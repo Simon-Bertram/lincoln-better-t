@@ -12,22 +12,27 @@
     "db:migrate": "drizzle-kit migrate"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^1.0.1",
+    "@orpc/client": "^1.5.0",
+    "@orpc/server": "^1.5.0",
+    "@tailwindcss/postcss": "^4.1.12",
+    "dotenv": "^17.2.1",
+    "drizzle-orm": "^0.44.4",
     "next": "15.3.0",
+    "pg": "^8.14.1",
+    "postcss": "^8.5.6",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "dotenv": "^17.2.1",
-    "@orpc/server": "^1.5.0",
-    "@orpc/client": "^1.5.0",
-    "drizzle-orm": "^0.44.2",
-    "pg": "^8.14.1"
+    "tailwindcss": "^4.1.12"
   },
   "devDependencies": {
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "zod": "^4.0.13",
-    "typescript": "^5",
     "@types/bun": "^1.2.6",
-    "drizzle-kit": "^0.31.2",
-    "@types/pg": "^8.11.11"
+    "@types/node": "^20",
+    "@types/pg": "^8.11.11",
+    "@types/react": "^19",
+    "drizzle-kit": "^0.31.4",
+    "tsx": "^4.20.4",
+    "typescript": "^5",
+    "zod": "^4.0.13"
   }
 }
