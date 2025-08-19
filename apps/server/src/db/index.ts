@@ -1,12 +1,10 @@
-import { drizzle } from 'drizzle-orm/neon-http';
 import { neon } from '@neondatabase/serverless';
+import { drizzle } from 'drizzle-orm/neon-http';
+import { students } from './migrations/schema';
 
-// Placeholder schema - will be replaced after running drizzle-kit introspect
-const schema = {};
+const schema = { students };
 
-const sql = neon(process.env.DATABASE_URL!);
+const sql = neon(process.env.DATABASE_URL ?? '');
 const db = drizzle(sql, { schema });
 
 export { db, schema };
-
-
