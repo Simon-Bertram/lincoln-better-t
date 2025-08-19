@@ -1,24 +1,10 @@
+/* eslint-disable @typescript-eslint/no-namespace */
+
 'use client';
 
-import {
-  Content,
-  Group,
-  Icon,
-  Item,
-  ItemIndicator,
-  ItemText,
-  Label,
-  Portal,
-  Root,
-  ScrollDownButton,
-  ScrollUpButton,
-  Separator,
-  Trigger,
-  Value,
-  Viewport,
-} from '@radix-ui/react-select';
+import * as SelectPrimitive from '@radix-ui/react-select';
 import { Check, ChevronDown, ChevronUp } from 'lucide-react';
-import { forwardRef } from 'react';
+import * as React from 'react';
 
 import { cn } from '@/lib/utils';
 
