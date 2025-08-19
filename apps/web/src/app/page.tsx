@@ -1,14 +1,7 @@
 'use client';
 import { useQuery } from '@tanstack/react-query';
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+import { columns, type Student } from '@/components/columns';
+import { DataTable } from '@/components/data-table';
 import { orpc } from '@/utils/orpc';
 
 const TITLE_TEXT = `Lincoln School Directory
@@ -35,43 +28,10 @@ export default function Home() {
             </div>
           )}
           {studentsQuery.data && (
-            <Table>
-              <TableCaption>
-                A list of students from the Lincoln Institute.
-              </TableCaption>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>ID</TableHead>
-                  <TableHead>Indian Name</TableHead>
-                  <TableHead>Family Name</TableHead>
-                  <TableHead>English Name</TableHead>
-                  <TableHead>Sex</TableHead>
-                  <TableHead>Year of Birth</TableHead>
-                  <TableHead>Nation</TableHead>
-                  <TableHead>Arrival Date</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {studentsQuery.data.map((student) => (
-                  <TableRow key={student.id}>
-                    <TableCell className="font-medium">{student.id}</TableCell>
-                    <TableCell>{student.indianName || '-'}</TableCell>
-                    <TableCell>{student.familyName || '-'}</TableCell>
-                    <TableCell>{student.englishGivenName || '-'}</TableCell>
-                    <TableCell>{student.sex || '-'}</TableCell>
-                    <TableCell>{student.yearOfBirth || '-'}</TableCell>
-                    <TableCell>{student.nation || '-'}</TableCell>
-                    <TableCell>
-                      {student.arrivalAtLincoln
-                        ? new Date(
-                            student.arrivalAtLincoln
-                          ).toLocaleDateString()
-                        : '-'}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+            <DataTable
+              columns={columns}
+              data={studentsQuery.data as Student[]}
+            />
           )}
         </section>
         <section className="rounded-lg border p-4">
