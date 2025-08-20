@@ -146,7 +146,30 @@ export const columns: ColumnDef<Student>[] = [
   {
     accessorKey: 'source',
     header: 'Source',
-    cell: ({ row }) => <div>{row.getValue('source') || '-'}</div>,
+    cell: ({ row }) => {
+      const source = row.getValue('source') as string | null;
+      return (
+        <div>
+          {source ? (
+            <HoverCard>
+              <HoverCardTrigger asChild>
+                <Button variant="link" className="p-0 h-auto text-blue-600 hover:text-blue-800">
+                  Source
+                </Button>
+              </HoverCardTrigger>
+              <HoverCardContent className="w-80">
+                <div className="space-y-2">
+                  <h4 className="text-sm font-semibold">Source</h4>
+                  <p className="text-sm">{source}</p>
+                </div>
+              </HoverCardContent>
+            </HoverCard>
+          ) : (
+            '-'
+          )}
+        </div>
+      );
+    },
   },
   {
     accessorKey: 'comments',
