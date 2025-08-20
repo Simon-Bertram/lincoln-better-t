@@ -5,6 +5,13 @@ import { QueryCache, QueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import type { AppRouterClient } from '../../../server/src/routers/index';
 
+// Cache configuration constants
+const CACHE_CONFIG = {
+  STALE_TIME_MS: 5 * 60 * 1000, // 5 minutes
+  GC_TIME_MS: 10 * 60 * 1000, // 10 minutes
+  RETRY_ATTEMPTS: 3,
+} as const;
+
 export const queryClient = new QueryClient({
   queryCache: new QueryCache({
     onError: (error) => {
@@ -20,13 +27,9 @@ export const queryClient = new QueryClient({
   }),
   defaultOptions: {
     queries: {
-      // Cache data for 5 minutes
-      staleTime: 5 * 60 * 1000,
-      // Keep data in cache for 10 minutes even if unused
-      gcTime: 10 * 60 * 1000,
-      // Retry failed requests 3 times
-      retry: 3,
-      // Refetch on window focus (good for keeping data fresh)
+      staleTime: CACHE_CONFIG.STALE_TIME_MS,
+      gcTime: CACHE_CONFIG.GC_TIME_MS,
+      retry: CACHE_CONFIG.RETRY_ATTEMPTS,
       refetchOnWindowFocus: true,
     },
   },

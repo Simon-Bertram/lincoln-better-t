@@ -28,11 +28,10 @@ export const columns: ColumnDef<Student>[] = [
     accessorKey: 'id',
     header: 'ID',
     cell: ({ row }) => <div className="font-medium">{row.getValue('id')}</div>,
-    
   },
   {
     accessorKey: 'indianName',
-    header: 'Indian Name',
+    header: 'Tribal Name',
     cell: ({ row }) => <div>{row.getValue('indianName') || '-'}</div>,
     enableGlobalFilter: true,
   },
@@ -139,7 +138,9 @@ export const columns: ColumnDef<Student>[] = [
       );
     },
     cell: ({ row }) => {
-      const departureDate = row.getValue('departureFromLincoln') as string | null;
+      const departureDate = row.getValue('departureFromLincoln') as
+        | string
+        | null;
       return (
         <div>
           {departureDate ? new Date(departureDate).toLocaleDateString() : '-'}
@@ -157,13 +158,16 @@ export const columns: ColumnDef<Student>[] = [
           {source ? (
             <HoverCard>
               <HoverCardTrigger asChild>
-                <Button variant="link" className="p-0 h-auto text-blue-600 hover:text-blue-800">
+                <Button
+                  className="h-auto p-0 text-blue-600 hover:text-blue-800"
+                  variant="link"
+                >
                   Source
                 </Button>
               </HoverCardTrigger>
               <HoverCardContent className="w-80">
                 <div className="space-y-2">
-                  <h4 className="text-sm font-semibold">Source</h4>
+                  <h4 className="font-semibold text-sm">Source</h4>
                   <p className="text-sm">{source}</p>
                 </div>
               </HoverCardContent>
@@ -185,13 +189,16 @@ export const columns: ColumnDef<Student>[] = [
           {comments ? (
             <HoverCard>
               <HoverCardTrigger asChild>
-                <Button variant="link" className="p-0 h-auto text-blue-600 hover:text-blue-800">
+                <Button
+                  className="h-auto p-0 text-blue-600 hover:text-blue-800"
+                  variant="link"
+                >
                   Comments
                 </Button>
               </HoverCardTrigger>
               <HoverCardContent className="w-80">
                 <div className="space-y-2">
-                  <h4 className="text-sm font-semibold">Comments</h4>
+                  <h4 className="font-semibold text-sm">Comments</h4>
                   <p className="text-sm">{comments}</p>
                 </div>
               </HoverCardContent>
@@ -213,18 +220,21 @@ export const columns: ColumnDef<Student>[] = [
           {link ? (
             <HoverCard>
               <HoverCardTrigger asChild>
-                <Button variant="link" className="p-0 h-auto text-blue-600 hover:text-blue-800">
+                <Button
+                  className="h-auto p-0 text-blue-600 hover:text-blue-800"
+                  variant="link"
+                >
                   Relevant Links
                 </Button>
               </HoverCardTrigger>
               <HoverCardContent className="w-80">
                 <div className="space-y-2">
-                  <h4 className="text-sm font-semibold">Relevant Links</h4>
+                  <h4 className="font-semibold text-sm">Relevant Links</h4>
                   <a
+                    className="break-all text-blue-600 text-sm underline hover:text-blue-800"
                     href={link}
-                    target="_blank"
                     rel="noopener noreferrer"
-                    className="text-sm text-blue-600 hover:text-blue-800 underline break-all"
+                    target="_blank"
                   >
                     {link}
                   </a>
