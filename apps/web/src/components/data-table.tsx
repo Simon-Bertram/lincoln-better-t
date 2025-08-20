@@ -60,6 +60,7 @@ export function DataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
+  const [globalFilter, setGlobalFilter] = useState('');
 
   const table = useReactTable({
     data,
@@ -72,11 +73,14 @@ export function DataTable<TData, TValue>({
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
+    onGlobalFilterChange: setGlobalFilter,
+    globalFilterFn: 'includesString',
     state: {
       sorting,
       columnFilters,
       columnVisibility,
       rowSelection,
+      globalFilter,
     },
   });
 
@@ -85,16 +89,9 @@ export function DataTable<TData, TValue>({
       <div className="flex items-center py-4">
         <Input
           className="max-w-sm"
-          onChange={(event) =>
-            table
-              .getColumn('englishGivenName')
-              ?.setFilterValue(event.target.value)
-          }
+          onChange={(event) => table.setGlobalFilter(event.target.value)}
           placeholder="Filter by name..."
-          value={
-            (table.getColumn('englishGivenName')?.getFilterValue() as string) ??
-            ''
-          }
+          value={globalFilter}
         />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -173,7 +170,7 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-between px-2">
+      <div className="flex items-center justify-between p-4">
         <div className="flex-1 text-muted-foreground text-sm">
           {table.getFilteredSelectedRowModel().rows.length} of{' '}
           {table.getFilteredRowModel().rows.length} row(s) selected.

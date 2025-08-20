@@ -28,11 +28,13 @@ export const columns: ColumnDef<Student>[] = [
     accessorKey: 'id',
     header: 'ID',
     cell: ({ row }) => <div className="font-medium">{row.getValue('id')}</div>,
+    
   },
   {
     accessorKey: 'indianName',
     header: 'Indian Name',
     cell: ({ row }) => <div>{row.getValue('indianName') || '-'}</div>,
+    enableGlobalFilter: true,
   },
   {
     accessorKey: 'familyName',
@@ -48,6 +50,7 @@ export const columns: ColumnDef<Student>[] = [
       );
     },
     cell: ({ row }) => <div>{row.getValue('familyName') || '-'}</div>,
+    enableGlobalFilter: true,
   },
   {
     accessorKey: 'englishGivenName',
@@ -63,6 +66,7 @@ export const columns: ColumnDef<Student>[] = [
       );
     },
     cell: ({ row }) => <div>{row.getValue('englishGivenName') || '-'}</div>,
+    enableGlobalFilter: true,
   },
   {
     accessorKey: 'sex',

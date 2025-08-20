@@ -4,7 +4,7 @@ import { columns, type Student } from '@/components/columns';
 import { DataTable } from '@/components/data-table';
 import { orpc } from '@/utils/orpc';
 
-const TITLE_TEXT = `Lincoln School Directory
+const TITLE_TEXT = `Lincoln Institute Directory
  `;
 
 export default function Home() {
