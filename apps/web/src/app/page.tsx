@@ -12,7 +12,7 @@ export default function Home() {
   const studentsQuery = useQuery(orpc.getStudents.queryOptions());
 
   return (
-    <div className="container mx-auto max-w-6xl px-4 py-2">
+    <div className="container mx-auto max-w-8/10 px-4 py-2">
       <pre className="overflow-x-auto font-mono text-sm">{TITLE_TEXT}</pre>
       <div className="grid gap-6">
         <section className="rounded-lg border p-4">

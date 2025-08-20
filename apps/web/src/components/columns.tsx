@@ -12,6 +12,10 @@ export type Student = {
   yearOfBirth: number | null;
   nation: string | null;
   arrivalAtLincoln: string | null;
+  departureFromLincoln: string | null;
+  source: string | null;
+  comments: string | null;
+  relevant_link: string | null;
 };
 
 export const columns: ColumnDef<Student>[] = [

@@ -8,7 +8,7 @@ export const appRouter = {
     return 'OK';
   }),
   getStudents: publicProcedure.handler(async () => {
-    const allStudents = await db.select().from(students).limit(10);
+    const allStudents = await db.select().from(students).limit(20);
     return allStudents;
   }),
 };
