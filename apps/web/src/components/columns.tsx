@@ -116,4 +116,59 @@ export const columns: ColumnDef<Student>[] = [
       );
     },
   },
+  {
+    accessorKey: 'departureFromLincoln',
+    header: ({ column }) => {
+      return (
+        <Button
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          variant="ghost"
+        >
+          Departure Date
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const departureDate = row.getValue('departureFromLincoln') as string | null;
+      return (
+        <div>
+          {departureDate ? new Date(departureDate).toLocaleDateString() : '-'}
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: 'source',
+    header: 'Source',
+    cell: ({ row }) => <div>{row.getValue('source') || '-'}</div>,
+  },
+  {
+    accessorKey: 'comments',
+    header: 'Comments',
+    cell: ({ row }) => <div>{row.getValue('comments') || '-'}</div>,
+  },
+  {
+    accessorKey: 'relevant_link',
+    header: 'Relevant Link',
+    cell: ({ row }) => {
+      const link = row.getValue('relevant_link') as string | null;
+      return (
+        <div>
+          {link ? (
+            <a
+              href={link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:text-blue-800 underline"
+            >
+              View Link
+            </a>
+          ) : (
+            '-'
+          )}
+        </div>
+      );
+    },
+  },
 ];
