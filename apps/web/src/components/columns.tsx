@@ -2,6 +2,11 @@ import type { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from '@/components/ui/hover-card';
 
 export type Student = {
   id: number;
@@ -15,7 +20,7 @@ export type Student = {
   departureFromLincoln: string | null;
   source: string | null;
   comments: string | null;
-  relevant_link: string | null;
+  relevantLinks: string | null;
 };
 
 export const columns: ColumnDef<Student>[] = [
@@ -146,24 +151,59 @@ export const columns: ColumnDef<Student>[] = [
   {
     accessorKey: 'comments',
     header: 'Comments',
-    cell: ({ row }) => <div>{row.getValue('comments') || '-'}</div>,
+    cell: ({ row }) => {
+      const comments = row.getValue('comments') as string | null;
+      return (
+        <div>
+          {comments ? (
+            <HoverCard>
+              <HoverCardTrigger asChild>
+                <Button variant="link" className="p-0 h-auto text-blue-600 hover:text-blue-800">
+                  Comments
+                </Button>
+              </HoverCardTrigger>
+              <HoverCardContent className="w-80">
+                <div className="space-y-2">
+                  <h4 className="text-sm font-semibold">Comments</h4>
+                  <p className="text-sm">{comments}</p>
+                </div>
+              </HoverCardContent>
+            </HoverCard>
+          ) : (
+            '-'
+          )}
+        </div>
+      );
+    },
   },
   {
-    accessorKey: 'relevant_link',
+    accessorKey: 'relevantLinks',
     header: 'Relevant Link',
     cell: ({ row }) => {
-      const link = row.getValue('relevant_link') as string | null;
+      const link = row.getValue('relevantLinks') as string | null;
       return (
         <div>
           {link ? (
-            <a
-              href={link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 hover:text-blue-800 underline"
-            >
-              View Link
-            </a>
+            <HoverCard>
+              <HoverCardTrigger asChild>
+                <Button variant="link" className="p-0 h-auto text-blue-600 hover:text-blue-800">
+                  Relevant Links
+                </Button>
+              </HoverCardTrigger>
+              <HoverCardContent className="w-80">
+                <div className="space-y-2">
+                  <h4 className="text-sm font-semibold">Relevant Links</h4>
+                  <a
+                    href={link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-blue-600 hover:text-blue-800 underline break-all"
+                  >
+                    {link}
+                  </a>
+                </div>
+              </HoverCardContent>
+            </HoverCard>
           ) : (
             '-'
           )}
