@@ -249,3 +249,49 @@ export const columns: ColumnDef<Student>[] = [
     },
   },
 ];
+
+// Mobile-specific columns that show only essential information
+export const mobileColumns: ColumnDef<Student>[] = [
+  {
+    accessorKey: 'id',
+    header: 'ID',
+    cell: ({ row }) => <div className="font-medium">{row.getValue('id')}</div>,
+  },
+  {
+    accessorKey: 'familyName',
+    header: ({ column }) => {
+      return (
+        <Button
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          variant="ghost"
+        >
+          Family Name
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => <div>{row.getValue('familyName') || '-'}</div>,
+    enableGlobalFilter: true,
+  },
+  {
+    accessorKey: 'englishGivenName',
+    header: ({ column }) => {
+      return (
+        <Button
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          variant="ghost"
+        >
+          English Name
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => <div>{row.getValue('englishGivenName') || '-'}</div>,
+    enableGlobalFilter: true,
+  },
+  {
+    accessorKey: 'nation',
+    header: 'Nation',
+    cell: ({ row }) => <div>{row.getValue('nation') || '-'}</div>,
+  },
+];

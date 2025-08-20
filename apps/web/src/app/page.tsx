@@ -1,7 +1,8 @@
 'use client';
 import { useQuery } from '@tanstack/react-query';
-import { columns, type Student } from '@/components/columns';
+import { columns, mobileColumns, type Student } from '@/components/columns';
 import { DataTable } from '@/components/data-table';
+import { MobileDataTable } from '@/components/mobile-data-table';
 import { orpc } from '@/utils/orpc';
 
 const TITLE_TEXT = `Lincoln Institute Directory
@@ -28,10 +29,22 @@ export default function Home() {
             </div>
           )}
           {studentsQuery.data && (
-            <DataTable
-              columns={columns}
-              data={studentsQuery.data as Student[]}
-            />
+            <>
+              {/* Desktop table - hidden on mobile */}
+              <div className="hidden lg:block">
+                <DataTable
+                  columns={columns}
+                  data={studentsQuery.data as Student[]}
+                />
+              </div>
+              {/* Mobile table - visible on mobile */}
+              <div className="block lg:hidden">
+                <MobileDataTable
+                  data={studentsQuery.data as Student[]}
+                  mobileColumns={mobileColumns}
+                />
+              </div>
+            </>
           )}
         </section>
         <section className="rounded-lg border p-4">
