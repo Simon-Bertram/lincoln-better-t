@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { AlertTriangle, RefreshCw, Wifi, WifiOff } from 'lucide-react';
+import { AlertTriangle, RefreshCw } from 'lucide-react';
 import { columns, mobileColumns, type Student } from '@/components/columns';
 import { DataTable } from '@/components/data-table';
 import { ErrorBoundary } from '@/components/error-boundary';
