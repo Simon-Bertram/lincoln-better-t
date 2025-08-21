@@ -209,7 +209,7 @@ export function DataTable<TData, TValue>({
       </div>
       <div className="overflow-hidden rounded-md border">
         <Table aria-label="Student directory records" id="student-table">
-          <TableCaption>
+          <TableCaption className="sr-only">
             Student directory records from the Lincoln Institute (1866-1922)
           </TableCaption>
           <TableHeader>

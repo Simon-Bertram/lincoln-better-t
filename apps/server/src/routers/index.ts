@@ -4,24 +4,15 @@ import { z } from 'zod';
 import { db } from '../db';
 import { students } from '../db/migrations/schema';
 import { publicProcedure } from '../lib/orpc';
-
-const PAGINATION_LIMITS = {
-  MAX_LIMIT: 100,
-  MAX_SEARCH_LENGTH: 200,
-} as const;
-
-const getStudentsSchema = z.object({
-  limit: z.number().min(1).max(PAGINATION_LIMITS.MAX_LIMIT).optional(),
-  offset: z.number().min(0).optional(),
-  search: z.string().max(PAGINATION_LIMITS.MAX_SEARCH_LENGTH).optional(),
-});
+import { getStudentsInputSchema, StudentSchema } from '../types/student';
 
 export const appRouter = {
-  healthCheck: publicProcedure.handler(() => {
+  healthCheck: publicProcedure.output(z.string()).handler(() => {
     return 'OK';
   }),
   getStudents: publicProcedure
-    .input(getStudentsSchema.optional())
+    .input(getStudentsInputSchema.optional())
+    .output(z.array(StudentSchema))
     .handler(async ({ input }) => {
       try {
         // Validate and use input
@@ -32,7 +23,10 @@ export const appRouter = {
           ? like(students.familyName, `%${search}%`)
           : undefined;
 
-        return await query.where(whereClause).offset(offset);
+        const result = await query.where(whereClause).offset(offset);
+
+        // Validate the result against our schema
+        return z.array(StudentSchema).parse(result);
       } catch (error) {
         // In production, log to external service (Sentry, etc.)
         throw new Error(
@@ -41,5 +35,6 @@ export const appRouter = {
       }
     }),
 };
+
 export type AppRouter = typeof appRouter;
 export type AppRouterClient = RouterClient<typeof appRouter>;

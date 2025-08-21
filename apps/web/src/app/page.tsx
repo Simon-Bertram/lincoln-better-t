@@ -81,38 +81,6 @@ function StudentsSection() {
   );
 }
 
-function ApiStatusSection() {
-  const healthCheck = useQuery(orpc.healthCheck.queryOptions());
-
-  return (
-    <section className="rounded-lg border p-4">
-      <h2 className="mb-2 font-medium">API Status</h2>
-      <output aria-live="polite" className="flex items-center gap-2">
-        <div
-          className={`h-2 w-2 rounded-full ${
-            healthCheck.data ? 'bg-green-500' : 'bg-red-500'
-          }`}
-        />
-        <span className="text-muted-foreground text-sm">
-          {healthCheck.isLoading && 'Checking...'}
-          {!healthCheck.isLoading && healthCheck.data && (
-            <span className="flex items-center gap-1">
-              <Wifi className="h-3 w-3" />
-              Connected
-            </span>
-          )}
-          {!(healthCheck.isLoading || healthCheck.data) && (
-            <span className="flex items-center gap-1">
-              <WifiOff className="h-3 w-3" />
-              Disconnected
-            </span>
-          )}
-        </span>
-      </output>
-    </section>
-  );
-}
-
 export default function Home() {
   return (
     <main
@@ -139,9 +107,6 @@ export default function Home() {
             <StudentsSection />
           </ErrorBoundary>
         </section>
-        <ErrorBoundary>
-          <ApiStatusSection />
-        </ErrorBoundary>
       </div>
     </main>
   );
