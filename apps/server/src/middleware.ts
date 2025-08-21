@@ -1,19 +1,39 @@
-import { NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from 'next/server';
 
-export function middleware() {
-  const res = NextResponse.next()
+export function middleware(req: NextRequest) {
+  const res = NextResponse.next();
 
-  res.headers.append('Access-Control-Allow-Credentials', "true")
-  res.headers.append('Access-Control-Allow-Origin', process.env.CORS_ORIGIN || "")
-  res.headers.append('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
-  res.headers.append(
+  // Secure CORS configuration
+  const allowedOrigins = process.env.CORS_ORIGIN?.split(',') || [];
+  const origin = req.headers.get('origin');
+
+  if (origin && allowedOrigins.includes(origin)) {
+    res.headers.set('Access-Control-Allow-Origin', origin);
+  }
+
+  res.headers.set('Access-Control-Allow-Credentials', 'true');
+  res.headers.set(
+    'Access-Control-Allow-Methods',
+    'GET,POST,PUT,PATCH,DELETE,OPTIONS'
+  );
+  res.headers.set(
     'Access-Control-Allow-Headers',
-    'Content-Type, Authorization'
-  )
+    'Content-Type, Authorization, X-Requested-With'
+  );
 
-  return res
+  // Security headers
+  res.headers.set('X-Content-Type-Options', 'nosniff');
+  res.headers.set('X-Frame-Options', 'DENY');
+  res.headers.set('X-XSS-Protection', '1; mode=block');
+  res.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.headers.set(
+    'Strict-Transport-Security',
+    'max-age=31536000; includeSubDomains'
+  );
+
+  return res;
 }
 
 export const config = {
   matcher: '/:path*',
-}
+};

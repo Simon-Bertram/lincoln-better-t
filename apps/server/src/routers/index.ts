@@ -1,16 +1,38 @@
 import type { RouterClient } from '@orpc/server';
+import { like } from 'drizzle-orm';
+import { z } from 'zod';
 import { db } from '../db';
 import { students } from '../db/migrations/schema';
 import { publicProcedure } from '../lib/orpc';
+
+const PAGINATION_LIMITS = {
+  MAX_LIMIT: 100,
+  MAX_SEARCH_LENGTH: 200,
+} as const;
+
+const getStudentsSchema = z.object({
+  limit: z.number().min(1).max(PAGINATION_LIMITS.MAX_LIMIT).optional(),
+  offset: z.number().min(0).optional(),
+  search: z.string().max(PAGINATION_LIMITS.MAX_SEARCH_LENGTH).optional(),
+});
 
 export const appRouter = {
   healthCheck: publicProcedure.handler(() => {
     return 'OK';
   }),
-  getStudents: publicProcedure.handler(async () => {
-    const allStudents = await db.select().from(students);
-    return allStudents;
-  }),
+  getStudents: publicProcedure
+    .input(getStudentsSchema.optional())
+    .handler(async ({ input }) => {
+      // Validate and use input
+      const { limit = 50, offset = 0, search } = input || {};
+
+      const query = db.select().from(students);
+      const whereClause = search
+        ? like(students.familyName, `%${search}%`)
+        : undefined;
+
+      return await query.where(whereClause).limit(limit).offset(offset);
+    }),
 };
 export type AppRouter = typeof appRouter;
 export type AppRouterClient = RouterClient<typeof appRouter>;
