@@ -41,6 +41,7 @@ import {
 import {
   Table,
   TableBody,
+  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -122,6 +123,9 @@ export function DataTable<TData, TValue>({
       </div>
       <div className="overflow-hidden rounded-md border">
         <Table>
+          <TableCaption>
+            Student directory records from the Lincoln Institute (1866-1922)
+          </TableCaption>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>

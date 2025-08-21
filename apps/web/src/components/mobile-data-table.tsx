@@ -36,6 +36,7 @@ import {
 import {
   Table,
   TableBody,
+  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -177,6 +178,9 @@ export function MobileDataTable({ mobileColumns, data }: MobileDataTableProps) {
       </div>
       <div className="overflow-hidden rounded-md border">
         <Table>
+          <TableCaption>
+            Student directory records from the Lincoln Institute (1866-1922)
+          </TableCaption>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
