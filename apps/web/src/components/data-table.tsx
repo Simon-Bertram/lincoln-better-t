@@ -21,13 +21,14 @@ import {
   ChevronsLeft,
   ChevronsRight,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
@@ -78,6 +79,16 @@ export function DataTable<TData, TValue>({
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
   const [globalFilter, setGlobalFilter] = useState('');
+  const [nationFilter, setNationFilter] = useState<string | null>(null);
+
+  // Extract unique nations from data
+  const uniqueNations = useMemo(() => {
+    const nations = (data as Array<{ nation: string | null }>)
+      .map((item) => item.nation)
+      .filter((nation): nation is string => nation !== null && nation !== '');
+
+    return [...new Set(nations)].sort();
+  }, [data]);
 
   const getSortDirection = (column: { getIsSorted: () => string | false }) => {
     if (column.getIsSorted() === 'asc') {
@@ -89,8 +100,18 @@ export function DataTable<TData, TValue>({
     return 'none';
   };
 
+  // Filter data by nation if filter is applied
+  const filteredData = useMemo(() => {
+    if (!nationFilter) {
+      return data;
+    }
+    return (data as Array<{ nation: string | null }>).filter(
+      (item) => item.nation === nationFilter
+    ) as TData[];
+  }, [data, nationFilter]);
+
   const table = useReactTable({
-    data,
+    data: filteredData,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -129,6 +150,31 @@ export function DataTable<TData, TValue>({
         <p className="sr-only" id="student-filter-help">
           Filters the student table rows
         </p>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button className="ml-4" variant="outline">
+              {nationFilter || 'Filter by Nation'}
+              <ChevronDown
+                aria-hidden="true"
+                className="ml-2 h-4 w-4"
+                focusable="false"
+              />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={() => setNationFilter(null)}>
+              All Nations
+            </DropdownMenuItem>
+            {uniqueNations.map((nation) => (
+              <DropdownMenuItem
+                key={nation}
+                onClick={() => setNationFilter(nation)}
+              >
+                {nation}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button className="ml-auto" variant="outline">
