@@ -58,6 +58,16 @@ export function MobileDataTable({ mobileColumns, data }: MobileDataTableProps) {
   const [globalFilter, setGlobalFilter] = useState('');
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
 
+  const getSortDirection = (column: { getIsSorted: () => string | false }) => {
+    if (column.getIsSorted() === 'asc') {
+      return 'ascending';
+    }
+    if (column.getIsSorted() === 'desc') {
+      return 'descending';
+    }
+    return 'none';
+  };
+
   const table = useReactTable({
     data,
     columns: mobileColumns,
@@ -169,15 +179,20 @@ export function MobileDataTable({ mobileColumns, data }: MobileDataTableProps) {
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
+        <label className="sr-only" htmlFor="student-filter">
+          Filter students
+        </label>
         <Input
+          aria-describedby="student-filter-help"
           className="max-w-sm"
+          id="student-filter"
           onChange={(event) => table.setGlobalFilter(event.target.value)}
           placeholder="Filter by name..."
           value={globalFilter}
         />
       </div>
       <div className="overflow-hidden rounded-md border">
-        <Table>
+        <Table aria-label="Student directory records" id="student-table">
           <TableCaption>
             Student directory records from the Lincoln Institute (1866-1922)
           </TableCaption>
@@ -186,7 +201,11 @@ export function MobileDataTable({ mobileColumns, data }: MobileDataTableProps) {
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead
+                      aria-sort={getSortDirection(header.column)}
+                      key={header.id}
+                      scope="col"
+                    >
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -265,21 +284,31 @@ export function MobileDataTable({ mobileColumns, data }: MobileDataTableProps) {
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-between p-4">
+      <nav
+        aria-controls="student-table"
+        aria-label="Table pagination"
+        className="flex items-center justify-between p-4"
+      >
         <div className="flex-1 text-muted-foreground text-sm">
           {table.getFilteredSelectedRowModel().rows.length} of{' '}
           {table.getFilteredRowModel().rows.length} row(s) selected.
         </div>
         <div className="flex items-center space-x-6 lg:space-x-8">
           <div className="flex items-center space-x-2">
-            <p className="font-medium text-sm">Rows per page</p>
+            <p className="font-medium text-sm" id="rows-per-page-label">
+              Rows per page
+            </p>
             <Select
               onValueChange={(value) => {
                 table.setPageSize(Number(value));
               }}
               value={`${table.getState().pagination.pageSize}`}
             >
-              <SelectTrigger className="h-8 w-[70px]">
+              <SelectTrigger
+                aria-labelledby="rows-per-page-label rows-per-page-trigger"
+                className="h-8 w-[70px]"
+                id="rows-per-page-trigger"
+              >
                 <SelectValue
                   placeholder={table.getState().pagination.pageSize}
                 />
@@ -356,7 +385,7 @@ export function MobileDataTable({ mobileColumns, data }: MobileDataTableProps) {
             </Button>
           </div>
         </div>
-      </div>
+      </nav>
     </div>
   );
 }
