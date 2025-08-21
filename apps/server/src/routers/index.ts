@@ -23,15 +23,22 @@ export const appRouter = {
   getStudents: publicProcedure
     .input(getStudentsSchema.optional())
     .handler(async ({ input }) => {
-      // Validate and use input
-      const { limit = 50, offset = 0, search } = input || {};
+      try {
+        // Validate and use input
+        const { offset = 0, search } = input || {};
 
-      const query = db.select().from(students);
-      const whereClause = search
-        ? like(students.familyName, `%${search}%`)
-        : undefined;
+        const query = db.select().from(students);
+        const whereClause = search
+          ? like(students.familyName, `%${search}%`)
+          : undefined;
 
-      return await query.where(whereClause).limit(limit).offset(offset);
+        return await query.where(whereClause).offset(offset);
+      } catch (error) {
+        // In production, log to external service (Sentry, etc.)
+        throw new Error(
+          `Failed to fetch students: ${error instanceof Error ? error.message : 'Unknown error'}`
+        );
+      }
     }),
 };
 export type AppRouter = typeof appRouter;
