@@ -117,6 +117,7 @@ export const columns: ColumnDef<Student>[] = [
       );
     },
     cell: ({ row }) => <div>{row.getValue('nation') || '-'}</div>,
+    enableGlobalFilter: false,
   },
   {
     accessorKey: 'arrivalAtLincoln',
@@ -339,5 +340,6 @@ export const mobileColumns: ColumnDef<Student>[] = [
       );
     },
     cell: ({ row }) => <div>{row.getValue('nation') || '-'}</div>,
+    enableGlobalFilter: false,
   },
 ];

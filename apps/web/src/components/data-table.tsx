@@ -48,6 +48,22 @@ import {
   TableRow,
 } from '@/components/ui/table';
 
+const DEFAULT_PAGE_SIZE = 10;
+const SMALL_PAGE_SIZE = 20;
+const MEDIUM_PAGE_SIZE = 25;
+const LARGE_PAGE_SIZE = 30;
+const EXTRA_LARGE_PAGE_SIZE = 40;
+const MAX_PAGE_SIZE = 50;
+
+const PAGE_SIZE_OPTIONS = [
+  DEFAULT_PAGE_SIZE,
+  SMALL_PAGE_SIZE,
+  MEDIUM_PAGE_SIZE,
+  LARGE_PAGE_SIZE,
+  EXTRA_LARGE_PAGE_SIZE,
+  MAX_PAGE_SIZE,
+] as const;
+
 type DataTableProps<TData, TValue> = {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
@@ -232,7 +248,7 @@ export function DataTable<TData, TValue>({
                 />
               </SelectTrigger>
               <SelectContent side="top">
-                {[10, 20, 25, 30, 40, 50].map((pageSize) => (
+                {PAGE_SIZE_OPTIONS.map((pageSize) => (
                   <SelectItem key={pageSize} value={`${pageSize}`}>
                     {pageSize}
                   </SelectItem>
