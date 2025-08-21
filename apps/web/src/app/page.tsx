@@ -5,16 +5,12 @@ import { DataTable } from '@/components/data-table';
 import { MobileDataTable } from '@/components/mobile-data-table';
 import { orpc } from '@/utils/orpc';
 
-const TITLE_TEXT = `Lincoln Institute Directory
- `;
-
 export default function Home() {
   const healthCheck = useQuery(orpc.healthCheck.queryOptions());
   const studentsQuery = useQuery(orpc.getStudents.queryOptions());
 
   return (
     <main className="container mx-auto my-4 max-w-8/10 px-4 py-2">
-      <pre className="overflow-x-auto font-mono text-sm">{TITLE_TEXT}</pre>
       <p>
         The Lincoln Institution was a charity created by Mary McHenry Cox which
         operated from 1866 to 1922 at 808 South Eleventh Street in Philadelphia.
