@@ -43,7 +43,21 @@ import {
   TableRow,
 } from '@/components/ui/table';
 
-const PAGE_SIZE_OPTIONS = [10, 20, 25, 30, 40, 50] as const;
+const DEFAULT_PAGE_SIZE = 10;
+const SMALL_PAGE_SIZE = 20;
+const MEDIUM_PAGE_SIZE = 25;
+const LARGE_PAGE_SIZE = 30;
+const EXTRA_LARGE_PAGE_SIZE = 40;
+const MAX_PAGE_SIZE = 50;
+
+const PAGE_SIZE_OPTIONS = [
+  DEFAULT_PAGE_SIZE,
+  SMALL_PAGE_SIZE,
+  MEDIUM_PAGE_SIZE,
+  LARGE_PAGE_SIZE,
+  EXTRA_LARGE_PAGE_SIZE,
+  MAX_PAGE_SIZE,
+] as const;
 
 type MobileDataTableProps = {
   mobileColumns: ColumnDef<Student>[];

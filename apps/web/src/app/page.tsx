@@ -1,14 +1,119 @@
 'use client';
+
 import { useQuery } from '@tanstack/react-query';
+import { AlertTriangle, RefreshCw, Wifi, WifiOff } from 'lucide-react';
 import { columns, mobileColumns, type Student } from '@/components/columns';
 import { DataTable } from '@/components/data-table';
+import { ErrorBoundary } from '@/components/error-boundary';
 import { MobileDataTable } from '@/components/mobile-data-table';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { orpc } from '@/utils/orpc';
 
-export default function Home() {
-  const healthCheck = useQuery(orpc.healthCheck.queryOptions());
+function StudentsSection() {
   const studentsQuery = useQuery(orpc.getStudents.queryOptions());
 
+  if (studentsQuery.isLoading) {
+    return (
+      <div className="flex items-center justify-center py-8">
+        <div className="flex items-center gap-2 text-muted-foreground">
+          <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+          <span>Loading students...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (studentsQuery.error) {
+    return (
+      <Card className="mx-auto max-w-md">
+        <CardHeader className="text-center">
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10">
+            <AlertTriangle className="h-6 w-6 text-destructive" />
+          </div>
+          <CardTitle className="text-lg">Failed to load students</CardTitle>
+          <CardDescription>
+            There was an error loading the student data. Please try again.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Button
+            className="w-full"
+            onClick={() => studentsQuery.refetch()}
+            variant="default"
+          >
+            <RefreshCw className="mr-2 h-4 w-4" />
+            Retry
+          </Button>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (!studentsQuery.data || studentsQuery.data.length === 0) {
+    return (
+      <div className="py-8 text-center text-muted-foreground">
+        <p>No students found.</p>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      {/* Desktop table - hidden on mobile */}
+      <div className="hidden lg:block">
+        <DataTable columns={columns} data={studentsQuery.data as Student[]} />
+      </div>
+      {/* Mobile table - visible on mobile */}
+      <div className="block lg:hidden">
+        <MobileDataTable
+          data={studentsQuery.data as Student[]}
+          mobileColumns={mobileColumns}
+        />
+      </div>
+    </>
+  );
+}
+
+function ApiStatusSection() {
+  const healthCheck = useQuery(orpc.healthCheck.queryOptions());
+
+  return (
+    <section className="rounded-lg border p-4">
+      <h2 className="mb-2 font-medium">API Status</h2>
+      <output aria-live="polite" className="flex items-center gap-2">
+        <div
+          className={`h-2 w-2 rounded-full ${
+            healthCheck.data ? 'bg-green-500' : 'bg-red-500'
+          }`}
+        />
+        <span className="text-muted-foreground text-sm">
+          {healthCheck.isLoading && 'Checking...'}
+          {!healthCheck.isLoading && healthCheck.data && (
+            <span className="flex items-center gap-1">
+              <Wifi className="h-3 w-3" />
+              Connected
+            </span>
+          )}
+          {!(healthCheck.isLoading || healthCheck.data) && (
+            <span className="flex items-center gap-1">
+              <WifiOff className="h-3 w-3" />
+              Disconnected
+            </span>
+          )}
+        </span>
+      </output>
+    </section>
+  );
+}
+
+export default function Home() {
   return (
     <main
       className="container mx-auto my-4 max-w-8/10 px-4 py-2"
@@ -30,52 +135,13 @@ export default function Home() {
       <div className="grid gap-6">
         <section className="my-6 rounded-lg border p-6">
           <h2 className="mb-4 font-medium">Students</h2>
-          {studentsQuery.isLoading && (
-            <output
-              aria-busy="true"
-              aria-live="polite"
-              className="block py-8 text-center text-muted-foreground"
-            >
-              Loading students...
-            </output>
-          )}
-          {studentsQuery.error && (
-            <div className="py-8 text-center text-red-500" role="alert">
-              Error loading students: {studentsQuery.error.message}
-            </div>
-          )}
-          {studentsQuery.data && (
-            <>
-              {/* Desktop table - hidden on mobile */}
-              <div className="hidden lg:block">
-                <DataTable
-                  columns={columns}
-                  data={studentsQuery.data as Student[]}
-                />
-              </div>
-              {/* Mobile table - visible on mobile */}
-              <div className="block lg:hidden">
-                <MobileDataTable
-                  data={studentsQuery.data as Student[]}
-                  mobileColumns={mobileColumns}
-                />
-              </div>
-            </>
-          )}
+          <ErrorBoundary>
+            <StudentsSection />
+          </ErrorBoundary>
         </section>
-        <section className="rounded-lg border p-4">
-          <h2 className="mb-2 font-medium">API Status</h2>
-          <output aria-live="polite" className="flex items-center gap-2">
-            <div
-              className={`h-2 w-2 rounded-full ${healthCheck.data ? 'bg-green-500' : 'bg-red-500'}`}
-            />
-            <span className="text-muted-foreground text-sm">
-              {healthCheck.isLoading && 'Checking...'}
-              {!healthCheck.isLoading && healthCheck.data && 'Connected'}
-              {!(healthCheck.isLoading || healthCheck.data) && 'Disconnected'}
-            </span>
-          </output>
-        </section>
+        <ErrorBoundary>
+          <ApiStatusSection />
+        </ErrorBoundary>
       </div>
     </main>
   );
