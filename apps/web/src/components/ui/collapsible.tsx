@@ -56,9 +56,12 @@ export function CollapsibleTrigger({
   const { open, setOpen } = context;
 
   if (asChild) {
-    return cloneElement(children as ReactElement, {
-      onClick: () => setOpen(!open),
-    });
+    return cloneElement(
+      children as ReactElement,
+      {
+        onClick: () => setOpen(!open),
+      } as any
+    );
   }
 
   return (
@@ -69,10 +72,12 @@ export function CollapsibleTrigger({
       variant="ghost"
     >
       <ChevronDown
+        aria-hidden="true"
         className={cn(
           'h-4 w-4 transition-transform duration-200',
           open && 'rotate-180'
         )}
+        focusable="false"
       />
       <span className="sr-only">Toggle details</span>
     </Button>

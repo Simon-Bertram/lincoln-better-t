@@ -63,6 +63,16 @@ export function DataTable<TData, TValue>({
   const [rowSelection, setRowSelection] = useState({});
   const [globalFilter, setGlobalFilter] = useState('');
 
+  const getSortDirection = (column: { getIsSorted: () => string | false }) => {
+    if (column.getIsSorted() === 'asc') {
+      return 'ascending';
+    }
+    if (column.getIsSorted() === 'desc') {
+      return 'descending';
+    }
+    return 'none';
+  };
+
   const table = useReactTable({
     data,
     columns,
@@ -88,16 +98,30 @@ export function DataTable<TData, TValue>({
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
+        <label className="sr-only" htmlFor="student-filter">
+          Filter students
+        </label>
         <Input
+          aria-describedby="student-filter-help"
           className="max-w-sm"
+          id="student-filter"
           onChange={(event) => table.setGlobalFilter(event.target.value)}
           placeholder="Filter by name..."
+          type="search"
           value={globalFilter}
         />
+        <p className="sr-only" id="student-filter-help">
+          Filters the student table rows
+        </p>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button className="ml-auto" variant="outline">
-              Columns <ChevronDown />
+              Columns{' '}
+              <ChevronDown
+                aria-hidden="true"
+                className="h-4 w-4"
+                focusable="false"
+              />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
@@ -122,7 +146,7 @@ export function DataTable<TData, TValue>({
         </DropdownMenu>
       </div>
       <div className="overflow-hidden rounded-md border">
-        <Table>
+        <Table aria-label="Student directory records" id="student-table">
           <TableCaption>
             Student directory records from the Lincoln Institute (1866-1922)
           </TableCaption>
@@ -131,7 +155,11 @@ export function DataTable<TData, TValue>({
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead
+                      aria-sort={getSortDirection(header.column)}
+                      key={header.id}
+                      scope="col"
+                    >
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -174,21 +202,31 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-between p-4">
+      <nav
+        aria-controls="student-table"
+        aria-label="Table pagination"
+        className="flex items-center justify-between p-4"
+      >
         <div className="flex-1 text-muted-foreground text-sm">
           {table.getFilteredSelectedRowModel().rows.length} of{' '}
           {table.getFilteredRowModel().rows.length} row(s) selected.
         </div>
         <div className="flex items-center space-x-6 lg:space-x-8">
           <div className="flex items-center space-x-2">
-            <p className="font-medium text-sm">Rows per page</p>
+            <p className="font-medium text-sm" id="rows-per-page-label">
+              Rows per page
+            </p>
             <Select
               onValueChange={(value) => {
                 table.setPageSize(Number(value));
               }}
               value={`${table.getState().pagination.pageSize}`}
             >
-              <SelectTrigger className="h-8 w-[70px]">
+              <SelectTrigger
+                aria-labelledby="rows-per-page-label rows-per-page-trigger"
+                className="h-8 w-[70px]"
+                id="rows-per-page-trigger"
+              >
                 <SelectValue
                   placeholder={table.getState().pagination.pageSize}
                 />
@@ -215,7 +253,11 @@ export function DataTable<TData, TValue>({
               variant="outline"
             >
               <span className="sr-only">Go to first page</span>
-              <ChevronsLeft className="h-4 w-4" />
+              <ChevronsLeft
+                aria-hidden="true"
+                className="h-4 w-4"
+                focusable="false"
+              />
             </Button>
             <Button
               className="h-8 w-8"
@@ -225,7 +267,11 @@ export function DataTable<TData, TValue>({
               variant="outline"
             >
               <span className="sr-only">Go to previous page</span>
-              <ChevronLeft className="h-4 w-4" />
+              <ChevronLeft
+                aria-hidden="true"
+                className="h-4 w-4"
+                focusable="false"
+              />
             </Button>
             <Button
               className="h-8 w-8"
@@ -235,7 +281,11 @@ export function DataTable<TData, TValue>({
               variant="outline"
             >
               <span className="sr-only">Go to next page</span>
-              <ChevronRight className="h-4 w-4" />
+              <ChevronRight
+                aria-hidden="true"
+                className="h-4 w-4"
+                focusable="false"
+              />
             </Button>
             <Button
               className="hidden h-8 w-8 lg:flex"
@@ -245,11 +295,15 @@ export function DataTable<TData, TValue>({
               variant="outline"
             >
               <span className="sr-only">Go to last page</span>
-              <ChevronsRight className="h-4 w-4" />
+              <ChevronsRight
+                aria-hidden="true"
+                className="h-4 w-4"
+                focusable="false"
+              />
             </Button>
           </div>
         </div>
-      </div>
+      </nav>
     </div>
   );
 }

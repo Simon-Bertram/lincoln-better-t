@@ -223,9 +223,17 @@ export function MobileDataTable({ mobileColumns, data }: MobileDataTableProps) {
                           variant="ghost"
                         >
                           {isExpanded ? (
-                            <ChevronDown className="h-4 w-4" />
+                            <ChevronDown
+                              aria-hidden="true"
+                              className="h-4 w-4"
+                              focusable="false"
+                            />
                           ) : (
-                            <ChevronRightIcon className="h-4 w-4" />
+                            <ChevronRightIcon
+                              aria-hidden="true"
+                              className="h-4 w-4"
+                              focusable="false"
+                            />
                           )}
                           <span className="sr-only">Toggle details</span>
                         </Button>
@@ -298,7 +306,11 @@ export function MobileDataTable({ mobileColumns, data }: MobileDataTableProps) {
               variant="outline"
             >
               <span className="sr-only">Go to first page</span>
-              <ChevronsLeft className="h-4 w-4" />
+              <ChevronsLeft
+                aria-hidden="true"
+                className="h-4 w-4"
+                focusable="false"
+              />
             </Button>
             <Button
               className="h-8 w-8"
@@ -308,7 +320,11 @@ export function MobileDataTable({ mobileColumns, data }: MobileDataTableProps) {
               variant="outline"
             >
               <span className="sr-only">Go to previous page</span>
-              <ChevronLeft className="h-4 w-4" />
+              <ChevronLeft
+                aria-hidden="true"
+                className="h-4 w-4"
+                focusable="false"
+              />
             </Button>
             <Button
               className="h-8 w-8"
@@ -318,7 +334,11 @@ export function MobileDataTable({ mobileColumns, data }: MobileDataTableProps) {
               variant="outline"
             >
               <span className="sr-only">Go to next page</span>
-              <ChevronRight className="h-4 w-4" />
+              <ChevronRight
+                aria-hidden="true"
+                className="h-4 w-4"
+                focusable="false"
+              />
             </Button>
             <Button
               className="hidden h-8 w-8 lg:flex"
@@ -328,7 +348,11 @@ export function MobileDataTable({ mobileColumns, data }: MobileDataTableProps) {
               variant="outline"
             >
               <span className="sr-only">Go to last page</span>
-              <ChevronsRight className="h-4 w-4" />
+              <ChevronsRight
+                aria-hidden="true"
+                className="h-4 w-4"
+                focusable="false"
+              />
             </Button>
           </div>
         </div>

@@ -44,7 +44,11 @@ export const columns: ColumnDef<Student>[] = [
           variant="ghost"
         >
           Family Name
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ArrowUpDown
+            aria-hidden="true"
+            className="ml-2 h-4 w-4"
+            focusable="false"
+          />
         </Button>
       );
     },
@@ -60,7 +64,11 @@ export const columns: ColumnDef<Student>[] = [
           variant="ghost"
         >
           English Name
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ArrowUpDown
+            aria-hidden="true"
+            className="ml-2 h-4 w-4"
+            focusable="false"
+          />
         </Button>
       );
     },
@@ -81,7 +89,11 @@ export const columns: ColumnDef<Student>[] = [
           variant="ghost"
         >
           Year of Birth
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ArrowUpDown
+            aria-hidden="true"
+            className="ml-2 h-4 w-4"
+            focusable="false"
+          />
         </Button>
       );
     },
@@ -96,7 +108,11 @@ export const columns: ColumnDef<Student>[] = [
           variant="ghost"
         >
           Nation
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ArrowUpDown
+            aria-hidden="true"
+            className="ml-2 h-4 w-4"
+            focusable="false"
+          />
         </Button>
       );
     },
@@ -111,7 +127,11 @@ export const columns: ColumnDef<Student>[] = [
           variant="ghost"
         >
           Arrival Date
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ArrowUpDown
+            aria-hidden="true"
+            className="ml-2 h-4 w-4"
+            focusable="false"
+          />
         </Button>
       );
     },
@@ -133,7 +153,11 @@ export const columns: ColumnDef<Student>[] = [
           variant="ghost"
         >
           Departure Date
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ArrowUpDown
+            aria-hidden="true"
+            className="ml-2 h-4 w-4"
+            focusable="false"
+          />
         </Button>
       );
     },
@@ -266,7 +290,11 @@ export const mobileColumns: ColumnDef<Student>[] = [
           variant="ghost"
         >
           Family Name
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ArrowUpDown
+            aria-hidden="true"
+            className="ml-2 h-4 w-4"
+            focusable="false"
+          />
         </Button>
       );
     },
@@ -282,7 +310,11 @@ export const mobileColumns: ColumnDef<Student>[] = [
           variant="ghost"
         >
           English Name
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ArrowUpDown
+            aria-hidden="true"
+            className="ml-2 h-4 w-4"
+            focusable="false"
+          />
         </Button>
       );
     },

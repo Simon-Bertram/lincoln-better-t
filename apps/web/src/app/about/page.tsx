@@ -1,6 +1,6 @@
 export default function AboutPage() {
   return (
-    <main className="container mx-auto px-4 py-8">
+    <main className="container mx-auto px-4 py-8" id="main-content">
       <h1 className="mb-6 font-bold text-2xl">About The Lincoln Institute</h1>
       <section className="prose prose-lg max-w-none">
         <p>
