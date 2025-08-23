@@ -20,7 +20,10 @@ export default function GlobalError({
 }) {
   useEffect(() => {
     // Log the error to an error reporting service
-    console.error('Global error caught:', error);
+    if (error) {
+      // Replace console.error with a logging service, e.g., Sentry
+      // Sentry.captureException(error)
+    }
   }, [error]);
 
   return (

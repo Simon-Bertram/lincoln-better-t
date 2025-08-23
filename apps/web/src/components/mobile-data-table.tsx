@@ -201,7 +201,7 @@ export function MobileDataTable({ mobileColumns, data }: MobileDataTableProps) {
               Relevant Links:
             </span>
             <a
-              className="mt-1 block text-blue-600 text-sm underline hover:text-blue-800"
+              className="mt-1 block text-sm underline"
               href={student.relevantLinks}
               rel="noopener noreferrer"
               target="_blank"

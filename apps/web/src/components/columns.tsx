@@ -184,7 +184,7 @@ export const columns: ColumnDef<Student>[] = [
             <HoverCard>
               <HoverCardTrigger asChild>
                 <Button
-                  className="h-auto p-0 text-blue-600 hover:text-blue-800"
+                  className="h-auto p-0 p-0 text-blue-700 hover:text-blue-900 dark:text-blue-300 dark:hover:text-blue-200"
                   variant="link"
                 >
                   Source
@@ -215,7 +215,7 @@ export const columns: ColumnDef<Student>[] = [
             <HoverCard>
               <HoverCardTrigger asChild>
                 <Button
-                  className="h-auto p-0 text-blue-600 hover:text-blue-800"
+                  className="h-auto p-0 p-0 text-blue-700 hover:text-blue-900 dark:text-blue-300 dark:hover:text-blue-200"
                   variant="link"
                 >
                   Comments
@@ -223,7 +223,9 @@ export const columns: ColumnDef<Student>[] = [
               </HoverCardTrigger>
               <HoverCardContent className="w-80">
                 <div className="space-y-2">
-                  <h4 className="font-semibold text-sm">Comments</h4>
+                  <h4 className="font-semibold text-blue-700 text-sm hover:text-blue-900 dark:text-blue-300 dark:hover:text-blue-200">
+                    Comments
+                  </h4>
                   <p className="text-sm">{comments}</p>
                 </div>
               </HoverCardContent>
@@ -246,7 +248,7 @@ export const columns: ColumnDef<Student>[] = [
             <HoverCard>
               <HoverCardTrigger asChild>
                 <Button
-                  className="h-auto p-0 text-blue-600 hover:text-blue-800"
+                  className="h-auto p-0 text-blue-700 hover:text-blue-900 dark:text-blue-300 dark:hover:text-blue-200"
                   variant="link"
                 >
                   Relevant Links
@@ -256,7 +258,7 @@ export const columns: ColumnDef<Student>[] = [
                 <div className="space-y-2">
                   <h4 className="font-semibold text-sm">Relevant Links</h4>
                   <a
-                    className="break-all text-blue-600 text-sm underline hover:text-blue-800"
+                    className="break-all text-sm underline"
                     href={link}
                     rel="noopener noreferrer"
                     target="_blank"
