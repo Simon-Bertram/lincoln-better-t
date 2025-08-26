@@ -10,6 +10,7 @@ export const appRouter = {
   healthCheck: publicProcedure.output(z.string()).handler(() => {
     return 'OK';
   }),
+<<<<<<< HEAD
   getStudents: publicProcedure
     .input(getStudentsInputSchema.optional())
     .output(z.array(StudentSchema))
@@ -34,6 +35,12 @@ export const appRouter = {
         );
       }
     }),
+=======
+  getStudents: publicProcedure.handler(async () => {
+    const allStudents = await db.select().from(students).limit(838);
+    return allStudents;
+  }),
+>>>>>>> 84aae68 (Add Vercel analytics)
 };
 
 export type AppRouter = typeof appRouter;
