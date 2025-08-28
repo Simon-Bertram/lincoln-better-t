@@ -1,37 +1,19 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
-export function middleware(request: NextRequest) {
+export function middleware(_request: NextRequest) {
   const response = NextResponse.next();
 
-  // Secure CORS configuration
-  const allowedOrigins = process.env.CORS_ORIGIN?.split(',') || [];
-  const origin = request.headers.get('origin');
-
-  if (origin && allowedOrigins.includes(origin)) {
-    response.headers.set('Access-Control-Allow-Origin', origin);
-  }
-
-  response.headers.set('Access-Control-Allow-Credentials', 'true');
-  response.headers.set(
-    'Access-Control-Allow-Methods',
-    'GET,POST,PUT,PATCH,DELETE,OPTIONS'
-  );
-  response.headers.set(
-    'Access-Control-Allow-Headers',
-    'Content-Type, Authorization, X-Requested-With'
-  );
-
-  // Add CSP headers if not already present
+  // Add security headers if not already present
   const cspHeader = response.headers.get('Content-Security-Policy');
   if (!cspHeader) {
     response.headers.set(
       'Content-Security-Policy',
       [
         "default-src 'self'",
-        "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
-        "style-src 'self' 'unsafe-inline'",
-        "font-src 'self' data:",
+        "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://fonts.googleapis.com",
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com",
+        "font-src 'self' https://fonts.gstatic.com data:",
         "img-src 'self' data: blob: https:",
         "connect-src 'self' https:",
         "media-src 'self' data:",
@@ -52,10 +34,6 @@ export function middleware(request: NextRequest) {
   response.headers.set(
     'Permissions-Policy',
     'camera=(), microphone=(), geolocation=(), payment=()'
-  );
-  response.headers.set(
-    'Strict-Transport-Security',
-    'max-age=31536000; includeSubDomains'
   );
 
   return response;
