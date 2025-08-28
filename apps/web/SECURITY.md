@@ -6,7 +6,7 @@ This document outlines the security measures implemented in the lincoln-better-t
 
 ### "No CSP found in enforcement mode" - RESOLVED ✅
 
-This security issue was addressed by implementing a comprehensive Content Security Policy (CSP) across both the web and server applications. The implementation includes:
+This security issue was addressed by implementing a comprehensive Content Security Policy (CSP) across both the web and server applications that meets [Lighthouse CSP requirements](https://developer.chrome.com/docs/lighthouse/best-practices/csp-xss/?utm_source=lighthouse&utm_medium=devtools). The implementation includes:
 
 - **CSP Headers**: Strict content security policy directives
 - **Security Headers**: Additional security headers for enhanced protection
@@ -26,16 +26,16 @@ The CSP implementation follows security best practices and provides protection a
 
 The application implements a comprehensive Content Security Policy to mitigate XSS attacks and other security vulnerabilities.
 
-### CSP Directives
+### CSP Directives (Lighthouse Compliant)
 
-- **default-src 'self'**: Restricts all resources to same origin by default
-- **script-src 'self' 'unsafe-inline' 'unsafe-eval'**: Allows scripts from same origin and inline scripts (required for Next.js)
-- **style-src 'self' 'unsafe-inline'**: Allows styles from same origin and inline styles (required for Tailwind CSS)
+- **script-src 'nonce-{random}' 'strict-dynamic' 'unsafe-inline' https:**: Uses nonce-based policy with strict-dynamic to prevent XSS bypasses (Lighthouse requirement)
+- **object-src 'none'**: Blocks all object/embed/applet elements (required for XSS protection)
+- **base-uri 'none'**: Blocks all base URI modifications (required for XSS protection)
+- **style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com**: Allows styles from same origin, inline styles, and Google Fonts
 - **font-src 'self' https://fonts.gstatic.com data:**: Allows fonts from same origin and Google Fonts
 - **img-src 'self' data: blob: https:**: Allows images from same origin, data URIs, and HTTPS sources
 - **connect-src 'self' https:**: Allows connections to same origin and HTTPS endpoints
-- **object-src 'none'**: Blocks all object/embed/applet elements
-- **base-uri 'self'**: Restricts base URI to same origin
+- **media-src 'self' data:**: Allows media from same origin and data URIs
 - **form-action 'self'**: Restricts form submissions to same origin
 - **frame-ancestors 'none'**: Prevents embedding in iframes (clickjacking protection)
 - **upgrade-insecure-requests**: Upgrades HTTP requests to HTTPS

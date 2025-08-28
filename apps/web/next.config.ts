@@ -9,10 +9,12 @@ const nextConfig: NextConfig = {
           {
             key: 'Content-Security-Policy',
             value: [
-              // Default source restrictions
-              "default-src 'self'",
-              // Script sources - allow self, inline scripts for Next.js, and Google Fonts
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://fonts.googleapis.com",
+              // Script sources - use strict-dynamic for XSS protection
+              "script-src 'strict-dynamic' 'unsafe-inline' https:",
+              // Object sources - block all (required for XSS protection)
+              "object-src 'none'",
+              // Base URI - block all (required for XSS protection)
+              "base-uri 'none'",
               // Style sources - allow self, inline styles, Google Fonts, and Tailwind
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com",
               // Font sources - allow Google Fonts
@@ -23,10 +25,6 @@ const nextConfig: NextConfig = {
               "connect-src 'self' https:",
               // Media sources - allow self and data URIs
               "media-src 'self' data:",
-              // Object sources - block all
-              "object-src 'none'",
-              // Base URI - restrict to same origin
-              "base-uri 'self'",
               // Form action - restrict to same origin
               "form-action 'self'",
               // Frame ancestors - block embedding in iframes
