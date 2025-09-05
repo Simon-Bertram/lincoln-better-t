@@ -20,6 +20,7 @@ import {
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
+  X,
 } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
@@ -135,18 +136,31 @@ export function DataTable<TData, TValue>({
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
-        <label className="sr-only" htmlFor="student-filter">
-          Filter students
-        </label>
-        <Input
-          aria-describedby="student-filter-help"
-          className="max-w-sm"
-          id="student-filter"
-          onChange={(event) => table.setGlobalFilter(event.target.value)}
-          placeholder="Filter by name..."
-          type="search"
-          value={globalFilter}
-        />
+        <div className="relative max-w-sm">
+          <label className="sr-only" htmlFor="student-filter">
+            Filter students
+          </label>
+          <Input
+            aria-describedby="student-filter-help"
+            className="pr-8"
+            id="student-filter"
+            onChange={(event) => table.setGlobalFilter(event.target.value)}
+            placeholder="Filter by name..."
+            type="search"
+            value={globalFilter}
+          />
+          {globalFilter && (
+            <Button
+              aria-label="Clear search"
+              className="-translate-y-1/2 absolute top-1/2 right-1 h-6 w-6 p-0"
+              onClick={() => table.setGlobalFilter('')}
+              size="sm"
+              variant="ghost"
+            >
+              <X aria-hidden="true" className="h-4 w-4" focusable="false" />
+            </Button>
+          )}
+        </div>
         <p className="sr-only" id="student-filter-help">
           Filters the student table rows
         </p>
