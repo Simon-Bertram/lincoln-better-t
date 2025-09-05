@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import '../index.css';
+import { Analytics } from '@vercel/analytics/react';
 import Header from '@/components/header';
 import Providers from '@/components/providers';
-import { Analytics } from '@vercel/analytics/react';
+import { getNonce } from '@/lib/nonce';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -25,6 +26,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const nonce = getNonce();
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body
@@ -42,6 +45,7 @@ export default function RootLayout({
             {children}
           </div>
         </Providers>
+        <Analytics />
       </body>
     </html>
   );
