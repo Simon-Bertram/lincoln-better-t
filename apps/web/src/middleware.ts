@@ -7,12 +7,16 @@ export function middleware(_request: NextRequest) {
   // Generate a unique nonce for this request
   const nonce = crypto.randomUUID();
 
+  // Make nonce available to Next.js
+  response.headers.set('x-nonce', nonce);
+
   // Set CSP header with nonce-based policy
   response.headers.set(
     'Content-Security-Policy',
     [
-      // Script sources - allow self, nonce, and strict-dynamic for Next.js compatibility
-      `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' 'unsafe-inline' https:`,
+      // Script sources - use hash-based approach for Next.js compatibility
+      // The hash allows specific inline scripts that Next.js generates
+      `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' 'sha256-HzMfaUcSA6GHOde2Db8a+loF1ug9IUc8vzXqrY0nRAo=' https:`,
       // Object sources - block all (required for XSS protection)
       "object-src 'none'",
       // Base URI - block all (required for XSS protection)
@@ -48,9 +52,6 @@ export function middleware(_request: NextRequest) {
 
   // Cross-Origin-Opener-Policy (COOP) for origin isolation
   response.headers.set('Cross-Origin-Opener-Policy', 'same-origin');
-
-  // Store nonce in request headers so it can be accessed in components
-  response.headers.set('x-nonce', nonce);
 
   return response;
 }
