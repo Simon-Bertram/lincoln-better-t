@@ -2,12 +2,8 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   // CSP headers are now handled by middleware for better nonce support
-  experimental: {
-    // Enable nonce support for inline scripts
-    serverComponentsExternalPackages: [],
-    // Optimize font loading
-    optimizeFonts: true,
-  },
+  // Moved from experimental to root level in Next.js 15
+  serverExternalPackages: [],
   // Configure webpack to handle nonces
   webpack: (config, { isServer }) => {
     if (!isServer) {
@@ -21,8 +17,6 @@ const nextConfig: NextConfig = {
     }
     return config;
   },
-  // Optimize font loading
-  optimizeFonts: true,
 };
 
 export default nextConfig;
