@@ -5,6 +5,8 @@ const nextConfig: NextConfig = {
   experimental: {
     // Enable nonce support for inline scripts
     serverComponentsExternalPackages: [],
+    // Optimize font loading
+    optimizeFonts: true,
   },
   // Configure webpack to handle nonces
   webpack: (config, { isServer }) => {
@@ -19,6 +21,8 @@ const nextConfig: NextConfig = {
     }
     return config;
   },
+  // Optimize font loading
+  optimizeFonts: true,
 };
 
 export default nextConfig;
