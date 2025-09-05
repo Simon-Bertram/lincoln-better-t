@@ -21,12 +21,12 @@ export const metadata: Metadata = {
   description: 'lincoln-better-t',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const nonce = getNonce();
+  const nonce = await getNonce();
 
   return (
     <html lang="en" suppressHydrationWarning>
