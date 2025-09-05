@@ -4,9 +4,6 @@ import { NextResponse } from 'next/server';
 export function middleware(request: NextRequest) {
   const response = NextResponse.next();
 
-  // Generate a unique nonce for this request
-  const nonce = crypto.randomUUID();
-
   // Secure CORS configuration
   const allowedOrigins = process.env.CORS_ORIGIN?.split(',') || [];
   const origin = request.headers.get('origin');
@@ -25,34 +22,35 @@ export function middleware(request: NextRequest) {
     'Content-Type, Authorization, X-Requested-With'
   );
 
-  // Set CSP header with nonce-based policy
-  response.headers.set(
-    'Content-Security-Policy',
-    [
-      // Script sources - allow self, nonce, and strict-dynamic for Next.js compatibility
-      `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' 'unsafe-inline' https:`,
-      // Object sources - block all (required for XSS protection)
-      "object-src 'none'",
-      // Base URI - block all (required for XSS protection)
-      "base-uri 'none'",
-      // Style sources - allow self, inline styles, Google Fonts, and Tailwind
-      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com",
-      // Font sources - allow Google Fonts
-      "font-src 'self' https://fonts.gstatic.com data:",
-      // Image sources - allow self, data URIs, and common image formats
-      "img-src 'self' data: blob: https:",
-      // Connect sources - allow self and any HTTPS connections for API calls
-      "connect-src 'self' https:",
-      // Media sources - allow self and data URIs
-      "media-src 'self' data:",
-      // Form action - restrict to same origin
-      "form-action 'self'",
-      // Frame ancestors - block embedding in iframes
-      "frame-ancestors 'none'",
-      // Upgrade insecure requests
-      'upgrade-insecure-requests',
-    ].join('; ')
-  );
+  // Performance-optimized CSP without nonces (allows static generation)
+  const cspHeader = [
+    // Default source - restrict to same origin
+    "default-src 'self'",
+    // Script sources - allow Next.js and Vercel Analytics
+    `script-src 'self' 'unsafe-eval' 'unsafe-inline' https://va.vercel-scripts.com https://vitals.vercel-insights.com`,
+    // Style sources - allow inline styles for Tailwind CSS
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com",
+    // Object sources - block all (required for XSS protection)
+    "object-src 'none'",
+    // Base URI - block all (required for XSS protection)
+    "base-uri 'none'",
+    // Font sources - allow Google Fonts and data URIs
+    "font-src 'self' https://fonts.gstatic.com data:",
+    // Image sources - allow self, data URIs, and common image formats
+    "img-src 'self' data: blob: https:",
+    // Connect sources - allow self and any HTTPS connections for API calls
+    "connect-src 'self' https:",
+    // Media sources - allow self and data URIs
+    "media-src 'self' data:",
+    // Form action - restrict to same origin
+    "form-action 'self'",
+    // Frame ancestors - block embedding in iframes
+    "frame-ancestors 'none'",
+    // Upgrade insecure requests
+    'upgrade-insecure-requests',
+  ].join('; ');
+
+  response.headers.set('Content-Security-Policy', cspHeader);
 
   // Add additional security headers
   response.headers.set('X-Content-Type-Options', 'nosniff');
@@ -70,9 +68,6 @@ export function middleware(request: NextRequest) {
 
   // Cross-Origin-Opener-Policy (COOP) for origin isolation
   response.headers.set('Cross-Origin-Opener-Policy', 'same-origin');
-
-  // Store nonce in request headers so it can be accessed in components
-  response.headers.set('x-nonce', nonce);
 
   return response;
 }

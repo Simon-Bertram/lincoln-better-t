@@ -4,41 +4,35 @@ import { NextResponse } from 'next/server';
 export function middleware(_request: NextRequest) {
   const response = NextResponse.next();
 
-  // Generate a unique nonce for this request
-  const nonce = crypto.randomUUID();
+  // Performance-optimized CSP without nonces (allows static generation)
+  const cspHeader = [
+    // Default source - restrict to same origin
+    "default-src 'self'",
+    // Script sources - allow Next.js and Vercel Analytics
+    `script-src 'self' 'unsafe-eval' 'unsafe-inline' https://va.vercel-scripts.com https://vitals.vercel-insights.com`,
+    // Style sources - allow inline styles for Tailwind CSS
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com",
+    // Object sources - block all (required for XSS protection)
+    "object-src 'none'",
+    // Base URI - block all (required for XSS protection)
+    "base-uri 'none'",
+    // Font sources - allow Google Fonts and data URIs
+    "font-src 'self' https://fonts.gstatic.com data:",
+    // Image sources - allow self, data URIs, and common image formats
+    "img-src 'self' data: blob: https:",
+    // Connect sources - allow self and any HTTPS connections for API calls
+    "connect-src 'self' https:",
+    // Media sources - allow self and data URIs
+    "media-src 'self' data:",
+    // Form action - restrict to same origin
+    "form-action 'self'",
+    // Frame ancestors - block embedding in iframes
+    "frame-ancestors 'none'",
+    // Upgrade insecure requests
+    'upgrade-insecure-requests',
+  ].join('; ');
 
-  // Make nonce available to Next.js
-  response.headers.set('x-nonce', nonce);
-
-  // Set CSP header with nonce-based policy
-  response.headers.set(
-    'Content-Security-Policy',
-    [
-      // Script sources - use hash-based approach for Next.js compatibility
-      // The hash allows specific inline scripts that Next.js generates
-      `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' 'sha256-HzMfaUcSA6GHOde2Db8a+loF1ug9IUc8vzXqrY0nRAo=' https:`,
-      // Object sources - block all (required for XSS protection)
-      "object-src 'none'",
-      // Base URI - block all (required for XSS protection)
-      "base-uri 'none'",
-      // Style sources - allow self, inline styles, Google Fonts, and Tailwind
-      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com",
-      // Font sources - allow Google Fonts
-      "font-src 'self' https://fonts.gstatic.com data:",
-      // Image sources - allow self, data URIs, and common image formats
-      "img-src 'self' data: blob: https:",
-      // Connect sources - allow self and any HTTPS connections for API calls
-      "connect-src 'self' https:",
-      // Media sources - allow self and data URIs
-      "media-src 'self' data:",
-      // Form action - restrict to same origin
-      "form-action 'self'",
-      // Frame ancestors - block embedding in iframes
-      "frame-ancestors 'none'",
-      // Upgrade insecure requests
-      'upgrade-insecure-requests',
-    ].join('; ')
-  );
+  response.headers.set('Content-Security-Policy', cspHeader);
 
   // Add additional security headers
   response.headers.set('X-Content-Type-Options', 'nosniff');
