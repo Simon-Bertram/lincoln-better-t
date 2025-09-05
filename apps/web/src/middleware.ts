@@ -1,7 +1,7 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
-export function middleware(request: NextRequest) {
+export function middleware(_request: NextRequest) {
   const response = NextResponse.next();
 
   // Generate a unique nonce for this request
@@ -45,6 +45,9 @@ export function middleware(request: NextRequest) {
     'Permissions-Policy',
     'camera=(), microphone=(), geolocation=(), payment=()'
   );
+
+  // Cross-Origin-Opener-Policy (COOP) for origin isolation
+  response.headers.set('Cross-Origin-Opener-Policy', 'same-origin');
 
   // Store nonce in request headers so it can be accessed in components
   response.headers.set('x-nonce', nonce);

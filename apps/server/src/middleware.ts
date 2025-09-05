@@ -68,6 +68,9 @@ export function middleware(request: NextRequest) {
     'max-age=31536000; includeSubDomains'
   );
 
+  // Cross-Origin-Opener-Policy (COOP) for origin isolation
+  response.headers.set('Cross-Origin-Opener-Policy', 'same-origin');
+
   // Store nonce in request headers so it can be accessed in components
   response.headers.set('x-nonce', nonce);
 
