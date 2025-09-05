@@ -2,7 +2,7 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   headers() {
-    return [
+    return Promise.resolve([
       {
         source: '/(.*)',
         headers: [
@@ -45,7 +45,7 @@ const nextConfig: NextConfig = {
           },
         ],
       },
-    ];
+    ]);
   },
 };
 
