@@ -10,14 +10,53 @@ import {
 } from '../types/civil-war-orphans';
 import { getStudentsInputSchema, StudentSchema } from '../types/student';
 
+// Security constants
+const SECURITY_LIMITS = {
+  MAX_OFFSET: 10_000,
+  MAX_SEARCH_LENGTH: 200,
+} as const;
+
+/**
+ * Sanitizes search input to prevent SQL injection and other attacks
+ * @param search - The raw search input
+ * @returns Sanitized search string safe for database queries
+ */
+function sanitizeSearchInput(search: string): string {
+  if (!search || typeof search !== 'string') {
+    return '';
+  }
+
+  return (
+    search
+      // Remove potentially dangerous SQL characters
+      .replace(/[%_\\]/g, '') // Remove SQL wildcards and escape characters
+      .replace(/[<>'"&]/g, '') // Remove HTML/XML special characters
+      .replace(/[;()]/g, '') // Remove SQL statement terminators
+      .trim() // Remove leading/trailing whitespace
+      .slice(0, SECURITY_LIMITS.MAX_SEARCH_LENGTH)
+  ); // Enforce length limit
+}
+
+/**
+ * Validates and sanitizes offset parameter
+ * @param offset - The raw offset value
+ * @returns Sanitized offset value within safe limits
+ */
+function sanitizeOffset(offset: number | undefined): number {
+  if (typeof offset !== 'number' || offset < 0 || !Number.isInteger(offset)) {
+    return 0;
+  }
+  return Math.min(offset, SECURITY_LIMITS.MAX_OFFSET);
+}
+
 /**
  * Builds a database query for students with optional search and offset
  * @param input - Optional input containing search and offset parameters
  * @returns Database query builder
  */
 function buildStudentQuery(input?: { search?: string; offset?: number }) {
-  const offset = input?.offset ?? 0;
-  const search = input?.search;
+  const offset = sanitizeOffset(input?.offset);
+  const search = input?.search ? sanitizeSearchInput(input.search) : undefined;
 
   const query = db.select().from(students);
   const whereClause = search
@@ -36,8 +75,8 @@ function buildCivilWarOrphansQuery(input?: {
   search?: string;
   offset?: number;
 }) {
-  const offset = input?.offset ?? 0;
-  const search = input?.search;
+  const offset = sanitizeOffset(input?.offset);
+  const search = input?.search ? sanitizeSearchInput(input.search) : undefined;
 
   const query = db.select().from(civilWarOrphans);
   const whereClause = search

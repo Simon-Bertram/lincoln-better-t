@@ -4,6 +4,7 @@ import { z } from 'zod';
 const PAGINATION_LIMITS = {
   MAX_LIMIT: 100,
   MAX_SEARCH_LENGTH: 200,
+  MAX_OFFSET: 10_000,
 } as const;
 
 // Define the complete CivilWarOrphan type based on the database schema
@@ -38,8 +39,15 @@ export type CivilWarOrphan = z.infer<typeof CivilWarOrphanSchema>;
 // Input schemas for API procedures
 export const getCivilWarOrphansInputSchema = z.object({
   limit: z.number().min(1).max(PAGINATION_LIMITS.MAX_LIMIT).optional(),
-  offset: z.number().min(0).optional(),
-  search: z.string().max(PAGINATION_LIMITS.MAX_SEARCH_LENGTH).optional(),
+  offset: z.number().min(0).max(PAGINATION_LIMITS.MAX_OFFSET).optional(),
+  search: z
+    .string()
+    .max(PAGINATION_LIMITS.MAX_SEARCH_LENGTH)
+    .regex(
+      /^[a-zA-Z0-9\s\-'.]+$/,
+      'Search can only contain letters, numbers, spaces, hyphens, apostrophes, and periods'
+    )
+    .optional(),
 });
 
 export type GetCivilWarOrphansInput = z.infer<
