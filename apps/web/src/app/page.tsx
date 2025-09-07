@@ -53,7 +53,7 @@ export default function Home() {
 
   return (
     <main
-      className="container mx-auto my-4 max-w-8/10 px-4 py-2"
+      className="container mx-auto my-4 w-[95%] px-4 py-2 lg:max-w-8/10"
       id="main-content"
     >
       <div className="mb-6 flex items-center justify-between">

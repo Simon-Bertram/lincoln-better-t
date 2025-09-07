@@ -14,7 +14,7 @@ export default function Header() {
 
   return (
     <header className="border-b">
-      <div className="mx-auto flex max-w-8/10 flex-row items-center justify-between px-2 py-4">
+      <div className="mx-auto flex w-[95%] flex-row items-center justify-between px-2 py-4 lg:max-w-8/10">
         <div className="flex items-center gap-4">
           <nav aria-label="Main navigation" className="flex gap-6 text-lg">
             {links.map(({ to, label }) => {
