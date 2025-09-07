@@ -160,7 +160,7 @@ function CivilWarOrphansSection() {
 }
 
 export default function Home() {
-  const { isStudentsTable, isCivilWarOrphansTable } = useTableToggle();
+  const { isStudentsTable } = useTableToggle();
 
   return (
     <main

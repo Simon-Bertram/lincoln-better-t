@@ -24,6 +24,7 @@ import {
   X,
 } from 'lucide-react';
 import React, { useMemo, useState } from 'react';
+import type { CivilWarOrphan } from '@/components/civil-war-orphans-columns';
 import type { Student } from '@/components/columns';
 import { Button } from '@/components/ui/button';
 import {
@@ -66,12 +67,15 @@ const PAGE_SIZE_OPTIONS = [
   MAX_PAGE_SIZE,
 ] as const;
 
-type MobileDataTableProps = {
-  mobileColumns: ColumnDef<Student>[];
-  data: Student[];
+type MobileDataTableProps<T extends Student | CivilWarOrphan> = {
+  mobileColumns: ColumnDef<T>[];
+  data: T[];
 };
 
-export function MobileDataTable({ mobileColumns, data }: MobileDataTableProps) {
+export function MobileDataTable<T extends Student | CivilWarOrphan>({
+  mobileColumns,
+  data,
+}: MobileDataTableProps<T>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -80,21 +84,28 @@ export function MobileDataTable({ mobileColumns, data }: MobileDataTableProps) {
   const [nationFilter, setNationFilter] = useState<string | null>(null);
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
 
-  // Extract unique nations from data
+  // Extract unique nations from data (only for Student type)
   const uniqueNations = useMemo(() => {
     const nations = data
-      .map((student) => student.nation)
+      .filter((item) => 'nation' in item)
+      .map((item) => (item as Student).nation)
       .filter((nation): nation is string => nation !== null && nation !== '');
 
     return [...new Set(nations)].sort();
   }, [data]);
 
-  // Filter data by nation if filter is applied
+  // Filter data by nation if filter is applied (only for Student type)
   const filteredData = useMemo(() => {
     if (!nationFilter) {
       return data;
     }
-    return data.filter((student) => student.nation === nationFilter);
+
+    return data.filter((item) => {
+      if ('nation' in item) {
+        return item.nation === nationFilter;
+      }
+      return true; // Don't filter CivilWarOrphan data
+    });
   }, [data, nationFilter]);
 
   const getSortDirection = (column: { getIsSorted: () => string | false }) => {
@@ -140,7 +151,15 @@ export function MobileDataTable({ mobileColumns, data }: MobileDataTableProps) {
   };
 
   // Function to render additional details for a row
-  const renderRowDetails = (student: Student) => {
+  const renderRowDetails = (item: T) => {
+    // Check if it's a Student by looking for Student-specific properties
+    if ('indianName' in item && 'englishGivenName' in item) {
+      return renderStudentDetails(item as Student);
+    }
+    return renderCivilWarOrphanDetails(item as CivilWarOrphan);
+  };
+
+  const renderStudentDetails = (student: Student) => {
     return (
       <div className="space-y-3 rounded-lg bg-muted/50 p-4">
         <div className="grid grid-cols-2 gap-4 text-sm">
@@ -215,6 +234,72 @@ export function MobileDataTable({ mobileColumns, data }: MobileDataTableProps) {
     );
   };
 
+  const renderCivilWarOrphanDetails = (orphan: CivilWarOrphan) => {
+    return (
+      <div className="space-y-3 rounded-lg bg-muted/50 p-4">
+        <div className="grid grid-cols-2 gap-4 text-sm">
+          <div>
+            <span className="font-medium text-muted-foreground">
+              Family Name:
+            </span>
+            <p className="mt-1">{orphan.familyName || '-'}</p>
+          </div>
+          <div>
+            <span className="font-medium text-muted-foreground">
+              Given Name:
+            </span>
+            <p className="mt-1">{orphan.givenName || '-'}</p>
+          </div>
+          <div>
+            <span className="font-medium text-muted-foreground">
+              Birth Date:
+            </span>
+            <p className="mt-1">{orphan.birthDate || '-'}</p>
+          </div>
+          <div>
+            <span className="font-medium text-muted-foreground">Arrival:</span>
+            <p className="mt-1">{orphan.arrival || '-'}</p>
+          </div>
+          <div>
+            <span className="font-medium text-muted-foreground">
+              Departure:
+            </span>
+            <p className="mt-1">{orphan.departure || '-'}</p>
+          </div>
+          <div>
+            <span className="font-medium text-muted-foreground">
+              Scholarships:
+            </span>
+            <p className="mt-1">{orphan.scholarships || '-'}</p>
+          </div>
+        </div>
+
+        {orphan.aliases && (
+          <div>
+            <span className="font-medium text-muted-foreground">Aliases:</span>
+            <p className="mt-1 text-sm">{orphan.aliases}</p>
+          </div>
+        )}
+
+        {orphan.comments && (
+          <div>
+            <span className="font-medium text-muted-foreground">Comments:</span>
+            <p className="mt-1 text-sm">{orphan.comments}</p>
+          </div>
+        )}
+
+        {orphan.references && (
+          <div>
+            <span className="font-medium text-muted-foreground">
+              References:
+            </span>
+            <p className="mt-1 text-sm">{orphan.references}</p>
+          </div>
+        )}
+      </div>
+    );
+  };
+
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
@@ -242,31 +327,33 @@ export function MobileDataTable({ mobileColumns, data }: MobileDataTableProps) {
             </Button>
           )}
         </div>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button className="ml-4" variant="outline">
-              {nationFilter || 'Filter by Nation'}
-              <ChevronDown
-                aria-hidden="true"
-                className="ml-2 h-4 w-4"
-                focusable="false"
-              />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => setNationFilter(null)}>
-              All Nations
-            </DropdownMenuItem>
-            {uniqueNations.map((nation) => (
-              <DropdownMenuItem
-                key={nation}
-                onClick={() => setNationFilter(nation)}
-              >
-                {nation}
+        {uniqueNations.length > 0 && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button className="ml-4" variant="outline">
+                {nationFilter || 'Filter by Nation'}
+                <ChevronDown
+                  aria-hidden="true"
+                  className="ml-2 h-4 w-4"
+                  focusable="false"
+                />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => setNationFilter(null)}>
+                All Nations
               </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
+              {uniqueNations.map((nation) => (
+                <DropdownMenuItem
+                  key={nation}
+                  onClick={() => setNationFilter(nation)}
+                >
+                  {nation}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
       </div>
       <div className="overflow-hidden rounded-md border">
         <Table aria-label="Student directory records" id="student-table">
