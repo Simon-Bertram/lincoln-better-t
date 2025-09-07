@@ -1,4 +1,4 @@
-import type { ColumnDef } from '@tanstack/react-table';
+import type { Column, ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -23,6 +23,98 @@ export type Student = {
   relevantLinks: string | null;
 };
 
+/**
+ * Creates a sortable header button with arrow icon
+ * @param title - The header title text
+ * @param column - The column object for sorting functionality
+ * @returns JSX element for the sortable header
+ */
+function createSortableHeader(title: string, column: Column<Student, unknown>) {
+  return (
+    <Button
+      onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+      variant="ghost"
+    >
+      {title}
+      <ArrowUpDown
+        aria-hidden="true"
+        className="ml-2 h-4 w-4"
+        focusable="false"
+      />
+    </Button>
+  );
+}
+
+/**
+ * Creates a cell that displays a value or fallback text
+ * @param value - The value to display
+ * @param fallback - The fallback text when value is null/undefined
+ * @returns JSX element for the cell
+ */
+function createTextCell(value: unknown, fallback = '-') {
+  return <div>{String(value || fallback)}</div>;
+}
+
+/**
+ * Creates a cell that formats and displays a date
+ * @param dateValue - The date value to format
+ * @returns JSX element for the date cell
+ */
+function createDateCell(dateValue: string | null) {
+  return (
+    <div>{dateValue ? new Date(dateValue).toLocaleDateString() : '-'}</div>
+  );
+}
+
+/**
+ * Creates a hover card cell for displaying long text content
+ * @param content - The content to display in the hover card
+ * @param title - The title for the hover card trigger
+ * @param isLink - Whether the content should be rendered as a link
+ * @returns JSX element for the hover card cell
+ */
+function createHoverCardCell(
+  content: string | null,
+  title: string,
+  isLink = false
+) {
+  if (!content) {
+    return <div>-</div>;
+  }
+
+  return (
+    <div>
+      <HoverCard>
+        <HoverCardTrigger asChild>
+          <Button
+            className="h-auto p-0 text-blue-700 hover:text-blue-900 dark:text-blue-300 dark:hover:text-blue-200"
+            variant="link"
+          >
+            {title}
+          </Button>
+        </HoverCardTrigger>
+        <HoverCardContent className="w-80">
+          <div className="space-y-2">
+            <h4 className="font-semibold text-sm">{title}</h4>
+            {isLink ? (
+              <a
+                className="break-all text-sm underline"
+                href={content}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                {content}
+              </a>
+            ) : (
+              <p className="text-sm">{content}</p>
+            )}
+          </div>
+        </HoverCardContent>
+      </HoverCard>
+    </div>
+  );
+}
+
 export const columns: ColumnDef<Student>[] = [
   {
     accessorKey: 'id',
@@ -32,248 +124,73 @@ export const columns: ColumnDef<Student>[] = [
   {
     accessorKey: 'indianName',
     header: 'Tribal Name',
-    cell: ({ row }) => <div>{row.getValue('indianName') || '-'}</div>,
+    cell: ({ row }) => createTextCell(row.getValue('indianName')),
     enableGlobalFilter: true,
   },
   {
     accessorKey: 'familyName',
-    header: ({ column }) => {
-      return (
-        <Button
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          variant="ghost"
-        >
-          Family Name
-          <ArrowUpDown
-            aria-hidden="true"
-            className="ml-2 h-4 w-4"
-            focusable="false"
-          />
-        </Button>
-      );
-    },
-    cell: ({ row }) => <div>{row.getValue('familyName') || '-'}</div>,
+    header: ({ column }) => createSortableHeader('Family Name', column),
+    cell: ({ row }) => createTextCell(row.getValue('familyName')),
     enableGlobalFilter: true,
   },
   {
     accessorKey: 'englishGivenName',
-    header: ({ column }) => {
-      return (
-        <Button
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          variant="ghost"
-        >
-          English Name
-          <ArrowUpDown
-            aria-hidden="true"
-            className="ml-2 h-4 w-4"
-            focusable="false"
-          />
-        </Button>
-      );
-    },
-    cell: ({ row }) => <div>{row.getValue('englishGivenName') || '-'}</div>,
+    header: ({ column }) => createSortableHeader('English Name', column),
+    cell: ({ row }) => createTextCell(row.getValue('englishGivenName')),
     enableGlobalFilter: true,
   },
   {
     accessorKey: 'sex',
     header: 'Sex',
-    cell: ({ row }) => <div>{row.getValue('sex') || '-'}</div>,
+    cell: ({ row }) => createTextCell(row.getValue('sex')),
   },
   {
     accessorKey: 'yearOfBirth',
-    header: ({ column }) => {
-      return (
-        <Button
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          variant="ghost"
-        >
-          Year of Birth
-          <ArrowUpDown
-            aria-hidden="true"
-            className="ml-2 h-4 w-4"
-            focusable="false"
-          />
-        </Button>
-      );
-    },
-    cell: ({ row }) => <div>{row.getValue('yearOfBirth') || '-'}</div>,
+    header: ({ column }) => createSortableHeader('Year of Birth', column),
+    cell: ({ row }) => createTextCell(row.getValue('yearOfBirth')),
   },
   {
     accessorKey: 'nation',
-    header: ({ column }) => {
-      return (
-        <Button
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          variant="ghost"
-        >
-          Nation
-          <ArrowUpDown
-            aria-hidden="true"
-            className="ml-2 h-4 w-4"
-            focusable="false"
-          />
-        </Button>
-      );
-    },
-    cell: ({ row }) => <div>{row.getValue('nation') || '-'}</div>,
+    header: ({ column }) => createSortableHeader('Nation', column),
+    cell: ({ row }) => createTextCell(row.getValue('nation')),
     enableGlobalFilter: false,
   },
   {
     accessorKey: 'arrivalAtLincoln',
-    header: ({ column }) => {
-      return (
-        <Button
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          variant="ghost"
-        >
-          Arrival Date
-          <ArrowUpDown
-            aria-hidden="true"
-            className="ml-2 h-4 w-4"
-            focusable="false"
-          />
-        </Button>
-      );
-    },
-    cell: ({ row }) => {
-      const arrivalDate = row.getValue('arrivalAtLincoln') as string | null;
-      return (
-        <div>
-          {arrivalDate ? new Date(arrivalDate).toLocaleDateString() : '-'}
-        </div>
-      );
-    },
+    header: ({ column }) => createSortableHeader('Arrival Date', column),
+    cell: ({ row }) =>
+      createDateCell(row.getValue('arrivalAtLincoln') as string | null),
   },
   {
     accessorKey: 'departureFromLincoln',
-    header: ({ column }) => {
-      return (
-        <Button
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          variant="ghost"
-        >
-          Departure Date
-          <ArrowUpDown
-            aria-hidden="true"
-            className="ml-2 h-4 w-4"
-            focusable="false"
-          />
-        </Button>
-      );
-    },
-    cell: ({ row }) => {
-      const departureDate = row.getValue('departureFromLincoln') as
-        | string
-        | null;
-      return (
-        <div>
-          {departureDate ? new Date(departureDate).toLocaleDateString() : '-'}
-        </div>
-      );
-    },
+    header: ({ column }) => createSortableHeader('Departure Date', column),
+    cell: ({ row }) =>
+      createDateCell(row.getValue('departureFromLincoln') as string | null),
   },
   {
     accessorKey: 'source',
     header: 'Source',
-    cell: ({ row }) => {
-      const source = row.getValue('source') as string | null;
-      return (
-        <div>
-          {source ? (
-            <HoverCard>
-              <HoverCardTrigger asChild>
-                <Button
-                  className="h-auto p-0 p-0 text-blue-700 hover:text-blue-900 dark:text-blue-300 dark:hover:text-blue-200"
-                  variant="link"
-                >
-                  Source
-                </Button>
-              </HoverCardTrigger>
-              <HoverCardContent className="w-80">
-                <div className="space-y-2">
-                  <h4 className="font-semibold text-sm">Source</h4>
-                  <p className="text-sm">{source}</p>
-                </div>
-              </HoverCardContent>
-            </HoverCard>
-          ) : (
-            '-'
-          )}
-        </div>
-      );
-    },
+    cell: ({ row }) =>
+      createHoverCardCell(row.getValue('source') as string | null, 'Source'),
   },
   {
     accessorKey: 'comments',
     header: 'Comments',
-    cell: ({ row }) => {
-      const comments = row.getValue('comments') as string | null;
-      return (
-        <div>
-          {comments ? (
-            <HoverCard>
-              <HoverCardTrigger asChild>
-                <Button
-                  className="h-auto p-0 p-0 text-blue-700 hover:text-blue-900 dark:text-blue-300 dark:hover:text-blue-200"
-                  variant="link"
-                >
-                  Comments
-                </Button>
-              </HoverCardTrigger>
-              <HoverCardContent className="w-80">
-                <div className="space-y-2">
-                  <h4 className="font-semibold text-blue-700 text-sm hover:text-blue-900 dark:text-blue-300 dark:hover:text-blue-200">
-                    Comments
-                  </h4>
-                  <p className="text-sm">{comments}</p>
-                </div>
-              </HoverCardContent>
-            </HoverCard>
-          ) : (
-            '-'
-          )}
-        </div>
-      );
-    },
+    cell: ({ row }) =>
+      createHoverCardCell(
+        row.getValue('comments') as string | null,
+        'Comments'
+      ),
   },
   {
     accessorKey: 'relevantLinks',
     header: 'Relevant Link',
-    cell: ({ row }) => {
-      const link = row.getValue('relevantLinks') as string | null;
-      return (
-        <div>
-          {link ? (
-            <HoverCard>
-              <HoverCardTrigger asChild>
-                <Button
-                  className="h-auto p-0 text-blue-700 hover:text-blue-900 dark:text-blue-300 dark:hover:text-blue-200"
-                  variant="link"
-                >
-                  Relevant Links
-                </Button>
-              </HoverCardTrigger>
-              <HoverCardContent className="w-80">
-                <div className="space-y-2">
-                  <h4 className="font-semibold text-sm">Relevant Links</h4>
-                  <a
-                    className="break-all text-sm underline"
-                    href={link}
-                    rel="noopener noreferrer"
-                    target="_blank"
-                  >
-                    {link}
-                  </a>
-                </div>
-              </HoverCardContent>
-            </HoverCard>
-          ) : (
-            '-'
-          )}
-        </div>
-      );
-    },
+    cell: ({ row }) =>
+      createHoverCardCell(
+        row.getValue('relevantLinks') as string | null,
+        'Relevant Links',
+        true
+      ),
   },
 ];
 
@@ -281,42 +198,14 @@ export const columns: ColumnDef<Student>[] = [
 export const mobileColumns: ColumnDef<Student>[] = [
   {
     accessorKey: 'familyName',
-    header: ({ column }) => {
-      return (
-        <Button
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          variant="ghost"
-        >
-          Family Name
-          <ArrowUpDown
-            aria-hidden="true"
-            className="ml-2 h-4 w-4"
-            focusable="false"
-          />
-        </Button>
-      );
-    },
-    cell: ({ row }) => <div>{row.getValue('familyName') || '-'}</div>,
+    header: ({ column }) => createSortableHeader('Family Name', column),
+    cell: ({ row }) => createTextCell(row.getValue('familyName')),
     enableGlobalFilter: true,
   },
   {
     accessorKey: 'englishGivenName',
-    header: ({ column }) => {
-      return (
-        <Button
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          variant="ghost"
-        >
-          English Name
-          <ArrowUpDown
-            aria-hidden="true"
-            className="ml-2 h-4 w-4"
-            focusable="false"
-          />
-        </Button>
-      );
-    },
-    cell: ({ row }) => <div>{row.getValue('englishGivenName') || '-'}</div>,
+    header: ({ column }) => createSortableHeader('English Name', column),
+    cell: ({ row }) => createTextCell(row.getValue('englishGivenName')),
     enableGlobalFilter: true,
   },
 ];
