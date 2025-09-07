@@ -1,67 +1,8 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
-function getAllowedOrigins() {
-  const allowedOrigins = process.env.CORS_ORIGIN?.split(',') || [];
-  const isDevelopment = process.env.NODE_ENV === 'development';
-  const defaultAllowedOrigins = isDevelopment
-    ? ['http://localhost:3000', 'http://localhost:3001']
-    : [
-        'https://lincoln-better-t.vercel.app',
-        'https://lincoln-better-t-web.vercel.app',
-        'https://lincoln-better-t-git-main-lincoln-better-t.vercel.app', // Vercel preview URLs
-        'https://lincoln-better-t-web-git-main-lincoln-better-t.vercel.app',
-      ];
-
-  return [...allowedOrigins, ...defaultAllowedOrigins];
-}
-
-function setCorsHeaders(response: NextResponse, origin: string | null) {
-  const allAllowedOrigins = getAllowedOrigins();
-
-  // Debug logging (remove in production)
-  if (process.env.NODE_ENV === 'development') {
-    console.log('CORS Debug:', {
-      origin,
-      allowedOrigins: allAllowedOrigins,
-      isAllowed: origin ? allAllowedOrigins.includes(origin) : false,
-    });
-  }
-
-  if (origin && allAllowedOrigins.includes(origin)) {
-    response.headers.set('Access-Control-Allow-Origin', origin);
-    response.headers.set('Access-Control-Allow-Credentials', 'true');
-  } else if (
-    origin &&
-    process.env.CORS_ORIGIN?.split(',').includes('*') &&
-    !process.env.CORS_ALLOW_CREDENTIALS
-  ) {
-    response.headers.set('Access-Control-Allow-Origin', '*');
-  }
-
-  response.headers.set(
-    'Access-Control-Allow-Methods',
-    'GET,POST,PUT,PATCH,DELETE,OPTIONS'
-  );
-  response.headers.set(
-    'Access-Control-Allow-Headers',
-    'Content-Type, Authorization, X-Requested-With'
-  );
-}
-
 export function middleware(request: NextRequest) {
-  const origin = request.headers.get('origin');
-
-  // Handle preflight OPTIONS requests
-  if (request.method === 'OPTIONS') {
-    const response = new NextResponse(null, { status: 200 });
-    setCorsHeaders(response, origin);
-    response.headers.set('Access-Control-Max-Age', '86400'); // 24 hours
-    return response;
-  }
-
   const response = NextResponse.next();
-  setCorsHeaders(response, origin);
 
   // Security-hardened CSP
   const cspHeader = [
@@ -130,11 +71,12 @@ export const config = {
   matcher: [
     /*
      * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - rpc (RPC routes - handled by oRPC CORS plugin)
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
-     * Note: We now include API routes and RPC routes to handle CORS
      */
-    '/((?!_next/static|_next/image|favicon.ico).*)',
+    '/((?!api|rpc|_next/static|_next/image|favicon.ico).*)',
   ],
 };
