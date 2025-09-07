@@ -1,161 +1,50 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
-import { AlertTriangle, RefreshCw } from 'lucide-react';
 import {
   type CivilWarOrphan,
   civilWarOrphansColumns,
   civilWarOrphansMobileColumns,
 } from '@/components/civil-war-orphans-columns';
 import { columns, mobileColumns, type Student } from '@/components/columns';
-import { DataTable } from '@/components/data-table';
+import { DataSection } from '@/components/data-section';
 import { ErrorBoundary } from '@/components/error-boundary';
-import { MobileDataTable } from '@/components/mobile-data-table';
 import { TableToggle } from '@/components/table-toggle';
-import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
 import { useTableToggle } from '@/hooks/use-table-toggle';
-import { orpc } from '@/utils/orpc';
+import { MESSAGES } from '@/lib/constants';
 
+// Students section using the generic DataSection component
 function StudentsSection() {
-  const studentsQuery = useQuery(orpc.getStudents.queryOptions());
-
-  if (studentsQuery.isLoading) {
-    return (
-      <div className="flex items-center justify-center py-8">
-        <div className="flex items-center gap-2 text-muted-foreground">
-          <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-          <span>Loading students...</span>
-        </div>
-      </div>
-    );
-  }
-
-  if (studentsQuery.error) {
-    return (
-      <Card className="mx-auto max-w-md">
-        <CardHeader className="text-center">
-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10">
-            <AlertTriangle className="h-6 w-6 text-destructive" />
-          </div>
-          <CardTitle className="text-lg">Failed to load students</CardTitle>
-          <CardDescription>
-            There was an error loading the student data. Please try again.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Button
-            className="w-full"
-            onClick={() => studentsQuery.refetch()}
-            variant="default"
-          >
-            <RefreshCw className="mr-2 h-4 w-4" />
-            Retry
-          </Button>
-        </CardContent>
-      </Card>
-    );
-  }
-
-  if (!studentsQuery.data || studentsQuery.data.length === 0) {
-    return (
-      <div className="py-8 text-center text-muted-foreground">
-        <p>No students found.</p>
-      </div>
-    );
-  }
-
   return (
-    <>
-      {/* Desktop table - hidden on mobile */}
-      <div className="hidden lg:block">
-        <DataTable columns={columns} data={studentsQuery.data as Student[]} />
-      </div>
-      {/* Mobile table - visible on mobile */}
-      <div className="block lg:hidden">
-        <MobileDataTable
-          data={studentsQuery.data as Student[]}
-          mobileColumns={mobileColumns}
-        />
-      </div>
-    </>
+    <DataSection<Student>
+      columns={columns}
+      emptyMessage={MESSAGES.EMPTY.STUDENTS}
+      errorMessage={MESSAGES.ERROR.STUDENTS}
+      loadingMessage={MESSAGES.LOADING.STUDENTS}
+      mobileColumns={mobileColumns}
+      queryFnAction={async () => {
+        const { client } = await import('@/utils/orpc');
+        return client.getStudents();
+      }}
+      queryKey="students"
+    />
   );
 }
 
+// Civil War Orphans section using the generic DataSection component
 function CivilWarOrphansSection() {
-  const civilWarOrphansQuery = useQuery(orpc.getCivilWarOrphans.queryOptions());
-
-  if (civilWarOrphansQuery.isLoading) {
-    return (
-      <div className="flex items-center justify-center py-8">
-        <div className="flex items-center gap-2 text-muted-foreground">
-          <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-          <span>Loading civil war orphans...</span>
-        </div>
-      </div>
-    );
-  }
-
-  if (civilWarOrphansQuery.error) {
-    return (
-      <Card className="mx-auto max-w-md">
-        <CardHeader className="text-center">
-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10">
-            <AlertTriangle className="h-6 w-6 text-destructive" />
-          </div>
-          <CardTitle className="text-lg">
-            Failed to load civil war orphans
-          </CardTitle>
-          <CardDescription>
-            There was an error loading the civil war orphans data. Please try
-            again.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Button
-            className="w-full"
-            onClick={() => civilWarOrphansQuery.refetch()}
-            variant="default"
-          >
-            <RefreshCw className="mr-2 h-4 w-4" />
-            Retry
-          </Button>
-        </CardContent>
-      </Card>
-    );
-  }
-
-  if (!civilWarOrphansQuery.data || civilWarOrphansQuery.data.length === 0) {
-    return (
-      <div className="py-8 text-center text-muted-foreground">
-        <p>No civil war orphans found.</p>
-      </div>
-    );
-  }
-
   return (
-    <>
-      {/* Desktop table - hidden on mobile */}
-      <div className="hidden lg:block">
-        <DataTable
-          columns={civilWarOrphansColumns}
-          data={civilWarOrphansQuery.data as CivilWarOrphan[]}
-        />
-      </div>
-      {/* Mobile table - visible on mobile */}
-      <div className="block lg:hidden">
-        <MobileDataTable
-          data={civilWarOrphansQuery.data as CivilWarOrphan[]}
-          mobileColumns={civilWarOrphansMobileColumns}
-        />
-      </div>
-    </>
+    <DataSection<CivilWarOrphan>
+      columns={civilWarOrphansColumns}
+      emptyMessage={MESSAGES.EMPTY.CIVIL_WAR_ORPHANS}
+      errorMessage={MESSAGES.ERROR.CIVIL_WAR_ORPHANS}
+      loadingMessage={MESSAGES.LOADING.CIVIL_WAR_ORPHANS}
+      mobileColumns={civilWarOrphansMobileColumns}
+      queryFnAction={async () => {
+        const { client } = await import('@/utils/orpc');
+        return client.getCivilWarOrphans();
+      }}
+      queryKey="civil-war-orphans"
+    />
   );
 }
 
@@ -187,8 +76,8 @@ export default function Home() {
         <section className="my-6 rounded-lg border p-6">
           <h2 className="mb-4 font-medium">
             {isStudentsTable
-              ? 'Indigenous American Students'
-              : 'Civil War Orphans'}
+              ? MESSAGES.TITLES.STUDENTS
+              : MESSAGES.TITLES.CIVIL_WAR_ORPHANS}
           </h2>
           <ErrorBoundary>
             {isStudentsTable ? <StudentsSection /> : <CivilWarOrphansSection />}
