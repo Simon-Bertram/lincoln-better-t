@@ -15,8 +15,8 @@ export const studentsConfig: DataSectionConfig<Student> =
   createDataSectionConfig({
     queryKey: QUERY_KEYS.STUDENTS,
     queryFn: async () => {
-      const { orpc } = await import('@/utils/orpc');
-      return orpc.getStudents.query();
+      const { client } = await import('@/utils/orpc');
+      return client.getStudents();
     },
     columns,
     mobileColumns,
@@ -26,10 +26,9 @@ export const studentsConfig: DataSectionConfig<Student> =
       loading: MESSAGES.LOADING.STUDENTS,
     },
     options: {
-      retry: true,
-      retryCount: 3,
+      retry: 3,
       staleTime: 5 * 60 * 1000, // 5 minutes
-      cacheTime: 10 * 60 * 1000, // 10 minutes
+      gcTime: 10 * 60 * 1000, // 10 minutes
     },
   });
 
@@ -38,8 +37,8 @@ export const civilWarOrphansConfig: DataSectionConfig<CivilWarOrphan> =
   createDataSectionConfig({
     queryKey: QUERY_KEYS.CIVIL_WAR_ORPHANS,
     queryFn: async () => {
-      const { orpc } = await import('@/utils/orpc');
-      return orpc.getCivilWarOrphans.query();
+      const { client } = await import('@/utils/orpc');
+      return client.getCivilWarOrphans();
     },
     columns: civilWarOrphansColumns,
     mobileColumns: civilWarOrphansMobileColumns,
@@ -49,10 +48,9 @@ export const civilWarOrphansConfig: DataSectionConfig<CivilWarOrphan> =
       loading: MESSAGES.LOADING.CIVIL_WAR_ORPHANS,
     },
     options: {
-      retry: true,
-      retryCount: 3,
+      retry: 3,
       staleTime: 5 * 60 * 1000, // 5 minutes
-      cacheTime: 10 * 60 * 1000, // 10 minutes
+      gcTime: 10 * 60 * 1000, // 10 minutes
     },
   });
 

@@ -3,6 +3,8 @@
 import { useQuery } from '@tanstack/react-query';
 import type { ColumnDef } from '@tanstack/react-table';
 import { AlertTriangle, RefreshCw } from 'lucide-react';
+import type { CivilWarOrphan } from '@/components/civil-war-orphans-columns';
+import type { Student } from '@/components/columns';
 import { DataTable } from '@/components/data-table';
 import { MobileDataTable } from '@/components/mobile-data-table';
 import { Button } from '@/components/ui/button';
@@ -15,7 +17,7 @@ import {
 } from '@/components/ui/card';
 
 // Enhanced types for better type safety
-export interface DataSectionConfig<T> {
+export interface DataSectionConfig<T extends Student | CivilWarOrphan> {
   queryKey: string;
   queryFn: () => Promise<T[]>;
   columns: ColumnDef<T>[];
@@ -27,15 +29,14 @@ export interface DataSectionConfig<T> {
   };
   // Optional configuration
   options?: {
-    retry?: boolean;
-    retryCount?: number;
+    retry?: boolean | number;
     staleTime?: number;
-    cacheTime?: number;
+    gcTime?: number;
   };
 }
 
 // Enhanced props interface
-export interface EnhancedDataSectionProps<T> {
+export interface EnhancedDataSectionProps<T extends Student | CivilWarOrphan> {
   config: DataSectionConfig<T>;
   className?: string;
   showMobileTable?: boolean;
@@ -120,7 +121,7 @@ function EmptyState({ message, className }: EmptyStateProps) {
 }
 
 // Main enhanced data section component
-export function EnhancedDataSection<T>({
+export function EnhancedDataSection<T extends Student | CivilWarOrphan>({
   config,
   className,
   showMobileTable = true,
@@ -138,10 +139,9 @@ export function EnhancedDataSection<T>({
   const query = useQuery({
     queryKey: [queryKey],
     queryFn,
-    retry: options.retry ?? true,
-    retryCount: options.retryCount ?? 3,
+    retry: options.retry ?? 3, // Can be boolean or number of retries
     staleTime: options.staleTime ?? 5 * 60 * 1000, // 5 minutes
-    cacheTime: options.cacheTime ?? 10 * 60 * 1000, // 10 minutes
+    gcTime: options.gcTime ?? 10 * 60 * 1000, // 10 minutes
   });
 
   if (query.isLoading) {
@@ -180,16 +180,15 @@ export function EnhancedDataSection<T>({
 }
 
 // Factory function to create data section configurations
-export function createDataSectionConfig<T>(
+export function createDataSectionConfig<T extends Student | CivilWarOrphan>(
   config: DataSectionConfig<T>
 ): DataSectionConfig<T> {
   return {
     ...config,
     options: {
-      retry: true,
-      retryCount: 3,
+      retry: 3,
       staleTime: 5 * 60 * 1000,
-      cacheTime: 10 * 60 * 1000,
+      gcTime: 10 * 60 * 1000,
       ...config.options,
     },
   };
