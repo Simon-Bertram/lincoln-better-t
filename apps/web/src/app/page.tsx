@@ -53,56 +53,80 @@ export default function Home() {
   const { isStudentsTable } = useTableToggle();
 
   return (
-    <main
-      className="container mx-auto my-4 w-[95%] px-4 py-2 lg:max-w-8/10"
-      id="main-content"
-    >
-      <section
-        aria-labelledby="main-heading"
-        className="space-y-6 py-8 text-center"
-      >
-        <div
-          aria-label="Historical records badge"
-          className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 font-medium text-foreground text-sm"
-          role="img"
-        >
-          <Users aria-hidden="true" className="h-4 w-4" />
-          Historical Records 1866-1922
-        </div>
-        <h1
-          className="text-balance bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text font-bold text-4xl text-transparent md:text-5xl"
-          id="main-heading"
-        >
-          The Lincoln Institute Directory
-        </h1>
-        <div className="prose prose-lg mx-auto max-w-3xl space-y-4 text-muted-foreground leading-relaxed">
-          <p className="text-lg">
-            The Lincoln Institute was a charity created by Mary McHenry Cox
-            which operated from 1866 to 1922 at 808 South Eleventh Street in
-            Philadelphia.
-          </p>
-          <p>
-            This digital directory contains historical records of students who
-            attended the Lincoln Institute during its years of operation. The
-            data provides valuable insights into the educational opportunities
-            and experiences of students during this period in American history.
-          </p>
-        </div>
-      </section>
+    <div className="relative min-h-screen w-full bg-white dark:bg-black">
+      {/* Dark mode background */}
+      <div
+        className="absolute inset-0 z-0 hidden dark:block"
+        style={{
+          background:
+            'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(139, 92, 246, 0.25), transparent 70%), #000000',
+        }}
+      />
+      {/* Light mode background */}
+      <div
+        className="absolute inset-0 z-0 bg-white dark:hidden"
+        style={{
+          background:
+            'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(139, 92, 246, 0.15), transparent 70%), #ffffff',
+        }}
+      />
 
-      <div className="grid gap-6">
-        <section className="my-6 rounded-lg border p-6">
-          <h2 className="mb-4 font-medium">
-            <TableToggle />
-            {isStudentsTable
-              ? MESSAGES.TITLES.STUDENTS
-              : MESSAGES.TITLES.CIVIL_WAR_ORPHANS}
-          </h2>
-          <ErrorBoundary>
-            {isStudentsTable ? <StudentsSection /> : <CivilWarOrphansSection />}
-          </ErrorBoundary>
+      <main
+        className="container relative z-10 mx-auto my-4 w-[95%] px-4 py-2 lg:max-w-8/10"
+        id="main-content"
+      >
+        <section
+          aria-labelledby="main-heading"
+          className="space-y-6 py-8 text-center"
+        >
+          <div
+            aria-label="Historical records badge"
+            className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 font-medium text-foreground text-sm"
+            role="img"
+          >
+            <Users aria-hidden="true" className="h-4 w-4" />
+            Historical Records 1866-1922
+          </div>
+          <h1
+            className="text-balance bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text font-bold text-4xl text-transparent md:text-5xl"
+            id="main-heading"
+          >
+            The Lincoln Institute Directory
+          </h1>
+          <div className="prose prose-lg mx-auto max-w-3xl space-y-4 text-muted-foreground leading-relaxed">
+            <p className="text-lg">
+              The Lincoln Institute was a charity created by Mary McHenry Cox
+              which operated from 1866 to 1922 at 808 South Eleventh Street in
+              Philadelphia.
+            </p>
+            <p>
+              This digital directory contains historical records of students who
+              attended the Lincoln Institute during its years of operation. The
+              data provides valuable insights into the educational opportunities
+              and experiences of students during this period in American
+              history.
+            </p>
+          </div>
         </section>
-      </div>
-    </main>
+
+        <div className="grid gap-6">
+          <section className="my-6 rounded-lg border p-6">
+            <h2 className="mb-4 font-medium">
+              <TableToggle />
+              {isStudentsTable
+                ? MESSAGES.TITLES.STUDENTS
+                : MESSAGES.TITLES.CIVIL_WAR_ORPHANS}
+            </h2>
+            <ErrorBoundary>
+              {isStudentsTable ? (
+                <StudentsSection />
+              ) : (
+                <CivilWarOrphansSection />
+              )}
+            </ErrorBoundary>
+          </section>
+        </div>
+      </main>
+    </div>
   );
 }
