@@ -455,11 +455,11 @@ export function MobileDataTable<T extends Student | CivilWarOrphan>({
       <nav
         aria-controls="student-table"
         aria-label="Table pagination"
-        className="flex items-center justify-between p-4"
+        className="flex flex-col items-center justify-between gap-2.5 p-4 md:flex-row"
       >
-        <div className="flex-1 text-muted-foreground text-sm">
-          {table.getFilteredSelectedRowModel().rows.length} of{' '}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
+        <div className="mb-2 flex-1 text-muted-foreground text-sm">
+          Showing {table.getRowModel().rows.length} of{' '}
+          {table.getFilteredRowModel().rows.length} row(s).
         </div>
         <div className="flex items-center space-x-6 lg:space-x-8">
           <div className="flex items-center space-x-2">
