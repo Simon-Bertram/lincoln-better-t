@@ -8,7 +8,7 @@ export function TableToggle() {
   const { toggleTable, isStudentsTable } = useTableToggle();
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="mb-4 flex items-center gap-2">
       <span className="font-medium text-muted-foreground text-sm">View:</span>
       <Button
         aria-label={`Switch to ${isStudentsTable ? 'Civil War Orphans' : 'Students'} table`}
