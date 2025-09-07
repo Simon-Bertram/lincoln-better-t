@@ -284,8 +284,8 @@ export function DataTable<TData, TValue>({
         className="flex items-center justify-between p-4"
       >
         <div className="flex-1 text-muted-foreground text-sm">
-          {table.getFilteredSelectedRowModel().rows.length} of{' '}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
+          Showing {table.getRowModel().rows.length} of{' '}
+          {table.getFilteredRowModel().rows.length} row(s).
         </div>
         <div className="flex items-center space-x-6 lg:space-x-8">
           <div className="flex items-center space-x-2">
