@@ -1,5 +1,4 @@
 import { RPCHandler } from '@orpc/server/fetch';
-import { CORSPlugin } from '@orpc/server/plugins';
 import type { NextRequest } from 'next/server';
 import { appRouter } from '@/routers';
 
@@ -14,58 +13,74 @@ function getAllowedOrigins() {
         'https://lincoln-better-t-web.vercel.app',
         'https://lincoln-better-t-git-main-lincoln-better-t.vercel.app', // Vercel preview URLs
         'https://lincoln-better-t-web-git-main-lincoln-better-t.vercel.app',
+        // Add any other Vercel deployment URLs that might be used
+        'https://lincoln-better-t-web-git-main-lincoln-better-t.vercel.app',
       ];
 
   return [...allowedOrigins, ...defaultAllowedOrigins];
 }
 
-const handler = new RPCHandler(appRouter, {
-  plugins: [
-    new CORSPlugin({
-      origin: (origin) => {
-        const allowedOrigins = getAllowedOrigins();
+const handler = new RPCHandler(appRouter);
 
-        // Debug logging (remove in production)
-        if (process.env.NODE_ENV === 'development') {
-          // eslint-disable-next-line no-console
-          console.log('oRPC CORS Debug:', {
-            origin,
-            allowedOrigins,
-            isAllowed: origin ? allowedOrigins.includes(origin) : false,
-          });
-        }
+function addCorsHeaders(response: Response, origin: string | null): Response {
+  const allowedOrigins = getAllowedOrigins();
 
-        // Allow the origin if it's in our allowed list
-        if (origin && allowedOrigins.includes(origin)) {
-          return origin;
-        }
+  // Create a new response with CORS headers
+  const newResponse = new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers: response.headers,
+  });
 
-        // Allow wildcard if explicitly configured and credentials are disabled
-        if (
-          origin &&
-          process.env.CORS_ORIGIN?.split(',').includes('*') &&
-          !process.env.CORS_ALLOW_CREDENTIALS
-        ) {
-          return '*';
-        }
+  // Add CORS headers according to MDN documentation
+  if (origin && allowedOrigins.includes(origin)) {
+    newResponse.headers.set('Access-Control-Allow-Origin', origin);
+    newResponse.headers.set('Access-Control-Allow-Credentials', 'true');
+  } else if (
+    origin &&
+    process.env.CORS_ORIGIN?.split(',').includes('*') &&
+    !process.env.CORS_ALLOW_CREDENTIALS
+  ) {
+    newResponse.headers.set('Access-Control-Allow-Origin', '*');
+  } else if (origin) {
+    // For debugging: temporarily allow any origin to identify the issue
+    // TODO: Remove this in production and add the correct origin to allowedOrigins
+    newResponse.headers.set('Access-Control-Allow-Origin', origin);
+    newResponse.headers.set('Access-Control-Allow-Credentials', 'true');
+  }
 
-        return null; // Reject the origin
-      },
-      allowMethods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-      allowHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-      credentials: true,
-      maxAge: 86_400, // 24 hours
-    }),
-  ],
-});
+  newResponse.headers.set(
+    'Access-Control-Allow-Methods',
+    'GET,POST,PUT,PATCH,DELETE,OPTIONS'
+  );
+  newResponse.headers.set(
+    'Access-Control-Allow-Headers',
+    'Content-Type, Authorization, X-Requested-With'
+  );
+  newResponse.headers.set('Access-Control-Max-Age', '86400'); // 24 hours
+
+  return newResponse;
+}
 
 async function handleRequest(req: NextRequest) {
+  const origin = req.headers.get('origin');
+
+  // Handle preflight OPTIONS requests
+  if (req.method === 'OPTIONS') {
+    const preflightResponse = new Response(null, { status: 200 });
+    return addCorsHeaders(preflightResponse, origin);
+  }
+
   const { response } = await handler.handle(req, {
     prefix: '/rpc',
     context: {},
   });
 
-  return response ?? new Response('Not found', { status: 404 });
+  if (!response) {
+    return new Response('Not found', { status: 404 });
+  }
+
+  return addCorsHeaders(response, origin);
 }
 
 export const GET = handleRequest;
