@@ -14,8 +14,6 @@ function getAllowedOrigins() {
         'https://lincoln-better-t-web.vercel.app',
         'https://lincoln-better-t-git-main-lincoln-better-t.vercel.app', // Vercel preview URLs
         'https://lincoln-better-t-web-git-main-lincoln-better-t.vercel.app',
-        // Add any other Vercel deployment URLs that might be used
-        'https://lincoln-better-t-web-git-main-lincoln-better-t.vercel.app',
       ];
 
   return [...allowedOrigins, ...defaultAllowedOrigins];

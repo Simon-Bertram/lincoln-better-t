@@ -58,11 +58,15 @@ export function middleware(request: NextRequest) {
   // Cross-Origin-Opener-Policy (COOP) for origin isolation
   response.headers.set('Cross-Origin-Opener-Policy', 'same-origin');
 
-  // Cross-Origin-Embedder-Policy for additional isolation
-  response.headers.set('Cross-Origin-Embedder-Policy', 'require-corp');
+  // Cross-Origin-Embedder-Policy for additional isolation - only for non-RPC routes
+  if (!request.nextUrl.pathname.startsWith('/rpc')) {
+    response.headers.set('Cross-Origin-Embedder-Policy', 'require-corp');
+  }
 
-  // Cross-Origin-Resource-Policy
-  response.headers.set('Cross-Origin-Resource-Policy', 'same-origin');
+  // Cross-Origin-Resource-Policy - only for non-RPC routes
+  if (!request.nextUrl.pathname.startsWith('/rpc')) {
+    response.headers.set('Cross-Origin-Resource-Policy', 'same-origin');
+  }
 
   return response;
 }
