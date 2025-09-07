@@ -5,13 +5,7 @@ import { Button } from '@/components/ui/button';
 import { useTableToggle } from '@/hooks/use-table-toggle';
 
 export function TableToggle() {
-  const {
-    currentTableType,
-    toggleTable,
-    isStudentsTable,
-    isCivilWarOrphansTable,
-    TABLE_TYPES,
-  } = useTableToggle();
+  const { toggleTable, isStudentsTable } = useTableToggle();
 
   return (
     <div className="flex items-center gap-2">

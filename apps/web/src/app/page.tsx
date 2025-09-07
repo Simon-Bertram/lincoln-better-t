@@ -58,7 +58,6 @@ export default function Home() {
     >
       <div className="mb-6 flex items-center justify-between">
         <h1 className="font-bold text-2xl">The Lincoln Institute Directory</h1>
-        <TableToggle />
       </div>
 
       <p>
@@ -75,6 +74,7 @@ export default function Home() {
       <div className="grid gap-6">
         <section className="my-6 rounded-lg border p-6">
           <h2 className="mb-4 font-medium">
+            <TableToggle />
             {isStudentsTable
               ? MESSAGES.TITLES.STUDENTS
               : MESSAGES.TITLES.CIVIL_WAR_ORPHANS}
