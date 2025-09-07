@@ -1,11 +1,12 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
-export function middleware(request: NextRequest) {
-  const response = NextResponse.next();
-
-  // Security-hardened CSP
-  const cspHeader = [
+/**
+ * Creates a comprehensive Content Security Policy header
+ * @returns CSP header string
+ */
+function createCSPHeader(): string {
+  return [
     // Default source - restrict to same origin
     "default-src 'self'",
     // Script sources - restrict to specific domains only
@@ -31,42 +32,100 @@ export function middleware(request: NextRequest) {
     // Upgrade insecure requests
     'upgrade-insecure-requests',
   ].join('; ');
+}
 
-  response.headers.set('Content-Security-Policy', cspHeader);
+/**
+ * Creates standard security headers
+ * @returns Object containing security header key-value pairs
+ */
+function createSecurityHeaders(): Record<string, string> {
+  return {
+    'X-Content-Type-Options': 'nosniff',
+    'X-Frame-Options': 'DENY',
+    'X-XSS-Protection': '1; mode=block',
+    'Referrer-Policy': 'strict-origin-when-cross-origin',
+    'Permissions-Policy':
+      'camera=(), microphone=(), geolocation=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=()',
+  };
+}
 
-  // Add additional security headers
-  response.headers.set('X-Content-Type-Options', 'nosniff');
-  response.headers.set('X-Frame-Options', 'DENY');
-  response.headers.set('X-XSS-Protection', '1; mode=block');
-  response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
-  response.headers.set(
-    'Permissions-Policy',
-    'camera=(), microphone=(), geolocation=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=()'
-  );
-
-  // Only set HSTS in production with HTTPS
-  if (
+/**
+ * Determines if HSTS header should be set based on environment and protocol
+ * @param request - The incoming request
+ * @returns True if HSTS should be set
+ */
+function shouldSetHSTS(request: NextRequest): boolean {
+  return (
     process.env.NODE_ENV === 'production' &&
     request.nextUrl.protocol === 'https:'
-  ) {
-    response.headers.set(
-      'Strict-Transport-Security',
-      'max-age=31536000; includeSubDomains; preload'
-    );
+  );
+}
+
+/**
+ * Creates HSTS header value
+ * @returns HSTS header value
+ */
+function createHSTSHeader(): string {
+  return 'max-age=31536000; includeSubDomains; preload';
+}
+
+/**
+ * Determines if CORS-related headers should be set based on request path
+ * @param request - The incoming request
+ * @returns True if CORS headers should be set
+ */
+function shouldSetCORSHeaders(request: NextRequest): boolean {
+  return !request.nextUrl.pathname.startsWith('/rpc');
+}
+
+/**
+ * Creates CORS-related headers
+ * @returns Object containing CORS header key-value pairs
+ */
+function createCORSHeaders(): Record<string, string> {
+  return {
+    'Cross-Origin-Opener-Policy': 'same-origin',
+    'Cross-Origin-Embedder-Policy': 'require-corp',
+    'Cross-Origin-Resource-Policy': 'same-origin',
+  };
+}
+
+/**
+ * Applies all security headers to the response
+ * @param response - The response object to modify
+ * @param request - The incoming request
+ */
+function applySecurityHeaders(
+  response: NextResponse,
+  request: NextRequest
+): void {
+  // Apply CSP header
+  response.headers.set('Content-Security-Policy', createCSPHeader());
+
+  // Apply standard security headers
+  const securityHeaders = createSecurityHeaders();
+  for (const [key, value] of Object.entries(securityHeaders)) {
+    response.headers.set(key, value);
   }
 
-  // Cross-Origin-Opener-Policy (COOP) for origin isolation
-  response.headers.set('Cross-Origin-Opener-Policy', 'same-origin');
-
-  // Cross-Origin-Embedder-Policy for additional isolation - only for non-RPC routes
-  if (!request.nextUrl.pathname.startsWith('/rpc')) {
-    response.headers.set('Cross-Origin-Embedder-Policy', 'require-corp');
+  // Apply HSTS header conditionally
+  if (shouldSetHSTS(request)) {
+    response.headers.set('Strict-Transport-Security', createHSTSHeader());
   }
 
-  // Cross-Origin-Resource-Policy - only for non-RPC routes
-  if (!request.nextUrl.pathname.startsWith('/rpc')) {
-    response.headers.set('Cross-Origin-Resource-Policy', 'same-origin');
+  // Apply CORS headers conditionally
+  if (shouldSetCORSHeaders(request)) {
+    const corsHeaders = createCORSHeaders();
+    for (const [key, value] of Object.entries(corsHeaders)) {
+      response.headers.set(key, value);
+    }
   }
+}
+
+export function middleware(request: NextRequest) {
+  const response = NextResponse.next();
+
+  applySecurityHeaders(response, request);
 
   return response;
 }
