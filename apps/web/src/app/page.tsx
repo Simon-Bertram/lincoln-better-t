@@ -2,10 +2,16 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { AlertTriangle, RefreshCw } from 'lucide-react';
+import {
+  type CivilWarOrphan,
+  civilWarOrphansColumns,
+  civilWarOrphansMobileColumns,
+} from '@/components/civil-war-orphans-columns';
 import { columns, mobileColumns, type Student } from '@/components/columns';
 import { DataTable } from '@/components/data-table';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { MobileDataTable } from '@/components/mobile-data-table';
+import { TableToggle } from '@/components/table-toggle';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -14,6 +20,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { useTableToggle } from '@/hooks/use-table-toggle';
 import { orpc } from '@/utils/orpc';
 
 function StudentsSection() {
@@ -81,15 +88,90 @@ function StudentsSection() {
   );
 }
 
+function CivilWarOrphansSection() {
+  const civilWarOrphansQuery = useQuery(orpc.getCivilWarOrphans.queryOptions());
+
+  if (civilWarOrphansQuery.isLoading) {
+    return (
+      <div className="flex items-center justify-center py-8">
+        <div className="flex items-center gap-2 text-muted-foreground">
+          <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+          <span>Loading civil war orphans...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (civilWarOrphansQuery.error) {
+    return (
+      <Card className="mx-auto max-w-md">
+        <CardHeader className="text-center">
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10">
+            <AlertTriangle className="h-6 w-6 text-destructive" />
+          </div>
+          <CardTitle className="text-lg">
+            Failed to load civil war orphans
+          </CardTitle>
+          <CardDescription>
+            There was an error loading the civil war orphans data. Please try
+            again.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Button
+            className="w-full"
+            onClick={() => civilWarOrphansQuery.refetch()}
+            variant="default"
+          >
+            <RefreshCw className="mr-2 h-4 w-4" />
+            Retry
+          </Button>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (!civilWarOrphansQuery.data || civilWarOrphansQuery.data.length === 0) {
+    return (
+      <div className="py-8 text-center text-muted-foreground">
+        <p>No civil war orphans found.</p>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      {/* Desktop table - hidden on mobile */}
+      <div className="hidden lg:block">
+        <DataTable
+          columns={civilWarOrphansColumns}
+          data={civilWarOrphansQuery.data as CivilWarOrphan[]}
+        />
+      </div>
+      {/* Mobile table - visible on mobile */}
+      <div className="block lg:hidden">
+        <MobileDataTable
+          data={civilWarOrphansQuery.data as CivilWarOrphan[]}
+          mobileColumns={civilWarOrphansMobileColumns}
+        />
+      </div>
+    </>
+  );
+}
+
 export default function Home() {
+  const { isStudentsTable, isCivilWarOrphansTable } = useTableToggle();
+
   return (
     <main
       className="container mx-auto my-4 max-w-8/10 px-4 py-2"
       id="main-content"
     >
-      <h1 className="mb-6 font-bold text-2xl">
-        The Lincoln Institute Directory
-      </h1>
+      <div className="mb-6 flex items-center justify-between">
+        <h1 className="font-bold text-2xl">The Lincoln Institute Directory</h1>
+        <TableToggle />
+      </div>
+
       <p>
         The Lincoln Institute was a charity created by Mary McHenry Cox which
         operated from 1866 to 1922 at 808 South Eleventh Street in Philadelphia.
@@ -100,11 +182,14 @@ export default function Home() {
         provides valuable insights into the educational opportunities and
         experiences of students during this period in American history.
       </p>
+
       <div className="grid gap-6">
         <section className="my-6 rounded-lg border p-6">
-          <h2 className="mb-4 font-medium">Students</h2>
+          <h2 className="mb-4 font-medium">
+            {isStudentsTable ? 'Students' : 'Civil War Orphans'}
+          </h2>
           <ErrorBoundary>
-            <StudentsSection />
+            {isStudentsTable ? <StudentsSection /> : <CivilWarOrphansSection />}
           </ErrorBoundary>
         </section>
       </div>
