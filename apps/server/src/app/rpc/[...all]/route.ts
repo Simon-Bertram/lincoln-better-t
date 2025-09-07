@@ -122,6 +122,73 @@ async function handleRequest(req: NextRequest) {
   return response;
 }
 
+// Handle preflight OPTIONS requests - follows Vercel's recommended pattern
+export function OPTIONS(req: NextRequest) {
+  const origin = req.headers.get('origin');
+  const allowedOrigins = getAllowedOrigins();
+
+  debugLog('=== OPTIONS Preflight Request ===', {
+    origin,
+    allowedOrigins,
+    method: req.method,
+    requestMethod: req.headers.get('access-control-request-method'),
+    requestHeaders: req.headers.get('access-control-request-headers'),
+    timestamp: new Date().toISOString(),
+  });
+
+  // Determine allowed origin based on the same logic as the CORS plugin
+  let allowedOrigin = 'null';
+
+  // TEMPORARY: Allow all origins for debugging (REMOVE IN PRODUCTION)
+  if (process.env.CORS_DEBUG === 'true') {
+    debugLog('🚨 DEBUG MODE: Allowing all origins for OPTIONS', { origin });
+    allowedOrigin = origin || '*';
+  } else if (!origin) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    debugLog('✅ No origin provided for OPTIONS, allowing with wildcard', {
+      origin,
+    });
+    allowedOrigin = '*';
+  } else if (allowedOrigins.includes(origin)) {
+    // Check if origin is in allowed list
+    debugLog('✅ Origin found in allowed list for OPTIONS', {
+      origin,
+      allowedOrigins,
+    });
+    allowedOrigin = origin;
+  } else if (
+    process.env.NODE_ENV === 'development' &&
+    origin.startsWith('http://localhost')
+  ) {
+    // For development, allow any localhost origin
+    debugLog('✅ Development mode: allowing localhost origin for OPTIONS', {
+      origin,
+    });
+    allowedOrigin = origin;
+  } else {
+    // For production, be strict about origins
+    debugLog('❌ Origin not allowed for OPTIONS', { origin, allowedOrigins });
+    allowedOrigin = 'null';
+  }
+
+  const corsHeaders = {
+    'Access-Control-Allow-Origin': allowedOrigin,
+    'Access-Control-Allow-Methods':
+      'GET, HEAD, PUT, POST, DELETE, PATCH, OPTIONS',
+    'Access-Control-Allow-Headers':
+      'Content-Type, Authorization, X-Requested-With',
+    'Access-Control-Allow-Credentials': 'true',
+    'Access-Control-Max-Age': '86400',
+  };
+
+  debugLog('=== OPTIONS Response Headers ===', corsHeaders);
+
+  return new Response(null, {
+    status: 200,
+    headers: corsHeaders,
+  });
+}
+
 export const GET = handleRequest;
 export const POST = handleRequest;
 export const PUT = handleRequest;
