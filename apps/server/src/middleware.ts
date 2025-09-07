@@ -2,17 +2,80 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
 export function middleware(request: NextRequest) {
+  // Handle preflight OPTIONS requests
+  if (request.method === 'OPTIONS') {
+    const response = new NextResponse(null, { status: 200 });
+
+    // Apply CORS headers for preflight
+    const allowedOrigins = process.env.CORS_ORIGIN?.split(',') || [];
+    const origin = request.headers.get('origin');
+
+    // Only allow HTTPS origins in production, HTTP localhost in development
+    const isDevelopment = process.env.NODE_ENV === 'development';
+    const defaultAllowedOrigins = isDevelopment
+      ? ['http://localhost:3000', 'http://localhost:3001']
+      : [
+          'https://lincoln-better-t.vercel.app',
+          'https://lincoln-better-t-web.vercel.app',
+        ];
+
+    const allAllowedOrigins = [...allowedOrigins, ...defaultAllowedOrigins];
+
+    // SECURITY: Never allow wildcard with credentials
+    if (origin && allAllowedOrigins.includes(origin)) {
+      response.headers.set('Access-Control-Allow-Origin', origin);
+      response.headers.set('Access-Control-Allow-Credentials', 'true');
+    } else if (
+      origin &&
+      allowedOrigins.includes('*') &&
+      !process.env.CORS_ALLOW_CREDENTIALS
+    ) {
+      // Only allow wildcard if explicitly configured and credentials are disabled
+      response.headers.set('Access-Control-Allow-Origin', '*');
+    }
+
+    response.headers.set(
+      'Access-Control-Allow-Methods',
+      'GET,POST,PUT,PATCH,DELETE,OPTIONS'
+    );
+    response.headers.set(
+      'Access-Control-Allow-Headers',
+      'Content-Type, Authorization, X-Requested-With'
+    );
+    response.headers.set('Access-Control-Max-Age', '86400'); // 24 hours
+
+    return response;
+  }
+
   const response = NextResponse.next();
 
   // Secure CORS configuration
   const allowedOrigins = process.env.CORS_ORIGIN?.split(',') || [];
   const origin = request.headers.get('origin');
 
-  if (origin && allowedOrigins.includes(origin)) {
-    response.headers.set('Access-Control-Allow-Origin', origin);
-  }
+  // Only allow HTTPS origins in production, HTTP localhost in development
+  const isDevelopment = process.env.NODE_ENV === 'development';
+  const defaultAllowedOrigins = isDevelopment
+    ? ['http://localhost:3000', 'http://localhost:3001']
+    : [
+        'https://lincoln-better-t.vercel.app',
+        'https://lincoln-better-t-web.vercel.app',
+      ];
 
-  response.headers.set('Access-Control-Allow-Credentials', 'true');
+  const allAllowedOrigins = [...allowedOrigins, ...defaultAllowedOrigins];
+
+  // SECURITY: Never allow wildcard with credentials
+  if (origin && allAllowedOrigins.includes(origin)) {
+    response.headers.set('Access-Control-Allow-Origin', origin);
+    response.headers.set('Access-Control-Allow-Credentials', 'true');
+  } else if (
+    origin &&
+    allowedOrigins.includes('*') &&
+    !process.env.CORS_ALLOW_CREDENTIALS
+  ) {
+    // Only allow wildcard if explicitly configured and credentials are disabled
+    response.headers.set('Access-Control-Allow-Origin', '*');
+  }
   response.headers.set(
     'Access-Control-Allow-Methods',
     'GET,POST,PUT,PATCH,DELETE,OPTIONS'
@@ -22,26 +85,26 @@ export function middleware(request: NextRequest) {
     'Content-Type, Authorization, X-Requested-With'
   );
 
-  // Performance-optimized CSP without nonces (allows static generation)
+  // Security-hardened CSP
   const cspHeader = [
     // Default source - restrict to same origin
     "default-src 'self'",
-    // Script sources - allow Next.js and Vercel Analytics
-    `script-src 'self' 'unsafe-eval' 'unsafe-inline' https://va.vercel-scripts.com https://vitals.vercel-insights.com`,
-    // Style sources - allow inline styles for Tailwind CSS
-    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com",
+    // Script sources - restrict to specific domains only
+    `script-src 'self' https://va.vercel-scripts.com https://vitals.vercel-insights.com`,
+    // Style sources - allow Google Fonts and self
+    "style-src 'self' https://fonts.googleapis.com",
     // Object sources - block all (required for XSS protection)
     "object-src 'none'",
     // Base URI - block all (required for XSS protection)
     "base-uri 'none'",
-    // Font sources - allow Google Fonts and data URIs
-    "font-src 'self' https://fonts.gstatic.com data:",
-    // Image sources - allow self, data URIs, and common image formats
-    "img-src 'self' data: blob: https:",
-    // Connect sources - allow self and any HTTPS connections for API calls
-    "connect-src 'self' https:",
-    // Media sources - allow self and data URIs
-    "media-src 'self' data:",
+    // Font sources - allow Google Fonts only
+    "font-src 'self' https://fonts.gstatic.com",
+    // Image sources - restrict to specific domains
+    "img-src 'self' data: https://images.unsplash.com https://via.placeholder.com",
+    // Connect sources - restrict to specific API endpoints
+    "connect-src 'self' https://lincoln-better-t-server.vercel.app https://va.vercel-scripts.com https://vitals.vercel-insights.com",
+    // Media sources - allow self only
+    "media-src 'self'",
     // Form action - restrict to same origin
     "form-action 'self'",
     // Frame ancestors - block embedding in iframes
@@ -59,15 +122,28 @@ export function middleware(request: NextRequest) {
   response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
   response.headers.set(
     'Permissions-Policy',
-    'camera=(), microphone=(), geolocation=(), payment=()'
+    'camera=(), microphone=(), geolocation=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=()'
   );
-  response.headers.set(
-    'Strict-Transport-Security',
-    'max-age=31536000; includeSubDomains'
-  );
+
+  // Only set HSTS in production with HTTPS
+  if (
+    process.env.NODE_ENV === 'production' &&
+    request.nextUrl.protocol === 'https:'
+  ) {
+    response.headers.set(
+      'Strict-Transport-Security',
+      'max-age=31536000; includeSubDomains; preload'
+    );
+  }
 
   // Cross-Origin-Opener-Policy (COOP) for origin isolation
   response.headers.set('Cross-Origin-Opener-Policy', 'same-origin');
+
+  // Cross-Origin-Embedder-Policy for additional isolation
+  response.headers.set('Cross-Origin-Embedder-Policy', 'require-corp');
+
+  // Cross-Origin-Resource-Policy
+  response.headers.set('Cross-Origin-Resource-Policy', 'same-origin');
 
   return response;
 }
