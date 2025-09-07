@@ -95,11 +95,6 @@ export const civilWarOrphansColumns: ColumnDef<CivilWarOrphan>[] = [
 // Mobile-specific columns for civil war orphans
 export const civilWarOrphansMobileColumns: ColumnDef<CivilWarOrphan>[] = [
   {
-    accessorKey: 'id',
-    header: 'ID',
-    cell: ({ row }) => <div className="font-medium">{row.getValue('id')}</div>,
-  },
-  {
     accessorKey: 'familyName',
     header: ({ column }) => {
       return (
@@ -138,10 +133,5 @@ export const civilWarOrphansMobileColumns: ColumnDef<CivilWarOrphan>[] = [
     },
     cell: ({ row }) => <div>{row.getValue('givenName') || '-'}</div>,
     enableGlobalFilter: true,
-  },
-  {
-    accessorKey: 'birthDate',
-    header: 'Birth Date',
-    cell: ({ row }) => <div>{row.getValue('birthDate') || '-'}</div>,
   },
 ];

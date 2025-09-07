@@ -180,6 +180,10 @@ export function MobileDataTable<T extends Student | CivilWarOrphan>({
             <p className="mt-1">{student.yearOfBirth || '-'}</p>
           </div>
           <div>
+            <span className="font-medium text-muted-foreground">Nation:</span>
+            <p className="mt-1">{student.nation || '-'}</p>
+          </div>
+          <div>
             <span className="font-medium text-muted-foreground">
               Arrival Date:
             </span>

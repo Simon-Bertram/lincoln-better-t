@@ -280,11 +280,6 @@ export const columns: ColumnDef<Student>[] = [
 // Mobile-specific columns that show only essential information
 export const mobileColumns: ColumnDef<Student>[] = [
   {
-    accessorKey: 'id',
-    header: 'ID',
-    cell: ({ row }) => <div className="font-medium">{row.getValue('id')}</div>,
-  },
-  {
     accessorKey: 'familyName',
     header: ({ column }) => {
       return (
@@ -323,25 +318,5 @@ export const mobileColumns: ColumnDef<Student>[] = [
     },
     cell: ({ row }) => <div>{row.getValue('englishGivenName') || '-'}</div>,
     enableGlobalFilter: true,
-  },
-  {
-    accessorKey: 'nation',
-    header: ({ column }) => {
-      return (
-        <Button
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          variant="ghost"
-        >
-          Nation
-          <ArrowUpDown
-            aria-hidden="true"
-            className="ml-2 h-4 w-4"
-            focusable="false"
-          />
-        </Button>
-      );
-    },
-    cell: ({ row }) => <div>{row.getValue('nation') || '-'}</div>,
-    enableGlobalFilter: false,
   },
 ];
