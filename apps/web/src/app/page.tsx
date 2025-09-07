@@ -186,7 +186,9 @@ export default function Home() {
       <div className="grid gap-6">
         <section className="my-6 rounded-lg border p-6">
           <h2 className="mb-4 font-medium">
-            {isStudentsTable ? 'Students' : 'Civil War Orphans'}
+            {isStudentsTable
+              ? 'Indigenous American Students'
+              : 'Civil War Orphans'}
           </h2>
           <ErrorBoundary>
             {isStudentsTable ? <StudentsSection /> : <CivilWarOrphansSection />}

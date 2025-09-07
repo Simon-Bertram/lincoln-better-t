@@ -26,7 +26,7 @@ export function TableToggle() {
         {isStudentsTable ? (
           <>
             <Users className="h-4 w-4" />
-            Students
+            Indigenous American Students
           </>
         ) : (
           <>
