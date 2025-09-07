@@ -1,7 +1,7 @@
 export default function AboutPage() {
   return (
     <main
-      className="container mx-auto my-4 max-w-8/10 px-4 py-2"
+      className="container mx-auto my-4 w-[95%] px-4 py-2 lg:max-w-8/10"
       id="main-content"
     >
       <h1 className="mb-6 font-bold text-2xl">About The Lincoln Institute</h1>
