@@ -1,4 +1,5 @@
 import { RPCHandler } from '@orpc/server/fetch';
+import { CORSPlugin } from '@orpc/server/plugins';
 import type { NextRequest } from 'next/server';
 import { appRouter } from '@/routers';
 
@@ -20,57 +21,43 @@ function getAllowedOrigins() {
   return [...allowedOrigins, ...defaultAllowedOrigins];
 }
 
-const handler = new RPCHandler(appRouter);
+// Configure CORS plugin
+const corsPlugin = new CORSPlugin({
+  origin: (origin) => {
+    const allowedOrigins = getAllowedOrigins();
 
-function addCorsHeaders(response: Response, origin: string | null): Response {
-  const allowedOrigins = getAllowedOrigins();
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) {
+      return '*';
+    }
 
-  // Create a new response with CORS headers
-  const newResponse = new Response(response.body, {
-    status: response.status,
-    statusText: response.statusText,
-    headers: response.headers,
-  });
+    // Check if origin is in allowed list
+    if (allowedOrigins.includes(origin)) {
+      return origin;
+    }
 
-  // Add CORS headers according to MDN documentation
-  if (origin && allowedOrigins.includes(origin)) {
-    newResponse.headers.set('Access-Control-Allow-Origin', origin);
-    newResponse.headers.set('Access-Control-Allow-Credentials', 'true');
-  } else if (
-    origin &&
-    process.env.CORS_ORIGIN?.split(',').includes('*') &&
-    !process.env.CORS_ALLOW_CREDENTIALS
-  ) {
-    newResponse.headers.set('Access-Control-Allow-Origin', '*');
-  } else if (origin) {
-    // For debugging: temporarily allow any origin to identify the issue
-    // TODO: Remove this in production and add the correct origin to allowedOrigins
-    newResponse.headers.set('Access-Control-Allow-Origin', origin);
-    newResponse.headers.set('Access-Control-Allow-Credentials', 'true');
-  }
+    // For development, allow any localhost origin
+    if (
+      process.env.NODE_ENV === 'development' &&
+      origin.startsWith('http://localhost')
+    ) {
+      return origin;
+    }
 
-  newResponse.headers.set(
-    'Access-Control-Allow-Methods',
-    'GET,POST,PUT,PATCH,DELETE,OPTIONS'
-  );
-  newResponse.headers.set(
-    'Access-Control-Allow-Headers',
-    'Content-Type, Authorization, X-Requested-With'
-  );
-  newResponse.headers.set('Access-Control-Max-Age', '86400'); // 24 hours
+    // For production, be strict about origins
+    return null;
+  },
+  allowMethods: ['GET', 'HEAD', 'PUT', 'POST', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  credentials: true,
+  maxAge: 86_400, // 24 hours
+});
 
-  return newResponse;
-}
+const handler = new RPCHandler(appRouter, {
+  plugins: [corsPlugin],
+});
 
 async function handleRequest(req: NextRequest) {
-  const origin = req.headers.get('origin');
-
-  // Handle preflight OPTIONS requests
-  if (req.method === 'OPTIONS') {
-    const preflightResponse = new Response(null, { status: 200 });
-    return addCorsHeaders(preflightResponse, origin);
-  }
-
   const { response } = await handler.handle(req, {
     prefix: '/rpc',
     context: {},
@@ -80,7 +67,7 @@ async function handleRequest(req: NextRequest) {
     return new Response('Not found', { status: 404 });
   }
 
-  return addCorsHeaders(response, origin);
+  return response;
 }
 
 export const GET = handleRequest;
