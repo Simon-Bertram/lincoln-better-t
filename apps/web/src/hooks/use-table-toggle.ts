@@ -12,18 +12,32 @@ const TABLE_TYPES = {
 
 const DEFAULT_TABLE_TYPE: TableType = TABLE_TYPES.STUDENTS;
 
-export function useTableToggle() {
-  const router = useRouter();
+/**
+ * Hook for parsing table type from URL parameters
+ * @returns The current table type from URL or default
+ */
+function useTableTypeFromURL(): TableType {
   const searchParams = useSearchParams();
 
-  // Get current table type from URL params
-  const currentTableType = useMemo(() => {
+  return useMemo(() => {
     const tableParam = searchParams.get('table');
     return (tableParam as TableType) || DEFAULT_TABLE_TYPE;
   }, [searchParams]);
+}
 
-  // Toggle table type and update URL
-  const toggleTableType = useCallback(
+/**
+ * Hook for handling table navigation and URL updates
+ * @returns Functions for updating table type in URL
+ */
+function useTableNavigation() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  /**
+   * Updates the URL with the specified table type
+   * @param newTableType - The table type to set in the URL
+   */
+  const updateTableTypeInURL = useCallback(
     (newTableType: TableType) => {
       const params = new URLSearchParams(searchParams);
 
@@ -44,15 +58,31 @@ export function useTableToggle() {
     [router, searchParams]
   );
 
-  // Switch to specific table type
+  return { updateTableTypeInURL };
+}
+
+/**
+ * Main hook that combines URL parsing and navigation functionality
+ * @returns Complete table toggle functionality
+ */
+export function useTableToggle() {
+  const currentTableType = useTableTypeFromURL();
+  const { updateTableTypeInURL } = useTableNavigation();
+
+  /**
+   * Switches to a specific table type
+   * @param tableType - The table type to switch to
+   */
   const switchToTable = useCallback(
     (tableType: TableType) => {
-      toggleTableType(tableType);
+      updateTableTypeInURL(tableType);
     },
-    [toggleTableType]
+    [updateTableTypeInURL]
   );
 
-  // Toggle between the two table types
+  /**
+   * Toggles between the two available table types
+   */
   const toggleTable = useCallback(() => {
     const newTableType =
       currentTableType === TABLE_TYPES.STUDENTS
