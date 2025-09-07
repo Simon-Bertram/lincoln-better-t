@@ -54,7 +54,7 @@ function TableRow({ className, ...props }: ComponentProps<'tr'>) {
   return (
     <tr
       className={cn(
-        'border-b transition-colors odd:bg-background even:bg-muted/20 hover:bg-muted/50 data-[state=selected]:bg-muted',
+        'border-b transition-colors odd:bg-red-100 even:bg-blue-100 hover:bg-muted/50 data-[state=selected]:bg-muted dark:even:bg-blue-950 dark:odd:bg-red-950',
         className
       )}
       data-slot="table-row"
@@ -67,7 +67,7 @@ function TableHead({ className, ...props }: ComponentProps<'th'>) {
   return (
     <th
       className={cn(
-        'h-10 whitespace-nowrap px-2 text-left align-middle font-medium text-foreground [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]',
+        'h-10 whitespace-nowrap bg-gray-50 px-2 text-left align-middle font-medium text-foreground dark:bg-gray-700 [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]',
         className
       )}
       data-slot="table-head"
