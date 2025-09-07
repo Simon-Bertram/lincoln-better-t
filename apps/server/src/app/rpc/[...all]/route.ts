@@ -1,6 +1,7 @@
 import { RPCHandler } from '@orpc/server/fetch';
 import { CORSPlugin } from '@orpc/server/plugins';
 import type { NextRequest } from 'next/server';
+import { createContext } from '@/lib/context';
 import { appRouter } from '@/routers';
 
 // Define allowed origins
@@ -56,9 +57,12 @@ const handler = new RPCHandler(appRouter, {
 });
 
 async function handleRequest(req: NextRequest) {
+  // Create context with client information for rate limiting
+  const context = createContext(req);
+
   const { response } = await handler.handle(req, {
     prefix: '/rpc',
-    context: {},
+    context,
   });
 
   if (!response) {

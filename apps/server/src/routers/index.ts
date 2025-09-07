@@ -5,6 +5,10 @@ import { db } from '../db';
 import { civilWarOrphans, students } from '../db/migrations/schema';
 import { publicProcedure } from '../lib/orpc';
 import {
+  checkRateLimitWithContext,
+  rateLimitMiddleware,
+} from '../lib/rate-limit';
+import {
   CivilWarOrphanSchema,
   getCivilWarOrphansInputSchema,
 } from '../types/civil-war-orphans';
@@ -128,15 +132,54 @@ function handleCivilWarOrphanQueryError(error: unknown): never {
   );
 }
 
+/**
+ * Throws a rate limit error with proper formatting
+ * @param rateLimitResult - The rate limit result
+ * @throws ORPCError with rate limit information
+ */
+function throwRateLimitError(rateLimitResult: {
+  retryAfter?: number;
+  limit: number;
+  remaining: number;
+  resetTime: number;
+}): never {
+  throw new Error(
+    `RATE_LIMITED:${JSON.stringify({
+      retryAfter: rateLimitResult.retryAfter || 60,
+      limit: rateLimitResult.limit,
+      remaining: rateLimitResult.remaining,
+      resetTime: rateLimitResult.resetTime,
+    })}`
+  );
+}
+
 export const appRouter = {
-  healthCheck: publicProcedure.output(z.string()).handler(() => {
-    return 'OK';
-  }),
+  healthCheck: publicProcedure
+    .use(rateLimitMiddleware)
+    .output(z.string())
+    .handler(({ context }) => {
+      // Check rate limit with real client IP
+      const rateLimitResult = checkRateLimitWithContext(context);
+
+      if (!rateLimitResult.allowed) {
+        throwRateLimitError(rateLimitResult);
+      }
+
+      return 'OK';
+    }),
   getStudents: publicProcedure
+    .use(rateLimitMiddleware)
     .input(getStudentsInputSchema.optional())
     .output(z.array(StudentSchema))
-    .handler(async ({ input }) => {
+    .handler(async ({ input, context }) => {
       try {
+        // Check rate limit with real client IP
+        const rateLimitResult = checkRateLimitWithContext(context);
+
+        if (!rateLimitResult.allowed) {
+          throwRateLimitError(rateLimitResult);
+        }
+
         const query = buildStudentQuery(input);
         const result = await query;
         return validateStudentResults(result);
@@ -145,10 +188,18 @@ export const appRouter = {
       }
     }),
   getCivilWarOrphans: publicProcedure
+    .use(rateLimitMiddleware)
     .input(getCivilWarOrphansInputSchema.optional())
     .output(z.array(CivilWarOrphanSchema))
-    .handler(async ({ input }) => {
+    .handler(async ({ input, context }) => {
       try {
+        // Check rate limit with real client IP
+        const rateLimitResult = checkRateLimitWithContext(context);
+
+        if (!rateLimitResult.allowed) {
+          throwRateLimitError(rateLimitResult);
+        }
+
         const query = buildCivilWarOrphansQuery(input);
         const result = await query;
         return validateCivilWarOrphanResults(result);
