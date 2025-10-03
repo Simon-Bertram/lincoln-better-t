@@ -71,15 +71,21 @@ export default function AboutPage() {
             businesses.
           </p>
           <p>
-            Information on the deaths of orphans is available
-            <Link href="https://www.the2nomads.site/TEHSDocumentStore/docs/doc837.html">
+            Information on the deaths of orphans is available{' '}
+            <Link
+              href="https://www.the2nomads.site/TEHSDocumentStore/docs/doc837.html"
+              target="_blank"
+            >
               here
             </Link>
             .
           </p>
           <p>
             Documents concerning the Lincoln Institute can be found{' '}
-            <Link href="https://www.the2nomads.site/TEHSDocumentStore/LincolnInstitution.html">
+            <Link
+              href="https://www.the2nomads.site/TEHSDocumentStore/LincolnInstitution.html"
+              target="_blank"
+            >
               here
             </Link>
             .
@@ -99,7 +105,7 @@ export default function AboutPage() {
         </section>
       </article>
 
-      <footer className="mt-8">
+      <footer className="mt-8 text-sm">
         <p>The data were compiled by Heidi Sproat and Mike Bertram.</p>
       </footer>
     </main>
