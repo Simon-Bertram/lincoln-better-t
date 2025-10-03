@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export default function AboutPage() {
   return (
     <main
@@ -23,6 +25,38 @@ export default function AboutPage() {
           </p>
         </section>
 
+        <section aria-labelledby="civil-war-orphans-heading" className="mt-8">
+          <h2
+            className="mb-4 font-semibold text-xl"
+            id="civil-war-orphans-heading"
+          >
+            Civil War Orphans
+          </h2>
+          <p>
+            The Lincoln Institute, a Philadelphia charity, housed orphaned boys
+            of the Civil War during from 1866 to 1884, whose fathers had been
+            Episcopalian. The orphans lived at two sites in Philadelphia. One at
+            11th Street and the other at 49th Street, the latter with the title
+            of The Educational Home. The first site was for younger boys and the
+            second for the older one. The older boys worked in city center
+            businesses.
+          </p>
+          <p>
+            Information on the deaths of orphans is available
+            <Link href="https://www.the2nomads.site/TEHSDocumentStore/docs/doc837.html">
+              here
+            </Link>
+            .
+          </p>
+          <p>
+            Documents concerning the Lincoln Institute can be found{' '}
+            <Link href="https://www.the2nomads.site/TEHSDocumentStore/LincolnInstitution.html">
+              here
+            </Link>
+            .
+          </p>
+        </section>
+
         <section aria-labelledby="directory-heading" className="mt-8">
           <h2 className="mb-4 font-semibold text-xl" id="directory-heading">
             This Digital Directory
@@ -35,6 +69,10 @@ export default function AboutPage() {
           </p>
         </section>
       </article>
+
+      <footer className="mt-8">
+        <p>The data were compiled by Heidi Sproat and Mike Bertram.</p>
+      </footer>
     </main>
   );
 }
