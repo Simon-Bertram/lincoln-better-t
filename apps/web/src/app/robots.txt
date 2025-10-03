@@ -1,0 +1,22 @@
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://lincoln-institute-directory.vercel.app/sitemap.xml
+
+# Crawl delay (optional - helps prevent overwhelming the server)
+Crawl-delay: 1
+
+# Block access to admin or sensitive areas (if any exist in the future)
+# Disallow: /admin/
+# Disallow: /api/
+
+# Allow all search engines to index the content
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /

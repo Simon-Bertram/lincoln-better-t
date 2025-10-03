@@ -1,4 +1,31 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
+import {
+  BreadcrumbStructuredData,
+  Breadcrumbs,
+} from '@/components/breadcrumbs';
+
+export const metadata: Metadata = {
+  title: 'About The Lincoln Institute',
+  description:
+    'Learn about The Lincoln Institute, a Philadelphia charity founded by Mary McHenry Cox that operated from 1866-1922, housing Civil War orphans and providing education.',
+  keywords: [
+    'Lincoln Institute history',
+    'Mary McHenry Cox',
+    'Philadelphia charity',
+    'Civil War orphans',
+    'Educational Home',
+    '808 South Eleventh Street',
+    '1866-1922',
+    'historical institution',
+  ],
+  openGraph: {
+    title: 'About The Lincoln Institute - Historical Institution 1866-1922',
+    description:
+      'Learn about The Lincoln Institute, a Philadelphia charity founded by Mary McHenry Cox that operated from 1866-1922, housing Civil War orphans and providing education.',
+    type: 'article',
+  },
+};
 
 export default function AboutPage() {
   return (
@@ -6,6 +33,8 @@ export default function AboutPage() {
       className="container mx-auto my-4 w-[95%] px-4 py-2 lg:max-w-8/10"
       id="main-content"
     >
+      <Breadcrumbs items={[{ label: 'About' }]} />
+      <BreadcrumbStructuredData items={[{ label: 'About' }]} />
       <header className="mb-8">
         <h1 className="mb-4 font-bold text-3xl">About The Lincoln Institute</h1>
         <p className="text-lg text-muted-foreground">
