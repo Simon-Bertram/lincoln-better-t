@@ -110,7 +110,7 @@ export default function Home() {
         </section>
 
         <div className="grid gap-6">
-          <section className="my-6 rounded-lg border p-6">
+          <section className="my-6 overflow-x-scroll rounded-lg border p-6">
             <h2 className="mb-4 font-medium">
               <TableToggle />
               {isStudentsTable
