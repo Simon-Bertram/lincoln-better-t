@@ -35,14 +35,14 @@ export default function AboutPage() {
     >
       <Breadcrumbs items={[{ label: 'About' }]} />
       <BreadcrumbStructuredData items={[{ label: 'About' }]} />
-      <header className="mb-8">
+      <header className="mb-8 text-center">
         <h1 className="mb-4 font-bold text-3xl">About The Lincoln Institute</h1>
         <p className="text-lg text-muted-foreground">
           Learn about the historical institution and this digital directory
         </p>
       </header>
 
-      <article className="prose prose-lg max-w-none">
+      <article className="prose prose-lg mx-auto mb-16 max-w-3xl">
         <section aria-labelledby="institution-heading">
           <h2 className="mb-4 font-semibold text-xl" id="institution-heading">
             The Institution
@@ -90,6 +90,9 @@ export default function AboutPage() {
             </Link>
             .
           </p>
+          <p className="text-sm">
+            The data were compiled by Heidi Sproat and Mike Bertram.
+          </p>
         </section>
 
         <section aria-labelledby="directory-heading" className="mt-8">
@@ -104,10 +107,6 @@ export default function AboutPage() {
           </p>
         </section>
       </article>
-
-      <footer className="mt-8 text-sm">
-        <p>The data were compiled by Heidi Sproat and Mike Bertram.</p>
-      </footer>
     </main>
   );
 }
