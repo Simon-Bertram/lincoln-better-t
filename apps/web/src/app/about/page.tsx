@@ -44,7 +44,10 @@ export default function AboutPage() {
 
       <article className="prose prose-lg mx-auto mb-16 max-w-3xl">
         <section aria-labelledby="institution-heading">
-          <h2 className="mb-4 font-semibold text-xl" id="institution-heading">
+          <h2
+            className="mb-8 text-center font-semibold text-xl"
+            id="institution-heading"
+          >
             The Institution
           </h2>
           <p>
@@ -56,7 +59,7 @@ export default function AboutPage() {
 
         <section aria-labelledby="civil-war-orphans-heading" className="mt-8">
           <h2
-            className="mb-4 font-semibold text-xl"
+            className="mb-8 text-center font-semibold text-xl"
             id="civil-war-orphans-heading"
           >
             Civil War Orphans
@@ -96,7 +99,10 @@ export default function AboutPage() {
         </section>
 
         <section aria-labelledby="directory-heading" className="mt-8">
-          <h2 className="mb-4 font-semibold text-xl" id="directory-heading">
+          <h2
+            className="mb-8 text-center font-semibold text-xl"
+            id="directory-heading"
+          >
             This Digital Directory
           </h2>
           <p>
