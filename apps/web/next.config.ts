@@ -5,7 +5,14 @@ const nextConfig: NextConfig = {
   // Moved from experimental to root level in Next.js 15
   serverExternalPackages: [],
   images: {
-    domains: ['res.cloudinary.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+        port: '', // Leave as empty string for standard HTTPS port (443)
+        pathname: '/dulwhlyqt/**', // Crucial: This should be specific to your Cloudinary cloud name
+      },
+    ],
   },
 };
 
