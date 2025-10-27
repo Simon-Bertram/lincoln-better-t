@@ -1,19 +1,7 @@
 'use client';
 
-import type {
-  ColumnDef,
-  ColumnFiltersState,
-  SortingState,
-  VisibilityState,
-} from '@tanstack/react-table';
-import {
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from '@tanstack/react-table';
+import type { ColumnDef } from '@tanstack/react-table';
+import { flexRender } from '@tanstack/react-table';
 import {
   ChevronDown,
   ChevronLeft,
@@ -22,7 +10,6 @@ import {
   ChevronsRight,
   X,
 } from 'lucide-react';
-import { useMemo, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -49,6 +36,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { useTableState } from '@/hooks/use-table-state';
 
 const DEFAULT_PAGE_SIZE = 10;
 const SMALL_PAGE_SIZE = 20;
@@ -75,62 +63,16 @@ export function DataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = useState({});
-  const [globalFilter, setGlobalFilter] = useState('');
-  const [nationFilter, setNationFilter] = useState<string | null>(null);
-
-  // Extract unique nations from data
-  const uniqueNations = useMemo(() => {
-    const nations = (data as Array<{ nation: string | null }>)
-      .map((item) => item.nation)
-      .filter((nation): nation is string => nation !== null && nation !== '');
-
-    return [...new Set(nations)].sort();
-  }, [data]);
-
-  const getSortDirection = (column: { getIsSorted: () => string | false }) => {
-    if (column.getIsSorted() === 'asc') {
-      return 'ascending';
-    }
-    if (column.getIsSorted() === 'desc') {
-      return 'descending';
-    }
-    return 'none';
-  };
-
-  // Filter data by nation if filter is applied
-  const filteredData = useMemo(() => {
-    if (!nationFilter) {
-      return data;
-    }
-    return (data as Array<{ nation: string | null }>).filter(
-      (item) => item.nation === nationFilter
-    ) as TData[];
-  }, [data, nationFilter]);
-
-  const table = useReactTable({
-    data: filteredData,
+  const {
+    table,
+    uniqueNations,
+    globalFilter,
+    nationFilter,
+    getSortDirection,
+    setNationFilter,
+  } = useTableState({
+    data,
     columns,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
-    onGlobalFilterChange: setGlobalFilter,
-    globalFilterFn: 'includesString',
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-      rowSelection,
-      globalFilter,
-    },
   });
 
   return (
