@@ -7,11 +7,11 @@ import {
 import { CloudinaryImage } from '@/components/cloudinary-image';
 
 export const metadata: Metadata = {
-  title: 'About The Lincoln Institute',
+  title: 'About The Lincoln Institution',
   description:
-    'Learn about The Lincoln Institute, a Philadelphia charity founded by Mary McHenry Cox that operated from 1866-1922, housing Civil War orphans and providing education.',
+    'Learn about The Lincoln Institution, a Philadelphia charity founded by Mary McHenry Cox that operated from 1866-1922, housing Civil War orphans and providing education.',
   keywords: [
-    'Lincoln Institute history',
+    'Lincoln Institution history',
     'Mary McHenry Cox',
     'Philadelphia charity',
     'Civil War orphans',
@@ -21,9 +21,9 @@ export const metadata: Metadata = {
     'historical institution',
   ],
   openGraph: {
-    title: 'About The Lincoln Institute - Historical Institution 1866-1922',
+    title: 'About The Lincoln Institution - Historical Institution 1866-1922',
     description:
-      'Learn about The Lincoln Institute, a Philadelphia charity founded by Mary McHenry Cox that operated from 1866-1922, housing Civil War orphans and providing education.',
+      'Learn about The Lincoln Institution, a Philadelphia charity founded by Mary McHenry Cox that operated from 1866-1922, housing Civil War orphans and providing education.',
     type: 'article',
   },
 };
@@ -37,7 +37,7 @@ export default function AboutPage() {
       <Breadcrumbs items={[{ label: 'About' }]} />
       <BreadcrumbStructuredData items={[{ label: 'About' }]} />
       <header className="mb-8 text-center">
-        <h1 className="mb-4 font-bold text-3xl">About The Lincoln Institute</h1>
+        <h1 className="mb-4 font-bold text-3xl">About The Lincoln Institution</h1>
         <p className="text-lg text-muted-foreground">
           Learn about the historical institution and this digital directory
         </p>
@@ -54,14 +54,14 @@ export default function AboutPage() {
           <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
             <div className="prose prose-lg flex-1">
               <p>
-                The Lincoln Institute was a charitable institution founded by
+                The Lincoln Institution was a charitable institution founded by
                 Mary McHenry Cox that operated from 1866 to 1922 at 808 South
                 Eleventh Street in Philadelphia, Pennsylvania.
               </p>
             </div>
             <div className="flex-shrink-0">
               <CloudinaryImage
-                alt="The Lincoln Institute Educational Home - Historical building where Civil War orphans were housed and educated"
+                alt="The Lincoln Institution Educational Home - Historical building where Civil War orphans were housed and educated"
                 className="rounded-lg"
                 crop="fill"
                 height="300"
@@ -83,7 +83,7 @@ export default function AboutPage() {
           <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
             <div className="prose prose-lg flex-1">
               <p>
-                The Lincoln Institute, a Philadelphia charity, housed orphaned
+                The Lincoln Institution, a Philadelphia charity, housed orphaned
                 boys of the Civil War during from 1866 to 1884, whose fathers
                 had been Episcopalian. The orphans lived at two sites in
                 Philadelphia. One at 11th Street and the other at 49th Street,
@@ -102,7 +102,7 @@ export default function AboutPage() {
                 .
               </p>
               <p>
-                Documents concerning the Lincoln Institute can be found{' '}
+                Documents concerning the Lincoln Institution can be found{' '}
                 <Link
                   href="https://www.the2nomads.site/TEHSDocumentStore/LincolnInstitution.html"
                   target="_blank"
@@ -117,7 +117,7 @@ export default function AboutPage() {
             </div>
             <div className="flex-shrink-0">
               <CloudinaryImage
-                alt="Lincoln Institute lithograph - Historical document showing the institution"
+                alt="Lincoln Institution lithograph - Historical document showing the institution"
                 className="rounded-lg shadow-md"
                 crop="fill"
                 height="600"
@@ -139,7 +139,7 @@ export default function AboutPage() {
             </h2>
             <p className="prose prose-lg mx-auto max-w-3xl text-left">
               This digital directory contains historical records of students who
-              attended the Lincoln Institute during its years of operation. The
+              attended the Lincoln Institution during its years of operation. The
               data provides valuable insights into the educational opportunities
               and experiences of students during this period in American
               history.

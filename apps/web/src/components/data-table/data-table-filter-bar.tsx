@@ -69,7 +69,7 @@ export function DataTableFilterBar<TData>({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem onClick={() => setNationFilterAction(null)}>
+          <DropdownMenuItem key="__all_nations" onClick={() => setNationFilterAction(null)}>
             All Nations
           </DropdownMenuItem>
           {uniqueNations.map((nation) => (
