@@ -6,6 +6,18 @@ import {
 } from "@/components/breadcrumbs";
 import { CloudinaryImage } from "@/components/cloudinary-image";
 
+/**
+ * Revalidate time for ISR (Incremental Static Regeneration)
+ * 
+ * This page is mostly static content, so we use a longer revalidate time.
+ * The page will be statically generated and revalidated daily.
+ * This provides:
+ * - Fast cached responses for all visitors
+ * - Minimal server load
+ * - Excellent Core Web Vitals scores
+ */
+export const revalidate = 86400; // 24 hours in seconds
+
 export const metadata: Metadata = {
   title: "About The Lincoln Institution",
   description:
