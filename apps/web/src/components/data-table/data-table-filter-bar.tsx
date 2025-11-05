@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
+import { useMemo } from 'react';
 
 export type DataTableFilterBarProps<TData> = {
   table: Table<TData>;
@@ -27,6 +28,10 @@ export function DataTableFilterBar<TData>({
   globalFilter,
   setNationFilterAction,
 }: DataTableFilterBarProps<TData>) {
+  const nationOptions = useMemo(
+    () => Array.from(new Set(uniqueNations)).filter(Boolean),
+    [uniqueNations]
+  );
   return (
     <div className="flex items-center py-4">
       <div className="relative max-w-sm">
@@ -72,7 +77,7 @@ export function DataTableFilterBar<TData>({
           <DropdownMenuItem key="__all_nations" onClick={() => setNationFilterAction(null)}>
             All Nations
           </DropdownMenuItem>
-          {uniqueNations.map((nation) => (
+          {nationOptions.map((nation) => (
             <DropdownMenuItem
               key={nation}
               onClick={() => setNationFilterAction(nation)}
