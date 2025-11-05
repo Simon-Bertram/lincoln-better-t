@@ -62,12 +62,15 @@ function buildStudentQuery(input?: { search?: string; offset?: number }) {
   const offset = sanitizeOffset(input?.offset);
   const search = input?.search ? sanitizeSearchInput(input.search) : undefined;
 
-  const query = db.select().from(students);
   const whereClause = search
     ? like(students.familyName, `%${search}%`)
     : undefined;
 
-  return query.where(whereClause).offset(offset);
+  if (whereClause) {
+    return db.select().from(students).where(whereClause).offset(offset);
+  }
+
+  return db.select().from(students).offset(offset);
 }
 
 /**
@@ -82,12 +85,15 @@ function buildCivilWarOrphansQuery(input?: {
   const offset = sanitizeOffset(input?.offset);
   const search = input?.search ? sanitizeSearchInput(input.search) : undefined;
 
-  const query = db.select().from(civilWarOrphans);
   const whereClause = search
     ? like(civilWarOrphans.familyName, `%${search}%`)
     : undefined;
 
-  return query.where(whereClause).offset(offset);
+  if (whereClause) {
+    return db.select().from(civilWarOrphans).where(whereClause).offset(offset);
+  }
+
+  return db.select().from(civilWarOrphans).offset(offset);
 }
 
 /**

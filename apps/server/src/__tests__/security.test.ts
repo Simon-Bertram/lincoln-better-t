@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
+const MALICIOUS_INPUT_REGEX = /[%_\\<>'"&;()]/;
+const NORMAL_INPUT_REGEX = /^[a-zA-Z0-9\s\-'.]+$/;
+const MAX_SEARCH_LENGTH = 200;
+const MAX_OFFSET = 10_000;
+
 // Import the sanitization functions (we'll need to export them for testing)
 // For now, we'll test the behavior through the public API
 
@@ -18,11 +23,11 @@ describe('Security Fixes', () => {
       ];
 
       // These should all be sanitized to safe values
-      maliciousInputs.forEach((input) => {
+      for (const input of maliciousInputs) {
         // The sanitization should remove dangerous characters
-        expect(input).toMatch(/[%_\\<>'"&;()]/); // Original contains dangerous chars
+        expect(input).toMatch(MALICIOUS_INPUT_REGEX); // Original contains dangerous chars
         // After sanitization, these should be removed
-      });
+      }
     });
 
     it('should handle normal search input correctly', () => {
@@ -34,15 +39,15 @@ describe('Security Fixes', () => {
         '123 Main St.',
       ];
 
-      normalInputs.forEach((input) => {
+      for (const input of normalInputs) {
         // These should pass through sanitization mostly unchanged
-        expect(input).toMatch(/^[a-zA-Z0-9\s\-'.]+$/);
-      });
+        expect(input).toMatch(NORMAL_INPUT_REGEX);
+      }
     });
 
     it('should enforce length limits', () => {
-      const longInput = 'a'.repeat(300); // Longer than MAX_SEARCH_LENGTH (200)
-      expect(longInput.length).toBeGreaterThan(200);
+      const longInput = 'a'.repeat(MAX_SEARCH_LENGTH + 1); // Longer than MAX_SEARCH_LENGTH (200)
+      expect(longInput.length).toBeGreaterThan(MAX_SEARCH_LENGTH);
       // After sanitization, this should be truncated to 200 characters
     });
   });
@@ -50,7 +55,7 @@ describe('Security Fixes', () => {
   describe('Offset Validation', () => {
     it('should enforce maximum offset limit', () => {
       const largeOffset = 50_000; // Larger than MAX_OFFSET (10,000)
-      expect(largeOffset).toBeGreaterThan(10_000);
+      expect(largeOffset).toBeGreaterThan(MAX_OFFSET);
       // After sanitization, this should be capped at 10,000
     });
 
@@ -80,10 +85,10 @@ describe('Security Fixes', () => {
         'test&',
       ];
 
-      invalidSearches.forEach((search) => {
+      for (const search of invalidSearches) {
         // These should fail Zod validation
-        expect(search).not.toMatch(/^[a-zA-Z0-9\s\-'.]+$/);
-      });
+        expect(search).not.toMatch(NORMAL_INPUT_REGEX);
+      }
     });
 
     it('should accept valid search patterns', () => {
@@ -101,10 +106,10 @@ describe('Security Fixes', () => {
         'test.test',
       ];
 
-      validSearches.forEach((search) => {
+      for (const search of validSearches) {
         // These should pass Zod validation
-        expect(search).toMatch(/^[a-zA-Z0-9\s\-'.]+$/);
-      });
+        expect(search).toMatch(NORMAL_INPUT_REGEX);
+      }
     });
   });
 });

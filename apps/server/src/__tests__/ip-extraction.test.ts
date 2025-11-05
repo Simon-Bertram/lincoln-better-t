@@ -1,4 +1,5 @@
 import { NextRequest } from 'next/server';
+import { describe, expect, it } from 'vitest';
 import { createContext } from '../lib/context';
 import { checkRateLimitWithContext } from '../lib/rate-limit';
 
@@ -124,7 +125,7 @@ describe('IP Extraction and Rate Limiting', () => {
       '',
     ];
 
-    validIPs.forEach((ip) => {
+    for (const ip of validIPs) {
       const request = new NextRequest('http://localhost:3000/api/test', {
         headers: {
           'x-forwarded-for': ip,
@@ -135,9 +136,9 @@ describe('IP Extraction and Rate Limiting', () => {
 
       const context = createContext(request);
       expect(context.clientIP).toBe(ip);
-    });
+    }
 
-    invalidIPs.forEach((ip) => {
+    for (const ip of invalidIPs) {
       const request = new NextRequest('http://localhost:3000/api/test', {
         headers: {
           'x-forwarded-for': ip,
@@ -148,6 +149,6 @@ describe('IP Extraction and Rate Limiting', () => {
 
       const context = createContext(request);
       expect(context.clientIP).toBe('unknown');
-    });
+    }
   });
 });
