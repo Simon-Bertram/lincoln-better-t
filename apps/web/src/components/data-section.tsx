@@ -95,6 +95,14 @@ export function DataSection<T extends Student | CivilWarOrphan>({
   const query = useQuery({
     queryKey: [queryKey],
     queryFn: queryFnAction,
+    // Data is static (never changes), so use infinite stale time
+    // This ensures React Query uses cached data immediately without refetching
+    staleTime: Infinity,
+    gcTime: Infinity,
+    // Don't refetch on window focus for static data
+    refetchOnWindowFocus: false,
+    // Don't refetch on mount if data exists in cache
+    refetchOnMount: false,
   });
 
   if (query.isLoading) {

@@ -6,9 +6,10 @@ import { toast } from "sonner";
 import type { AppRouterClient } from "../../../server/src/routers/index";
 
 // Cache configuration constants
+// Since data is historical and never changes, we use infinite cache times
 const CACHE_CONFIG = {
-  STALE_TIME_MS: 5 * 60 * 1000, // 5 minutes
-  GC_TIME_MS: 10 * 60 * 1000, // 10 minutes
+  STALE_TIME_MS: Infinity, // Data never becomes stale (historical data)
+  GC_TIME_MS: Infinity, // Never garbage collect (data is always valid)
   RETRY_ATTEMPTS: 3,
 } as const;
 
@@ -30,7 +31,10 @@ export const queryClient = new QueryClient({
       staleTime: CACHE_CONFIG.STALE_TIME_MS,
       gcTime: CACHE_CONFIG.GC_TIME_MS,
       retry: CACHE_CONFIG.RETRY_ATTEMPTS,
-      refetchOnWindowFocus: true,
+      // Don't refetch on window focus for static historical data
+      refetchOnWindowFocus: false,
+      // Don't refetch on mount if data exists (use cached data)
+      refetchOnMount: false,
     },
   },
 });

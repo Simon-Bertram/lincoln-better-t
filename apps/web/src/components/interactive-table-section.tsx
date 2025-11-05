@@ -50,7 +50,10 @@ function CivilWarOrphansSection() {
 
 /**
  * Interactive table section component that handles table switching and data fetching
- * This is a client component because it uses hooks for state management
+ * 
+ * OPTIMIZED: Both table components are always mounted but hidden with CSS
+ * This prevents React Query from refetching when switching, making table
+ * switching instant since data is already in cache.
  */
 export function InteractiveTableSection() {
 	const { isStudentsTable } = useTableToggle();
@@ -64,11 +67,14 @@ export function InteractiveTableSection() {
 					: MESSAGES.TITLES.CIVIL_WAR_ORPHANS}
 			</h2>
 			<ErrorBoundary>
-				{isStudentsTable ? (
+				{/* Always mount both components, but hide inactive one with CSS */}
+				{/* This prevents React Query from refetching when switching */}
+				<div className={isStudentsTable ? "block" : "hidden"}>
 					<StudentsSection />
-				) : (
+				</div>
+				<div className={isStudentsTable ? "hidden" : "block"}>
 					<CivilWarOrphansSection />
-				)}
+				</div>
 			</ErrorBoundary>
 		</section>
 	);
