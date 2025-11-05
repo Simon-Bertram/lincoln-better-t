@@ -4,35 +4,30 @@ import type { CivilWarOrphan } from "@/components/civil-war-orphans-columns";
 import type { Student } from "@/components/columns";
 import { QUERY_KEYS } from "@/lib/constants";
 import { client } from "@/utils/orpc";
-import { useRateLimitHandling } from "./use-rate-limit-handling";
 
 /**
- * Custom hook for students data fetching with rate limit handling
+ * Custom hook for students data fetching
  */
 export function useStudentsQuery() {
-  const { createRetryFunction } = useRateLimitHandling();
-
   return useMemo(
     () => ({
       queryKey: [QUERY_KEYS.STUDENTS],
-      queryFn: createRetryFunction(() => client.getStudents()),
+      queryFn: () => client.getStudents(),
     }),
-    [createRetryFunction]
+    []
   );
 }
 
 /**
- * Custom hook for civil war orphans data fetching with rate limit handling
+ * Custom hook for civil war orphans data fetching
  */
 export function useCivilWarOrphansQuery() {
-  const { createRetryFunction } = useRateLimitHandling();
-
   return useMemo(
     () => ({
       queryKey: [QUERY_KEYS.CIVIL_WAR_ORPHANS],
-      queryFn: createRetryFunction(() => client.getCivilWarOrphans()),
+      queryFn: () => client.getCivilWarOrphans(),
     }),
-    [createRetryFunction]
+    []
   );
 }
 

@@ -19,6 +19,7 @@ export type DataTableFilterBarProps<TData> = {
   nationFilter: string | null;
   globalFilter: string;
   setNationFilterAction: (value: string | null) => void;
+  tableId?: string;
 };
 
 export function DataTableFilterBar<TData>({
@@ -27,21 +28,26 @@ export function DataTableFilterBar<TData>({
   nationFilter,
   globalFilter,
   setNationFilterAction,
+  tableId = "table",
 }: DataTableFilterBarProps<TData>) {
   const nationOptions = useMemo(
     () => Array.from(new Set(uniqueNations)).filter(Boolean),
     [uniqueNations]
   );
+  
+  const filterId = `${tableId}-filter`;
+  const filterHelpId = `${tableId}-filter-help`;
+  
   return (
     <div className="flex items-center py-4">
       <div className="relative max-w-sm">
-        <label className="sr-only" htmlFor="student-filter">
-          Filter students
+        <label className="sr-only" htmlFor={filterId}>
+          Filter records
         </label>
         <Input
-          aria-describedby="student-filter-help"
+          aria-describedby={filterHelpId}
           className="pr-8"
-          id="student-filter"
+          id={filterId}
           onChange={(event) => table.setGlobalFilter(event.target.value)}
           placeholder="Filter by name..."
           type="search"
@@ -59,8 +65,8 @@ export function DataTableFilterBar<TData>({
           </Button>
         )}
       </div>
-      <p className="sr-only" id="student-filter-help">
-        Filters the student table rows
+      <p className="sr-only" id={filterHelpId}>
+        Filters the table rows
       </p>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>

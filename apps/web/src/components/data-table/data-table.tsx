@@ -13,11 +13,13 @@ import { useTableState } from "@/hooks/use-table-state";
 type DataTableProps<TData, TValue> = {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  tableId?: string;
 };
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  tableId,
 }: DataTableProps<TData, TValue>) {
   const {
     table,
@@ -38,11 +40,15 @@ export function DataTable<TData, TValue>({
         nationFilter={nationFilter}
         setNationFilterAction={setNationFilter}
         table={table}
+        tableId={tableId}
         uniqueNations={uniqueNations}
       />
-      <Table aria-label="Student directory records" id="student-table">
+      <Table
+        aria-label="Directory records"
+        id={tableId ? `${tableId}-table` : "data-table"}
+      >
         <TableCaption className="sr-only">
-          Student directory records from the Lincoln Institute (1866-1922)
+          Directory records from the Lincoln Institute (1866-1922)
         </TableCaption>
         <DataTableHead
           getSortDirectionAction={getSortDirection}

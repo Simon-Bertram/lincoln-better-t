@@ -1,5 +1,4 @@
 import { useQueryWithErrorHandling } from "./use-error-handling";
-import { useRateLimitHandling } from "./use-rate-limit-handling";
 
 export type UseDataFetchingOptions<TData> = {
   queryKey: string[];
@@ -26,13 +25,9 @@ export function useDataFetching<TData>({
   gcTime = DEFAULT_GC_TIME,
   retry = DEFAULT_RETRY,
 }: UseDataFetchingOptions<TData>) {
-  const { createRetryFunction } = useRateLimitHandling();
-
-  const retryQueryFn = createRetryFunction(queryFn);
-
   return useQueryWithErrorHandling({
     queryKey,
-    queryFn: retryQueryFn,
+    queryFn,
     enabled,
     staleTime,
     gcTime,

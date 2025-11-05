@@ -57,7 +57,7 @@ const handler = new RPCHandler(appRouter, {
 });
 
 async function handleRequest(req: NextRequest) {
-  // Create context with client information for rate limiting
+  // Create context with client information
   const context = createContext(req);
 
   const { response } = await handler.handle(req, {

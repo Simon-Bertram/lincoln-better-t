@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useMemo } from "react";
 
 export type TableType = "students" | "civil_war_orphans";
@@ -31,6 +31,7 @@ function useTableTypeFromURL(): TableType {
  */
 function useTableNavigation() {
   const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
 
   /**
@@ -50,12 +51,12 @@ function useTableNavigation() {
       }
 
       const newUrl = params.toString()
-        ? `${window.location.pathname}?${params.toString()}`
-        : window.location.pathname;
+        ? `${pathname}?${params.toString()}`
+        : pathname;
 
       router.push(newUrl, { scroll: false });
     },
-    [router, searchParams]
+    [router, pathname, searchParams]
   );
 
   return { updateTableTypeInURL };
