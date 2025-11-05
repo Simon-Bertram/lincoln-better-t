@@ -7,16 +7,19 @@ import {
 import { CloudinaryImage } from "@/components/cloudinary-image";
 
 /**
- * Revalidate time for ISR (Incremental Static Regeneration)
+ * Static Generation Configuration
  * 
- * This page is mostly static content, so we use a longer revalidate time.
- * The page will be statically generated and revalidated daily.
+ * This page contains static historical content that never changes.
+ * The page is statically generated at build time and never revalidated.
+ * 
  * This provides:
- * - Fast cached responses for all visitors
- * - Minimal server load
- * - Excellent Core Web Vitals scores
+ * - Maximum performance - served instantly from CDN
+ * - Zero server costs - all static, no server computation
+ * - Excellent Core Web Vitals scores - fully static content
+ * 
+ * The page will only regenerate when you redeploy the application.
  */
-export const revalidate = 86400; // 24 hours in seconds
+export const revalidate = false; // Never revalidate - content is static
 
 export const metadata: Metadata = {
   title: "About The Lincoln Institution",

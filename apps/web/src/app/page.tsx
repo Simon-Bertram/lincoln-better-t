@@ -8,35 +8,58 @@ import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query
 import { QUERY_KEYS } from "@/lib/constants";
 
 /**
- * Home page - Server Component
+ * Static Generation Configuration
  * 
- * This page is now a server component which provides:
- * - Server-side rendering for better SEO
- * - Faster initial page load
- * - Pre-fetched data for improved performance
- * - Static content rendered on the server
+ * Since the historical data (1866-1922) never changes, we use static generation
+ * without revalidation. The page and all data are generated at build time and
+ * embedded in the static HTML.
+ * 
+ * This provides:
+ * - Maximum performance - data is embedded in HTML, no API calls needed
+ * - Zero server costs after build - all served from CDN
+ * - Instant page loads - no database queries or server computation
+ * - Better Core Web Vitals scores - fully static content
+ * 
+ * The page will only regenerate when you redeploy the application.
+ */
+export const revalidate = false; // Never revalidate - data is static
+
+/**
+ * Home page - Static Server Component
+ * 
+ * This page is statically generated at build time with all data embedded.
+ * The datasets are prefetched and included in the HTML, so users get:
+ * - Instant access to both datasets (students and civil war orphans)
+ * - No loading states on initial page load
+ * - No API calls needed - everything is in the static HTML
+ * - Full SEO - all content visible in initial HTML
  */
 export default async function Home() {
-	// Pre-fetch data on the server for both table types
-	// This allows React Query to hydrate with server data
+	// Pre-fetch both datasets at build time
+	// Since data never changes, we embed both datasets in the static HTML
+	// This allows users to switch between tables instantly without API calls
 	const queryClient = new QueryClient({
 		defaultOptions: {
 			queries: {
-				staleTime: 5 * 60 * 1000, // 5 minutes
-				gcTime: 10 * 60 * 1000, // 10 minutes
+				// Data never changes, so set very long stale time
+				staleTime: Infinity, // Data never becomes stale
+				gcTime: Infinity, // Never garbage collect - data is always valid
 			},
 		},
 	});
 
-	// Pre-fetch both datasets in parallel for optimal performance
+	// Pre-fetch both datasets in parallel at build time
+	// Both datasets are embedded in the static HTML for instant access
 	await Promise.all([
 		queryClient.prefetchQuery({
 			queryKey: [QUERY_KEYS.STUDENTS],
 			queryFn: getStudentsServer,
+			staleTime: Infinity, // Override for this specific query
 		}),
 		queryClient.prefetchQuery({
 			queryKey: [QUERY_KEYS.CIVIL_WAR_ORPHANS],
 			queryFn: getCivilWarOrphansServer,
+			staleTime: Infinity, // Override for this specific query
 		}),
 	]);
 
