@@ -19,12 +19,12 @@
     "db:migrate": "turbo -F server db:migrate"
   },
   "dependencies": {
-    "@orpc/client": "^1.8.6",
-    "@orpc/server": "^1.8.6",
+    "@orpc/client": "^1.10.3",
+    "@orpc/server": "^1.10.3",
     "@radix-ui/react-select": "^2.2.6",
     "@tanstack/react-table": "^8.21.3",
-    "next-cloudinary": "^6.16.1",
-    "shadcn-prose": "^1.2.0"
+    "next-cloudinary": "^6.17.1",
+    "shadcn-prose": "^1.2.1"
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.0",
