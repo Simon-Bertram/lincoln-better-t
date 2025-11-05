@@ -1,0 +1,19 @@
+'use client';
+
+export const DEFAULT_PAGE_SIZE = 10;
+export const SMALL_PAGE_SIZE = 20;
+export const MEDIUM_PAGE_SIZE = 25;
+export const LARGE_PAGE_SIZE = 30;
+export const EXTRA_LARGE_PAGE_SIZE = 40;
+export const MAX_PAGE_SIZE = 50;
+
+export const PAGE_SIZE_OPTIONS = [
+  DEFAULT_PAGE_SIZE,
+  SMALL_PAGE_SIZE,
+  MEDIUM_PAGE_SIZE,
+  LARGE_PAGE_SIZE,
+  EXTRA_LARGE_PAGE_SIZE,
+  MAX_PAGE_SIZE,
+] as const;
+
+

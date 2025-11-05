@@ -14,33 +14,11 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import {
-  ChevronDown,
-  ChevronLeft,
-  ChevronRight,
-  ChevronRight as ChevronRightIcon,
-  ChevronsLeft,
-  ChevronsRight,
-  X,
-} from 'lucide-react';
+import { ChevronDown, ChevronRight as ChevronRightIcon } from 'lucide-react';
 import React, { useMemo, useState } from 'react';
 import type { CivilWarOrphan } from '@/components/civil-war-orphans-columns';
 import type { Student } from '@/components/columns';
 import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import {
   Table,
   TableBody,
@@ -50,22 +28,12 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { FilterBar } from '@/components/mobile-data-table/filter-bar';
+import { RowDetails } from '@/components/mobile-data-table/row-details';
+import { Pagination } from '@/components/mobile-data-table/pagination';
+import { PAGE_SIZE_OPTIONS } from '@/components/mobile-data-table/constants';
 
-const DEFAULT_PAGE_SIZE = 10;
-const SMALL_PAGE_SIZE = 20;
-const MEDIUM_PAGE_SIZE = 25;
-const LARGE_PAGE_SIZE = 30;
-const EXTRA_LARGE_PAGE_SIZE = 40;
-const MAX_PAGE_SIZE = 50;
-
-const PAGE_SIZE_OPTIONS = [
-  DEFAULT_PAGE_SIZE,
-  SMALL_PAGE_SIZE,
-  MEDIUM_PAGE_SIZE,
-  LARGE_PAGE_SIZE,
-  EXTRA_LARGE_PAGE_SIZE,
-  MAX_PAGE_SIZE,
-] as const;
+// Page size options moved to constants file
 
 type MobileDataTableProps<T extends Student | CivilWarOrphan> = {
   mobileColumns: ColumnDef<T>[];
@@ -150,215 +118,17 @@ export function MobileDataTable<T extends Student | CivilWarOrphan>({
     setExpandedRows(newExpandedRows);
   };
 
-  // Function to render additional details for a row
-  const renderRowDetails = (item: T) => {
-    // Check if it's a Student by looking for Student-specific properties
-    if ('indianName' in item && 'englishGivenName' in item) {
-      return renderStudentDetails(item as Student);
-    }
-    return renderCivilWarOrphanDetails(item as CivilWarOrphan);
-  };
-
-  const renderStudentDetails = (student: Student) => {
-    return (
-      <div className="space-y-3 rounded-lg bg-muted/50 p-4">
-        <div className="grid grid-cols-2 gap-4 text-sm">
-          <div>
-            <span className="font-medium text-muted-foreground">
-              Tribal Name:
-            </span>
-            <p className="mt-1">{student.indianName || '-'}</p>
-          </div>
-          <div>
-            <span className="font-medium text-muted-foreground">Sex:</span>
-            <p className="mt-1">{student.sex || '-'}</p>
-          </div>
-          <div>
-            <span className="font-medium text-muted-foreground">
-              Year of Birth:
-            </span>
-            <p className="mt-1">{student.yearOfBirth || '-'}</p>
-          </div>
-          <div>
-            <span className="font-medium text-muted-foreground">Nation:</span>
-            <p className="mt-1">{student.nation || '-'}</p>
-          </div>
-          <div>
-            <span className="font-medium text-muted-foreground">
-              Arrival Date:
-            </span>
-            <p className="mt-1">
-              {student.arrivalAtLincoln
-                ? new Date(student.arrivalAtLincoln).toLocaleDateString()
-                : '-'}
-            </p>
-          </div>
-          <div>
-            <span className="font-medium text-muted-foreground">
-              Departure Date:
-            </span>
-            <p className="mt-1">
-              {student.departureFromLincoln
-                ? new Date(student.departureFromLincoln).toLocaleDateString()
-                : '-'}
-            </p>
-          </div>
-        </div>
-
-        {student.source && (
-          <div>
-            <span className="font-medium text-muted-foreground">Source:</span>
-            <p className="mt-1 text-sm">{student.source}</p>
-          </div>
-        )}
-
-        {student.comments && (
-          <div>
-            <span className="font-medium text-muted-foreground">Comments:</span>
-            <p className="mt-1 text-sm">{student.comments}</p>
-          </div>
-        )}
-
-        {student.relevantLinks && (
-          <div>
-            <span className="font-medium text-muted-foreground">
-              Relevant Links:
-            </span>
-            <a
-              className="mt-1 block text-sm underline"
-              href={student.relevantLinks}
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              {student.relevantLinks}
-            </a>
-          </div>
-        )}
-      </div>
-    );
-  };
-
-  const renderCivilWarOrphanDetails = (orphan: CivilWarOrphan) => {
-    return (
-      <div className="space-y-3 rounded-lg bg-muted/50 p-4">
-        <div className="grid grid-cols-2 gap-4 text-sm">
-          <div>
-            <span className="font-medium text-muted-foreground">
-              Family Name:
-            </span>
-            <p className="mt-1">{orphan.familyName || '-'}</p>
-          </div>
-          <div>
-            <span className="font-medium text-muted-foreground">
-              Given Name:
-            </span>
-            <p className="mt-1">{orphan.givenName || '-'}</p>
-          </div>
-          <div>
-            <span className="font-medium text-muted-foreground">
-              Birth Date:
-            </span>
-            <p className="mt-1">{orphan.birthDate || '-'}</p>
-          </div>
-          <div>
-            <span className="font-medium text-muted-foreground">Arrival:</span>
-            <p className="mt-1">{orphan.arrival || '-'}</p>
-          </div>
-          <div>
-            <span className="font-medium text-muted-foreground">
-              Departure:
-            </span>
-            <p className="mt-1">{orphan.departure || '-'}</p>
-          </div>
-          <div>
-            <span className="font-medium text-muted-foreground">
-              Scholarships:
-            </span>
-            <p className="mt-1">{orphan.scholarships || '-'}</p>
-          </div>
-        </div>
-
-        {orphan.aliases && (
-          <div>
-            <span className="font-medium text-muted-foreground">Aliases:</span>
-            <p className="mt-1 text-sm">{orphan.aliases}</p>
-          </div>
-        )}
-
-        {orphan.comments && (
-          <div>
-            <span className="font-medium text-muted-foreground">Comments:</span>
-            <p className="mt-1 text-sm">{orphan.comments}</p>
-          </div>
-        )}
-
-        {orphan.references && (
-          <div>
-            <span className="font-medium text-muted-foreground">
-              References:
-            </span>
-            <p className="mt-1 text-sm">{orphan.references}</p>
-          </div>
-        )}
-      </div>
-    );
-  };
+  // Row details moved to dedicated components
 
   return (
     <div className="w-full">
-      <div className="flex items-center py-4">
-        <div className="relative max-w-sm">
-          <label className="sr-only" htmlFor="student-filter">
-            Filter students
-          </label>
-          <Input
-            aria-describedby="student-filter-help"
-            className="pr-8"
-            id="student-filter"
-            onChange={(event) => table.setGlobalFilter(event.target.value)}
-            placeholder="Filter by name..."
-            value={globalFilter}
-          />
-          {globalFilter && (
-            <Button
-              aria-label="Clear search"
-              className="-translate-y-1/2 absolute top-1/2 right-1 h-6 w-6 p-0"
-              onClick={() => table.setGlobalFilter('')}
-              size="sm"
-              variant="ghost"
-            >
-              <X aria-hidden="true" className="h-4 w-4" focusable="false" />
-            </Button>
-          )}
-        </div>
-        {uniqueNations.length > 0 && (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button className="ml-4" variant="outline">
-                {nationFilter || 'Filter by Nation'}
-                <ChevronDown
-                  aria-hidden="true"
-                  className="ml-2 h-4 w-4"
-                  focusable="false"
-                />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => setNationFilter(null)}>
-                All Nations
-              </DropdownMenuItem>
-              {uniqueNations.map((nation) => (
-                <DropdownMenuItem
-                  key={nation}
-                  onClick={() => setNationFilter(nation)}
-                >
-                  {nation}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        )}
-      </div>
+      <FilterBar
+        globalFilter={globalFilter}
+        onGlobalFilterChange={(value) => table.setGlobalFilter(value)}
+        uniqueNations={uniqueNations}
+        nationFilter={nationFilter}
+        onNationFilterChange={setNationFilter}
+      />
       <div className="overflow-hidden rounded-md border">
         <Table aria-label="Student directory records" id="student-table">
           <TableCaption>
@@ -432,7 +202,7 @@ export function MobileDataTable<T extends Student | CivilWarOrphan>({
                           className="p-0"
                           colSpan={row.getVisibleCells().length + 1}
                         >
-                          {renderRowDetails(row.original)}
+                          <RowDetails item={row.original as Student | CivilWarOrphan} />
                         </TableCell>
                       </TableRow>
                     )}
@@ -452,108 +222,7 @@ export function MobileDataTable<T extends Student | CivilWarOrphan>({
           </TableBody>
         </Table>
       </div>
-      <nav
-        aria-controls="student-table"
-        aria-label="Table pagination"
-        className="flex flex-col items-center justify-between gap-2.5 p-4 md:flex-row"
-      >
-        <div className="mb-2 flex-1 text-muted-foreground text-sm">
-          Showing {table.getRowModel().rows.length} of{' '}
-          {table.getFilteredRowModel().rows.length} row(s).
-        </div>
-        <div className="flex items-center space-x-6 lg:space-x-8">
-          <div className="flex items-center space-x-2">
-            <p className="font-medium text-sm" id="rows-per-page-label">
-              Rows per page
-            </p>
-            <Select
-              onValueChange={(value) => {
-                table.setPageSize(Number(value));
-              }}
-              value={`${table.getState().pagination.pageSize}`}
-            >
-              <SelectTrigger
-                aria-labelledby="rows-per-page-label rows-per-page-trigger"
-                className="h-8 w-[70px]"
-                id="rows-per-page-trigger"
-              >
-                <SelectValue
-                  placeholder={table.getState().pagination.pageSize}
-                />
-              </SelectTrigger>
-              <SelectContent side="top">
-                {PAGE_SIZE_OPTIONS.map((pageSize) => (
-                  <SelectItem key={pageSize} value={`${pageSize}`}>
-                    {pageSize}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="flex w-[100px] items-center justify-center font-medium text-sm">
-            Page {table.getState().pagination.pageIndex + 1} of{' '}
-            {table.getPageCount()}
-          </div>
-          <div className="flex items-center space-x-2">
-            <Button
-              className="hidden h-8 w-8 lg:flex"
-              disabled={!table.getCanPreviousPage()}
-              onClick={() => table.setPageIndex(0)}
-              size="icon"
-              variant="outline"
-            >
-              <span className="sr-only">Go to first page</span>
-              <ChevronsLeft
-                aria-hidden="true"
-                className="h-4 w-4"
-                focusable="false"
-              />
-            </Button>
-            <Button
-              className="h-8 w-8"
-              disabled={!table.getCanPreviousPage()}
-              onClick={() => table.previousPage()}
-              size="icon"
-              variant="outline"
-            >
-              <span className="sr-only">Go to previous page</span>
-              <ChevronLeft
-                aria-hidden="true"
-                className="h-4 w-4"
-                focusable="false"
-              />
-            </Button>
-            <Button
-              className="h-8 w-8"
-              disabled={!table.getCanNextPage()}
-              onClick={() => table.nextPage()}
-              size="icon"
-              variant="outline"
-            >
-              <span className="sr-only">Go to next page</span>
-              <ChevronRight
-                aria-hidden="true"
-                className="h-4 w-4"
-                focusable="false"
-              />
-            </Button>
-            <Button
-              className="hidden h-8 w-8 lg:flex"
-              disabled={!table.getCanNextPage()}
-              onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-              size="icon"
-              variant="outline"
-            >
-              <span className="sr-only">Go to last page</span>
-              <ChevronsRight
-                aria-hidden="true"
-                className="h-4 w-4"
-                focusable="false"
-              />
-            </Button>
-          </div>
-        </div>
-      </nav>
+      <Pagination table={table} pageSizeOptions={PAGE_SIZE_OPTIONS} tableId="student-table" />
     </div>
   );
 }
