@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { AlertTriangle, RefreshCw } from 'lucide-react';
-import { useEffect } from 'react';
-import { Button } from '@/components/ui/button';
+import { AlertTriangle, RefreshCw } from "lucide-react";
+import { useEffect } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
+} from "@/components/ui/card";
 
 export default function Error({
   error,
@@ -21,8 +21,8 @@ export default function Error({
   useEffect(() => {
     // Log the error to an error reporting service
     // In production, you would send this to a service like Sentry
-    if (process.env.NODE_ENV === 'development') {
-      console.error('Route error caught:', error);
+    if (process.env.NODE_ENV === "development") {
+      console.error("Route error caught:", error);
     }
   }, [error]);
 
@@ -41,9 +41,9 @@ export default function Error({
         <CardContent className="space-y-4">
           <div className="rounded-md bg-muted p-3">
             <p className="text-muted-foreground text-sm">
-              Error ID: {error.digest || 'Unknown'}
+              Error ID: {error.digest || "Unknown"}
             </p>
-            {process.env.NODE_ENV === 'development' && (
+            {process.env.NODE_ENV === "development" && (
               <details className="mt-2">
                 <summary className="cursor-pointer font-medium text-sm">
                   Error Details

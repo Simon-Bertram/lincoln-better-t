@@ -1,5 +1,5 @@
-import type { NextRequest } from 'next/server';
-import { NextResponse } from 'next/server';
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 
 /**
  * Creates a comprehensive Content Security Policy header
@@ -30,8 +30,8 @@ function createCSPHeader(): string {
     // Frame ancestors - block embedding in iframes
     "frame-ancestors 'none'",
     // Upgrade insecure requests
-    'upgrade-insecure-requests',
-  ].join('; ');
+    "upgrade-insecure-requests",
+  ].join("; ");
 }
 
 /**
@@ -40,12 +40,12 @@ function createCSPHeader(): string {
  */
 function createSecurityHeaders(): Record<string, string> {
   return {
-    'X-Content-Type-Options': 'nosniff',
-    'X-Frame-Options': 'DENY',
-    'X-XSS-Protection': '1; mode=block',
-    'Referrer-Policy': 'strict-origin-when-cross-origin',
-    'Permissions-Policy':
-      'camera=(), microphone=(), geolocation=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=()',
+    "X-Content-Type-Options": "nosniff",
+    "X-Frame-Options": "DENY",
+    "X-XSS-Protection": "1; mode=block",
+    "Referrer-Policy": "strict-origin-when-cross-origin",
+    "Permissions-Policy":
+      "camera=(), microphone=(), geolocation=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=()",
   };
 }
 
@@ -56,8 +56,8 @@ function createSecurityHeaders(): Record<string, string> {
  */
 function shouldSetHSTS(request: NextRequest): boolean {
   return (
-    process.env.NODE_ENV === 'production' &&
-    request.nextUrl.protocol === 'https:'
+    process.env.NODE_ENV === "production" &&
+    request.nextUrl.protocol === "https:"
   );
 }
 
@@ -66,7 +66,7 @@ function shouldSetHSTS(request: NextRequest): boolean {
  * @returns HSTS header value
  */
 function createHSTSHeader(): string {
-  return 'max-age=31536000; includeSubDomains; preload';
+  return "max-age=31536000; includeSubDomains; preload";
 }
 
 /**
@@ -75,7 +75,7 @@ function createHSTSHeader(): string {
  * @returns True if CORS headers should be set
  */
 function shouldSetCORSHeaders(request: NextRequest): boolean {
-  return !request.nextUrl.pathname.startsWith('/rpc');
+  return !request.nextUrl.pathname.startsWith("/rpc");
 }
 
 /**
@@ -84,9 +84,9 @@ function shouldSetCORSHeaders(request: NextRequest): boolean {
  */
 function createCORSHeaders(): Record<string, string> {
   return {
-    'Cross-Origin-Opener-Policy': 'same-origin',
-    'Cross-Origin-Embedder-Policy': 'require-corp',
-    'Cross-Origin-Resource-Policy': 'same-origin',
+    "Cross-Origin-Opener-Policy": "same-origin",
+    "Cross-Origin-Embedder-Policy": "require-corp",
+    "Cross-Origin-Resource-Policy": "same-origin",
   };
 }
 
@@ -100,7 +100,7 @@ function applySecurityHeaders(
   request: NextRequest
 ): void {
   // Apply CSP header
-  response.headers.set('Content-Security-Policy', createCSPHeader());
+  response.headers.set("Content-Security-Policy", createCSPHeader());
 
   // Apply standard security headers
   const securityHeaders = createSecurityHeaders();
@@ -110,7 +110,7 @@ function applySecurityHeaders(
 
   // Apply HSTS header conditionally
   if (shouldSetHSTS(request)) {
-    response.headers.set('Strict-Transport-Security', createHSTSHeader());
+    response.headers.set("Strict-Transport-Security", createHSTSHeader());
   }
 
   // Apply CORS headers conditionally
@@ -140,6 +140,6 @@ export const config = {
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      */
-    '/((?!api|rpc|_next/static|_next/image|favicon.ico).*)',
+    "/((?!api|rpc|_next/static|_next/image|favicon.ico).*)",
   ],
 };

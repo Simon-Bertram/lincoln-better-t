@@ -1,4 +1,4 @@
-import type { NextRequest } from 'next/server';
+import type { NextRequest } from "next/server";
 
 // Regex patterns for IP validation (defined at top level for performance)
 const IPV4_REGEX =
@@ -14,21 +14,21 @@ const IPV6_REGEX = /^(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$/;
 function getClientIP(request: NextRequest): string {
   // Check various headers that proxies use to forward the real IP
   const headers = [
-    'x-forwarded-for', // Most common proxy header
-    'x-real-ip', // Nginx proxy
-    'x-client-ip', // Apache proxy
-    'cf-connecting-ip', // Cloudflare
-    'x-cluster-client-ip', // Cluster environments
-    'x-forwarded', // Alternative forwarded header
-    'forwarded-for', // Alternative forwarded header
-    'forwarded', // RFC 7239 standard
+    "x-forwarded-for", // Most common proxy header
+    "x-real-ip", // Nginx proxy
+    "x-client-ip", // Apache proxy
+    "cf-connecting-ip", // Cloudflare
+    "x-cluster-client-ip", // Cluster environments
+    "x-forwarded", // Alternative forwarded header
+    "forwarded-for", // Alternative forwarded header
+    "forwarded", // RFC 7239 standard
   ];
 
   for (const header of headers) {
     const value = request.headers.get(header);
     if (value) {
       // x-forwarded-for can contain multiple IPs, take the first one
-      const ip = value.split(',')[0].trim();
+      const ip = value.split(",")[0].trim();
 
       // Validate IP format (basic validation)
       if (isValidIP(ip)) {
@@ -39,14 +39,14 @@ function getClientIP(request: NextRequest): string {
 
   // Fallback to connection remote address if available
   const connectionIP =
-    request.headers.get('x-vercel-forwarded-for') ||
-    request.headers.get('x-vercel-ip-country');
+    request.headers.get("x-vercel-forwarded-for") ||
+    request.headers.get("x-vercel-ip-country");
 
   if (connectionIP && isValidIP(connectionIP)) {
     return connectionIP;
   }
 
-  return 'unknown';
+  return "unknown";
 }
 
 /**
@@ -55,12 +55,12 @@ function getClientIP(request: NextRequest): string {
  * @returns True if IP appears valid
  */
 function isValidIP(ip: string): boolean {
-  if (!ip || typeof ip !== 'string') {
+  if (!ip || typeof ip !== "string") {
     return false;
   }
 
   // Remove any port numbers
-  const cleanIP = ip.split(':')[0];
+  const cleanIP = ip.split(":")[0];
 
   return IPV4_REGEX.test(cleanIP) || IPV6_REGEX.test(cleanIP);
 }
@@ -76,8 +76,8 @@ export function createContext(req: NextRequest) {
   return {
     request: req,
     clientIP,
-    userAgent: req.headers.get('user-agent') || 'unknown',
-    origin: req.headers.get('origin') || 'unknown',
+    userAgent: req.headers.get("user-agent") || "unknown",
+    origin: req.headers.get("origin") || "unknown",
   };
 }
 

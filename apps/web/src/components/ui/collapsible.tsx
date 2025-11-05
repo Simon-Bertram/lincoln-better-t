@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown } from "lucide-react";
 import {
   cloneElement,
   createContext,
@@ -8,9 +8,9 @@ import {
   type ReactNode,
   useContext,
   useState,
-} from 'react';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+} from "react";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 type CollapsibleProps = {
   children: ReactNode;
@@ -38,7 +38,7 @@ export function Collapsible({ children, className }: CollapsibleProps) {
 
   return (
     <CollapsibleContext.Provider value={{ open, setOpen }}>
-      <div className={cn('w-full', className)}>{children}</div>
+      <div className={cn("w-full", className)}>{children}</div>
     </CollapsibleContext.Provider>
   );
 }
@@ -50,7 +50,7 @@ export function CollapsibleTrigger({
 }: CollapsibleTriggerProps) {
   const context = useContext(CollapsibleContext);
   if (!context) {
-    throw new Error('CollapsibleTrigger must be used within a Collapsible');
+    throw new Error("CollapsibleTrigger must be used within a Collapsible");
   }
 
   const { open, setOpen } = context;
@@ -66,7 +66,7 @@ export function CollapsibleTrigger({
 
   return (
     <Button
-      className={cn('h-8 w-8 p-0', className)}
+      className={cn("h-8 w-8 p-0", className)}
       onClick={() => setOpen(!open)}
       size="sm"
       variant="ghost"
@@ -74,8 +74,8 @@ export function CollapsibleTrigger({
       <ChevronDown
         aria-hidden="true"
         className={cn(
-          'h-4 w-4 transition-transform duration-200',
-          open && 'rotate-180'
+          "h-4 w-4 transition-transform duration-200",
+          open && "rotate-180"
         )}
         focusable="false"
       />
@@ -90,7 +90,7 @@ export function CollapsibleContent({
 }: CollapsibleContentProps) {
   const context = useContext(CollapsibleContext);
   if (!context) {
-    throw new Error('CollapsibleContent must be used within a Collapsible');
+    throw new Error("CollapsibleContent must be used within a Collapsible");
   }
 
   const { open } = context;
@@ -98,8 +98,8 @@ export function CollapsibleContent({
   return (
     <div
       className={cn(
-        'overflow-hidden transition-all duration-200',
-        open ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0',
+        "overflow-hidden transition-all duration-200",
+        open ? "max-h-96 opacity-100" : "max-h-0 opacity-0",
         className
       )}
     >

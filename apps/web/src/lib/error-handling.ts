@@ -14,14 +14,14 @@ export type ErrorInfo = {
  */
 export function logError(error: Error, errorInfo?: ErrorInfo): void {
   // In development, log to console
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV === "development") {
     // eslint-disable-next-line no-console
-    console.group('Error Logged');
+    console.group("Error Logged");
     // eslint-disable-next-line no-console
-    console.error('Error:', error);
+    console.error("Error:", error);
     if (errorInfo) {
       // eslint-disable-next-line no-console
-      console.error('Error Info:', errorInfo);
+      console.error("Error Info:", errorInfo);
     }
     // eslint-disable-next-line no-console
     console.groupEnd();
@@ -34,13 +34,13 @@ export function logError(error: Error, errorInfo?: ErrorInfo): void {
   try {
     // Example: Sentry.captureException(error, { extra: errorInfo })
     // eslint-disable-next-line no-console
-    console.error('Production error:', error.message, errorInfo);
+    console.error("Production error:", error.message, errorInfo);
   } catch (loggingError) {
     // Fallback to console if error reporting fails
     // eslint-disable-next-line no-console
-    console.error('Failed to log error:', loggingError);
+    console.error("Failed to log error:", loggingError);
     // eslint-disable-next-line no-console
-    console.error('Original error:', error);
+    console.error("Original error:", error);
   }
 }
 
@@ -49,37 +49,37 @@ export function logError(error: Error, errorInfo?: ErrorInfo): void {
  */
 export function getErrorMessage(error: Error): string {
   // Handle network errors
-  if (error.name === 'TypeError' && error.message.includes('fetch')) {
-    return 'Unable to connect to the server. Please check your internet connection and try again.';
+  if (error.name === "TypeError" && error.message.includes("fetch")) {
+    return "Unable to connect to the server. Please check your internet connection and try again.";
   }
 
   // Handle timeout errors
-  if (error.name === 'TimeoutError' || error.message.includes('timeout')) {
-    return 'The request timed out. Please try again.';
+  if (error.name === "TimeoutError" || error.message.includes("timeout")) {
+    return "The request timed out. Please try again.";
   }
 
   // Handle authentication errors
-  if (error.message.includes('401') || error.message.includes('unauthorized')) {
-    return 'You are not authorized to perform this action. Please log in and try again.';
+  if (error.message.includes("401") || error.message.includes("unauthorized")) {
+    return "You are not authorized to perform this action. Please log in and try again.";
   }
 
   // Handle permission errors
-  if (error.message.includes('403') || error.message.includes('forbidden')) {
-    return 'You do not have permission to access this resource.';
+  if (error.message.includes("403") || error.message.includes("forbidden")) {
+    return "You do not have permission to access this resource.";
   }
 
   // Handle not found errors
-  if (error.message.includes('404') || error.message.includes('not found')) {
-    return 'The requested resource was not found.';
+  if (error.message.includes("404") || error.message.includes("not found")) {
+    return "The requested resource was not found.";
   }
 
   // Handle server errors
-  if (error.message.includes('500') || error.message.includes('server error')) {
-    return 'A server error occurred. Please try again later.';
+  if (error.message.includes("500") || error.message.includes("server error")) {
+    return "A server error occurred. Please try again later.";
   }
 
   // Default error message
-  return 'An unexpected error occurred. Please try again.';
+  return "An unexpected error occurred. Please try again.";
 }
 
 /**
@@ -87,30 +87,30 @@ export function getErrorMessage(error: Error): string {
  */
 export function isRetryableError(error: Error): boolean {
   // Network errors are usually retryable
-  if (error.name === 'TypeError' && error.message.includes('fetch')) {
+  if (error.name === "TypeError" && error.message.includes("fetch")) {
     return true;
   }
 
   // Server errors (5xx) are usually retryable
   if (
-    error.message.includes('500') ||
-    error.message.includes('502') ||
-    error.message.includes('503')
+    error.message.includes("500") ||
+    error.message.includes("502") ||
+    error.message.includes("503")
   ) {
     return true;
   }
 
   // Timeout errors are retryable
-  if (error.name === 'TimeoutError' || error.message.includes('timeout')) {
+  if (error.name === "TimeoutError" || error.message.includes("timeout")) {
     return true;
   }
 
   // Client errors (4xx) are usually not retryable
   if (
-    error.message.includes('400') ||
-    error.message.includes('401') ||
-    error.message.includes('403') ||
-    error.message.includes('404')
+    error.message.includes("400") ||
+    error.message.includes("401") ||
+    error.message.includes("403") ||
+    error.message.includes("404")
   ) {
     return false;
   }

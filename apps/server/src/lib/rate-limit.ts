@@ -1,6 +1,6 @@
-import { os } from '@orpc/server';
-import { z } from 'zod';
-import type { Context } from './context';
+import { os } from "@orpc/server";
+import { z } from "zod";
+import type { Context } from "./context";
 
 // Rate limiting configuration
 const SECONDS_PER_MINUTE = 60;
@@ -32,19 +32,19 @@ const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
  */
 function getClientId(context: Context): string {
   // Primary: Use real IP address
-  if (context.clientIP && context.clientIP !== 'unknown') {
+  if (context.clientIP && context.clientIP !== "unknown") {
     return context.clientIP;
   }
 
   // Fallback: Combine user agent and origin for unique identification
-  const userAgent = context.userAgent || 'unknown';
-  const origin = context.origin || 'unknown';
+  const userAgent = context.userAgent || "unknown";
+  const origin = context.origin || "unknown";
 
   // Create a hash-like identifier from user agent and origin
   // This is not cryptographically secure, just for rate limiting purposes
   const fallbackId = `${userAgent.slice(0, RATE_LIMIT_CONFIG.USER_AGENT_SLICE_LENGTH)}-${origin.slice(0, RATE_LIMIT_CONFIG.ORIGIN_SLICE_LENGTH)}`;
 
-  return fallbackId.replace(/[^a-zA-Z0-9-]/g, '');
+  return fallbackId.replace(/[^a-zA-Z0-9-]/g, "");
 }
 
 /**
@@ -109,7 +109,7 @@ export const baseWithErrors = os.errors({
       remaining: z.number().int().min(0).default(0),
       resetTime: z.number().int().min(0).default(0),
     }),
-    message: 'Rate limit exceeded. Please try again later.',
+    message: "Rate limit exceeded. Please try again later.",
   },
 });
 
@@ -150,15 +150,15 @@ export function createRateLimitHeaders(rateLimitResult: {
   retryAfter?: number;
 }): Record<string, string> {
   const headers: Record<string, string> = {
-    'X-RateLimit-Limit': rateLimitResult.limit.toString(),
-    'X-RateLimit-Remaining': rateLimitResult.remaining.toString(),
-    'X-RateLimit-Reset': Math.ceil(
+    "X-RateLimit-Limit": rateLimitResult.limit.toString(),
+    "X-RateLimit-Remaining": rateLimitResult.remaining.toString(),
+    "X-RateLimit-Reset": Math.ceil(
       rateLimitResult.resetTime / RATE_LIMIT_CONFIG.SECONDS_TO_MS
     ).toString(),
   };
 
   if (rateLimitResult.retryAfter) {
-    headers['Retry-After'] = rateLimitResult.retryAfter.toString();
+    headers["Retry-After"] = rateLimitResult.retryAfter.toString();
   }
 
   return headers;
@@ -169,9 +169,7 @@ export function createRateLimitHeaders(rateLimitResult: {
  * Note: Actual rate limiting is handled in procedure handlers using checkRateLimitWithContext
  */
 export const rateLimitMiddleware = baseWithErrors.middleware(
-  async ({ next }) => {
-    return await next();
-  }
+  async ({ next }) => await next()
 );
 
 /**
@@ -179,9 +177,7 @@ export const rateLimitMiddleware = baseWithErrors.middleware(
  * Note: Actual rate limiting is handled in procedure handlers using checkRateLimitWithContext
  */
 export const strictRateLimitMiddleware = baseWithErrors.middleware(
-  async ({ next }) => {
-    return await next();
-  }
+  async ({ next }) => await next()
 );
 
 /**

@@ -2,13 +2,13 @@ import {
   type UseQueryOptions,
   type UseQueryResult,
   useQuery,
-} from '@tanstack/react-query';
+} from "@tanstack/react-query";
 
 import {
   getErrorMessage,
   isRetryableError,
   logError,
-} from '@/lib/error-handling';
+} from "@/lib/error-handling";
 
 const DEFAULT_RETRY_ATTEMPTS = 3;
 
@@ -25,7 +25,7 @@ export function useQueryWithErrorHandling<TData, TError = Error>(
       // Only retry if the error is retryable
       if (isRetryableError(error as Error)) {
         const maxRetries =
-          typeof options.retry === 'number'
+          typeof options.retry === "number"
             ? options.retry
             : DEFAULT_RETRY_ATTEMPTS;
         return failureCount < maxRetries;
@@ -37,8 +37,8 @@ export function useQueryWithErrorHandling<TData, TError = Error>(
   // Log errors when they occur
   if (query.error) {
     logError(query.error as unknown as Error, {
-      componentStack: errorContext || 'Unknown component',
-      errorBoundary: 'useQueryWithErrorHandling',
+      componentStack: errorContext || "Unknown component",
+      errorBoundary: "useQueryWithErrorHandling",
     });
   }
 
@@ -50,7 +50,7 @@ export function useQueryWithErrorHandling<TData, TError = Error>(
  */
 export function useErrorMessage(error: Error | null | undefined): string {
   if (!error) {
-    return '';
+    return "";
   }
   return getErrorMessage(error);
 }

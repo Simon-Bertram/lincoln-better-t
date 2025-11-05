@@ -2,20 +2,20 @@ import {
   type CivilWarOrphan,
   civilWarOrphansColumns,
   civilWarOrphansMobileColumns,
-} from '@/components/civil-war-orphans-columns';
-import { columns, mobileColumns, type Student } from '@/components/columns';
+} from "@/components/civil-war-orphans-columns";
+import { columns, mobileColumns, type Student } from "@/components/columns";
 import {
   createDataSectionConfig,
   type DataSectionConfig,
-} from '@/components/enhanced-data-section';
-import { MESSAGES, QUERY_KEYS } from '@/lib/constants';
+} from "@/components/enhanced-data-section";
+import { MESSAGES, QUERY_KEYS } from "@/lib/constants";
 
 // Students data section configuration
 export const studentsConfig: DataSectionConfig<Student> =
   createDataSectionConfig({
     queryKey: QUERY_KEYS.STUDENTS,
     queryFn: async () => {
-      const { client } = await import('@/utils/orpc');
+      const { client } = await import("@/utils/orpc");
       return client.getStudents();
     },
     columns,
@@ -37,7 +37,7 @@ export const civilWarOrphansConfig: DataSectionConfig<CivilWarOrphan> =
   createDataSectionConfig({
     queryKey: QUERY_KEYS.CIVIL_WAR_ORPHANS,
     queryFn: async () => {
-      const { client } = await import('@/utils/orpc');
+      const { client } = await import("@/utils/orpc");
       return client.getCivilWarOrphans();
     },
     columns: civilWarOrphansColumns,

@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import type { Table } from '@tanstack/react-table';
-import { flexRender } from '@tanstack/react-table';
-import { TableBody, TableCell, TableRow } from '@/components/ui/table';
+import type { Table } from "@tanstack/react-table";
+import { flexRender } from "@tanstack/react-table";
+import { TableBody, TableCell, TableRow } from "@/components/ui/table";
 
 export type DataTableBodyProps<TData> = {
   table: Table<TData>;
@@ -21,7 +21,7 @@ export function DataTableBody<TData>({
         table.getRowModel().rows.map((row) => (
           <TableRow
             data-state={
-              isRowSelectionEnabled && row.getIsSelected() && 'selected'
+              isRowSelectionEnabled && row.getIsSelected() && "selected"
             }
             key={row.id}
           >

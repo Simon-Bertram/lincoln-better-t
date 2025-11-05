@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 // Pagination and validation constants
 const PAGINATION_LIMITS = {
@@ -52,7 +52,7 @@ export const getStudentsInputSchema = z.object({
     .max(PAGINATION_LIMITS.MAX_SEARCH_LENGTH)
     .regex(
       /^[a-zA-Z0-9\s\-'.]+$/,
-      'Search can only contain letters, numbers, spaces, hyphens, apostrophes, and periods'
+      "Search can only contain letters, numbers, spaces, hyphens, apostrophes, and periods"
     )
     .optional(),
 });

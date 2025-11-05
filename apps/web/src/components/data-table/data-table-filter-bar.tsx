@@ -1,17 +1,17 @@
-'use client';
+"use client";
 
-import type { Table } from '@tanstack/react-table';
-import { ChevronDown, X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import type { Table } from "@tanstack/react-table";
+import { ChevronDown, X } from "lucide-react";
+import { useMemo } from "react";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
-import { useMemo } from 'react';
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 
 export type DataTableFilterBarProps<TData> = {
   table: Table<TData>;
@@ -51,7 +51,7 @@ export function DataTableFilterBar<TData>({
           <Button
             aria-label="Clear search"
             className="-translate-y-1/2 absolute top-1/2 right-1 h-6 w-6 p-0"
-            onClick={() => table.setGlobalFilter('')}
+            onClick={() => table.setGlobalFilter("")}
             size="sm"
             variant="ghost"
           >
@@ -65,7 +65,7 @@ export function DataTableFilterBar<TData>({
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button className="ml-4" variant="outline">
-            {nationFilter || 'Filter by Nation'}
+            {nationFilter || "Filter by Nation"}
             <ChevronDown
               aria-hidden="true"
               className="ml-2 h-4 w-4"
@@ -74,7 +74,10 @@ export function DataTableFilterBar<TData>({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem key="__all_nations" onClick={() => setNationFilterAction(null)}>
+          <DropdownMenuItem
+            key="__all_nations"
+            onClick={() => setNationFilterAction(null)}
+          >
             All Nations
           </DropdownMenuItem>
           {nationOptions.map((nation) => (
@@ -90,7 +93,7 @@ export function DataTableFilterBar<TData>({
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button className="ml-auto" variant="outline">
-            Columns{' '}
+            Columns{" "}
             <ChevronDown
               aria-hidden="true"
               className="h-4 w-4"
@@ -102,18 +105,16 @@ export function DataTableFilterBar<TData>({
           {table
             .getAllColumns()
             .filter((column) => column.getCanHide())
-            .map((column) => {
-              return (
-                <DropdownMenuCheckboxItem
-                  checked={column.getIsVisible()}
-                  className="capitalize"
-                  key={column.id}
-                  onCheckedChange={(value) => column.toggleVisibility(!!value)}
-                >
-                  {column.id}
-                </DropdownMenuCheckboxItem>
-              );
-            })}
+            .map((column) => (
+              <DropdownMenuCheckboxItem
+                checked={column.getIsVisible()}
+                className="capitalize"
+                key={column.id}
+                onCheckedChange={(value) => column.toggleVisibility(!!value)}
+              >
+                {column.id}
+              </DropdownMenuCheckboxItem>
+            ))}
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

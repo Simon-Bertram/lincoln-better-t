@@ -1,10 +1,10 @@
-import type { ColumnDef } from '@tanstack/react-table';
-import { useMemo } from 'react';
-import type { CivilWarOrphan } from '@/components/civil-war-orphans-columns';
-import type { Student } from '@/components/columns';
-import { QUERY_KEYS } from '@/lib/constants';
-import { client } from '@/utils/orpc';
-import { useRateLimitHandling } from './use-rate-limit-handling';
+import type { ColumnDef } from "@tanstack/react-table";
+import { useMemo } from "react";
+import type { CivilWarOrphan } from "@/components/civil-war-orphans-columns";
+import type { Student } from "@/components/columns";
+import { QUERY_KEYS } from "@/lib/constants";
+import { client } from "@/utils/orpc";
+import { useRateLimitHandling } from "./use-rate-limit-handling";
 
 /**
  * Custom hook for students data fetching with rate limit handling
@@ -60,10 +60,10 @@ export function useStudentsConfig(): DataConfig<Student> {
       ...studentsQuery,
       columns: [], // Will be imported from columns.tsx
       mobileColumns: [], // Will be imported from columns.tsx
-      emptyMessage: 'No students found.',
+      emptyMessage: "No students found.",
       errorMessage:
-        'There was an error loading the student data. Please try again.',
-      loadingMessage: 'Loading students...',
+        "There was an error loading the student data. Please try again.",
+      loadingMessage: "Loading students...",
     }),
     [studentsQuery]
   );
@@ -80,10 +80,10 @@ export function useCivilWarOrphansConfig(): DataConfig<CivilWarOrphan> {
       ...orphansQuery,
       columns: [], // Will be imported from civil-war-orphans-columns.tsx
       mobileColumns: [], // Will be imported from civil-war-orphans-columns.tsx
-      emptyMessage: 'No civil war orphans found.',
+      emptyMessage: "No civil war orphans found.",
       errorMessage:
-        'There was an error loading the civil war orphans data. Please try again.',
-      loadingMessage: 'Loading civil war orphans...',
+        "There was an error loading the civil war orphans data. Please try again.",
+      loadingMessage: "Loading civil war orphans...",
     }),
     [orphansQuery]
   );

@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { AlertTriangle, RefreshCw } from 'lucide-react';
-import { Component, type ReactNode } from 'react';
-import { Button } from '@/components/ui/button';
+import { AlertTriangle, RefreshCw } from "lucide-react";
+import { Component, type ReactNode } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
+} from "@/components/ui/card";
 
 interface Props {
   children: ReactNode;
@@ -36,8 +36,8 @@ export class ErrorBoundary extends Component<Props, State> {
     this.props.onError?.(error, errorInfo);
 
     // Log error to reporting service in production
-    if (process.env.NODE_ENV === 'development') {
-      console.error('Error caught by boundary:', error, errorInfo);
+    if (process.env.NODE_ENV === "development") {
+      console.error("Error caught by boundary:", error, errorInfo);
     }
   }
 
@@ -63,7 +63,7 @@ export class ErrorBoundary extends Component<Props, State> {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            {process.env.NODE_ENV === 'development' && this.state.error && (
+            {process.env.NODE_ENV === "development" && this.state.error && (
               <div className="rounded-md bg-muted p-3">
                 <details>
                   <summary className="cursor-pointer font-medium text-sm">

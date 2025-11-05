@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import type { ColumnDef } from '@tanstack/react-table';
-import { DataTableBody } from '@/components/data-table/data-table-body';
-import { DataTableFilterBar } from '@/components/data-table/data-table-filter-bar';
-import { DataTableHead } from '@/components/data-table/data-table-head';
-import { PaginationControls } from '@/components/data-table/pagination-controls';
-import { Table, TableCaption } from '@/components/ui/table';
-import { useTableState } from '@/hooks/use-table-state';
+import type { ColumnDef } from "@tanstack/react-table";
+import { DataTableBody } from "@/components/data-table/data-table-body";
+import { DataTableFilterBar } from "@/components/data-table/data-table-filter-bar";
+import { DataTableHead } from "@/components/data-table/data-table-head";
+import { PaginationControls } from "@/components/data-table/pagination-controls";
+import { Table, TableCaption } from "@/components/ui/table";
+import { useTableState } from "@/hooks/use-table-state";
 
 // Pagination options moved to PaginationControls
 

@@ -1,5 +1,5 @@
-import { useQueryWithErrorHandling } from './use-error-handling';
-import { useRateLimitHandling } from './use-rate-limit-handling';
+import { useQueryWithErrorHandling } from "./use-error-handling";
+import { useRateLimitHandling } from "./use-rate-limit-handling";
 
 export type UseDataFetchingOptions<TData> = {
   queryKey: string[];

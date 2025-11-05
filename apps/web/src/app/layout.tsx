@@ -1,85 +1,85 @@
-import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
-import '../index.css';
-import { Analytics } from '@vercel/analytics/react';
-import Header from '@/components/header';
-import Providers from '@/components/providers';
+import type { Metadata } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
+import "../index.css";
+import { Analytics } from "@vercel/analytics/react";
+import Header from "@/components/header";
+import Providers from "@/components/providers";
 import {
   DatasetStructuredData,
   LincolnInstituteStructuredData,
   WebsiteStructuredData,
-} from '@/components/structured-data';
+} from "@/components/structured-data";
 
 const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-  display: 'swap',
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+  display: "swap",
   preload: true,
 });
 
 const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-  display: 'swap',
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+  display: "swap",
   preload: true,
 });
 
 export const metadata: Metadata = {
   title: {
     default:
-      'The Lincoln Institute Directory - Historical Student Records 1866-1922',
-    template: '%s | The Lincoln Institute Directory',
+      "The Lincoln Institution Directory - Historical Student Records 1866-1922",
+    template: "%s | The Lincoln Institution Directory",
   },
   description:
-    'Explore historical student records from The Lincoln Institute, a Philadelphia charity that operated from 1866-1922. Search through Civil War orphan records and student directories from this important educational institution.',
+    "Explore historical student records from The Lincoln Institution, a Philadelphia charity that operated from 1866-1922. Search through Civil War orphan records and student directories from this important educational institution.",
   keywords: [
-    'Lincoln Institute',
-    'Philadelphia history',
-    'Civil War orphans',
-    'historical records',
-    'student directory',
-    '1866-1922',
-    'Mary McHenry Cox',
-    'educational history',
-    'Pennsylvania history',
+    "Lincoln Institution",
+    "Philadelphia history",
+    "Civil War orphans",
+    "historical records",
+    "student directory",
+    "1866-1922",
+    "Mary McHenry Cox",
+    "educational history",
+    "Pennsylvania history",
   ],
-  authors: [{ name: 'Heidi Sproat and Mike Bertram' }],
-  creator: 'Heidi Sproat and Mike Bertram',
-  publisher: 'The Lincoln Institute Directory',
+  authors: [{ name: "Heidi Sproat and Mike Bertram" }],
+  creator: "Heidi Sproat and Mike Bertram",
+  publisher: "The Lincoln Institution Directory",
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
-  metadataBase: new URL('https://lincoln-institute-directory.vercel.app'), // Update with your actual domain
+  metadataBase: new URL("https://lincoln-institute-directory.vercel.app"), // Update with your actual domain
   alternates: {
-    canonical: '/',
+    canonical: "/",
   },
   openGraph: {
     title:
-      'The Lincoln Institute Directory - Historical Student Records 1866-1922',
+      "The Lincoln Institution Directory - Historical Student Records 1866-1922",
     description:
-      'Explore historical student records from The Lincoln Institute, a Philadelphia charity that operated from 1866-1922.',
-    url: 'https://lincoln-institute-directory.vercel.app', // Update with your actual domain
-    siteName: 'The Lincoln Institute Directory',
-    locale: 'en_US',
-    type: 'website',
+      "Explore historical student records from The Lincoln Institution, a Philadelphia charity that operated from 1866-1922.",
+    url: "https://lincoln-institute-directory.vercel.app", // Update with your actual domain
+    siteName: "The Lincoln Institution Directory",
+    locale: "en_US",
+    type: "website",
     images: [
       {
-        url: '/og-image.jpg', // You'll need to create this
+        url: "/og-image.jpg", // You'll need to create this
         width: 1200,
         height: 630,
-        alt: 'The Lincoln Institute Directory - Historical Student Records',
+        alt: "The Lincoln Institution Directory - Historical Student Records",
       },
     ],
   },
   twitter: {
-    card: 'summary_large_image',
+    card: "summary_large_image",
     title:
-      'The Lincoln Institute Directory - Historical Student Records 1866-1922',
+      "The Lincoln Institution Directory - Historical Student Records 1866-1922",
     description:
-      'Explore historical student records from The Lincoln Institute, a Philadelphia charity that operated from 1866-1922.',
-    images: ['/og-image.jpg'], // You'll need to create this
+      "Explore historical student records from The Lincoln Institution, a Philadelphia charity that operated from 1866-1922.",
+    images: ["/og-image.jpg"], // You'll need to create this
   },
   robots: {
     index: true,
@@ -87,9 +87,9 @@ export const metadata: Metadata = {
     googleBot: {
       index: true,
       follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
     },
   },
   verification: {

@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
 import type {
   ColumnDef,
   ColumnFiltersState,
   SortingState,
   VisibilityState,
-} from '@tanstack/react-table';
+} from "@tanstack/react-table";
 import {
   flexRender,
   getCoreRowModel,
@@ -13,12 +13,16 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from '@tanstack/react-table';
-import { ChevronDown, ChevronRight as ChevronRightIcon } from 'lucide-react';
-import React, { useMemo, useState } from 'react';
-import type { CivilWarOrphan } from '@/components/civil-war-orphans-columns';
-import type { Student } from '@/components/columns';
-import { Button } from '@/components/ui/button';
+} from "@tanstack/react-table";
+import { ChevronDown, ChevronRight as ChevronRightIcon } from "lucide-react";
+import React, { useMemo, useState } from "react";
+import type { CivilWarOrphan } from "@/components/civil-war-orphans-columns";
+import type { Student } from "@/components/columns";
+import { PAGE_SIZE_OPTIONS } from "@/components/mobile-data-table/constants";
+import { FilterBar } from "@/components/mobile-data-table/filter-bar";
+import { Pagination } from "@/components/mobile-data-table/pagination";
+import { RowDetails } from "@/components/mobile-data-table/row-details";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -27,11 +31,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { FilterBar } from '@/components/mobile-data-table/filter-bar';
-import { RowDetails } from '@/components/mobile-data-table/row-details';
-import { Pagination } from '@/components/mobile-data-table/pagination';
-import { PAGE_SIZE_OPTIONS } from '@/components/mobile-data-table/constants';
+} from "@/components/ui/table";
 
 // Page size options moved to constants file
 
@@ -48,16 +48,16 @@ export function MobileDataTable<T extends Student | CivilWarOrphan>({
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
-  const [globalFilter, setGlobalFilter] = useState('');
+  const [globalFilter, setGlobalFilter] = useState("");
   const [nationFilter, setNationFilter] = useState<string | null>(null);
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
 
   // Extract unique nations from data (only for Student type)
   const uniqueNations = useMemo(() => {
     const nations = data
-      .filter((item) => 'nation' in item)
+      .filter((item) => "nation" in item)
       .map((item) => (item as Student).nation)
-      .filter((nation): nation is string => nation !== null && nation !== '');
+      .filter((nation): nation is string => nation !== null && nation !== "");
 
     return [...new Set(nations)].sort();
   }, [data]);
@@ -69,7 +69,7 @@ export function MobileDataTable<T extends Student | CivilWarOrphan>({
     }
 
     return data.filter((item) => {
-      if ('nation' in item) {
+      if ("nation" in item) {
         return item.nation === nationFilter;
       }
       return true; // Don't filter CivilWarOrphan data
@@ -77,13 +77,13 @@ export function MobileDataTable<T extends Student | CivilWarOrphan>({
   }, [data, nationFilter]);
 
   const getSortDirection = (column: { getIsSorted: () => string | false }) => {
-    if (column.getIsSorted() === 'asc') {
-      return 'ascending';
+    if (column.getIsSorted() === "asc") {
+      return "ascending";
     }
-    if (column.getIsSorted() === 'desc') {
-      return 'descending';
+    if (column.getIsSorted() === "desc") {
+      return "descending";
     }
-    return 'none';
+    return "none";
   };
 
   const table = useReactTable({
@@ -98,7 +98,7 @@ export function MobileDataTable<T extends Student | CivilWarOrphan>({
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
     onGlobalFilterChange: setGlobalFilter,
-    globalFilterFn: 'includesString',
+    globalFilterFn: "includesString",
     state: {
       sorting,
       columnFilters,
@@ -124,10 +124,10 @@ export function MobileDataTable<T extends Student | CivilWarOrphan>({
     <div className="w-full">
       <FilterBar
         globalFilter={globalFilter}
-        onGlobalFilterChange={(value) => table.setGlobalFilter(value)}
-        uniqueNations={uniqueNations}
         nationFilter={nationFilter}
+        onGlobalFilterChange={(value) => table.setGlobalFilter(value)}
         onNationFilterChange={setNationFilter}
+        uniqueNations={uniqueNations}
       />
       <div className="overflow-hidden rounded-md border">
         <Table aria-label="Student directory records" id="student-table">
@@ -137,22 +137,20 @@ export function MobileDataTable<T extends Student | CivilWarOrphan>({
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead
-                      aria-sort={getSortDirection(header.column)}
-                      key={header.id}
-                      scope="col"
-                    >
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  );
-                })}
+                {headerGroup.headers.map((header) => (
+                  <TableHead
+                    aria-sort={getSortDirection(header.column)}
+                    key={header.id}
+                    scope="col"
+                  >
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                  </TableHead>
+                ))}
                 <TableHead className="w-12">Details</TableHead>
               </TableRow>
             ))}
@@ -163,7 +161,7 @@ export function MobileDataTable<T extends Student | CivilWarOrphan>({
                 const isExpanded = expandedRows.has(row.id);
                 return (
                   <React.Fragment key={row.id}>
-                    <TableRow data-state={row.getIsSelected() && 'selected'}>
+                    <TableRow data-state={row.getIsSelected() && "selected"}>
                       {row.getVisibleCells().map((cell) => (
                         <TableCell key={cell.id}>
                           {flexRender(
@@ -202,7 +200,9 @@ export function MobileDataTable<T extends Student | CivilWarOrphan>({
                           className="p-0"
                           colSpan={row.getVisibleCells().length + 1}
                         >
-                          <RowDetails item={row.original as Student | CivilWarOrphan} />
+                          <RowDetails
+                            item={row.original as Student | CivilWarOrphan}
+                          />
                         </TableCell>
                       </TableRow>
                     )}
@@ -222,7 +222,11 @@ export function MobileDataTable<T extends Student | CivilWarOrphan>({
           </TableBody>
         </Table>
       </div>
-      <Pagination table={table} pageSizeOptions={PAGE_SIZE_OPTIONS} tableId="student-table" />
+      <Pagination
+        pageSizeOptions={PAGE_SIZE_OPTIONS}
+        table={table}
+        tableId="student-table"
+      />
     </div>
   );
 }

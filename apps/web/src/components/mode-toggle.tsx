@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import { Moon, Sun } from 'lucide-react';
-import { useTheme } from 'next-themes';
-import { Button } from '@/components/ui/button';
+import { Moon, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from "@/components/ui/dropdown-menu";
 
 export function ModeToggle() {
   const { setTheme, theme } = useTheme();
@@ -24,22 +24,22 @@ export function ModeToggle() {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem
-          aria-checked={theme === 'light'}
-          onClick={() => setTheme('light')}
+          aria-checked={theme === "light"}
+          onClick={() => setTheme("light")}
           role="menuitemradio"
         >
           Light
         </DropdownMenuItem>
         <DropdownMenuItem
-          aria-checked={theme === 'dark'}
-          onClick={() => setTheme('dark')}
+          aria-checked={theme === "dark"}
+          onClick={() => setTheme("dark")}
           role="menuitemradio"
         >
           Dark
         </DropdownMenuItem>
         <DropdownMenuItem
-          aria-checked={theme === 'system'}
-          onClick={() => setTheme('system')}
+          aria-checked={theme === "system"}
+          onClick={() => setTheme("system")}
           role="menuitemradio"
         >
           System

@@ -1,30 +1,30 @@
-import type { Metadata } from 'next';
-import Link from 'next/link';
+import type { Metadata } from "next";
+import Link from "next/link";
 import {
   BreadcrumbStructuredData,
   Breadcrumbs,
-} from '@/components/breadcrumbs';
-import { CloudinaryImage } from '@/components/cloudinary-image';
+} from "@/components/breadcrumbs";
+import { CloudinaryImage } from "@/components/cloudinary-image";
 
 export const metadata: Metadata = {
-  title: 'About The Lincoln Institution',
+  title: "About The Lincoln Institution",
   description:
-    'Learn about The Lincoln Institution, a Philadelphia charity founded by Mary McHenry Cox that operated from 1866-1922, housing Civil War orphans and providing education.',
+    "Learn about The Lincoln Institution, a Philadelphia charity founded by Mary McHenry Cox that operated from 1866-1922, housing Civil War orphans and providing education.",
   keywords: [
-    'Lincoln Institution history',
-    'Mary McHenry Cox',
-    'Philadelphia charity',
-    'Civil War orphans',
-    'Educational Home',
-    '808 South Eleventh Street',
-    '1866-1922',
-    'historical institution',
+    "Lincoln Institution history",
+    "Mary McHenry Cox",
+    "Philadelphia charity",
+    "Civil War orphans",
+    "Educational Home",
+    "808 South Eleventh Street",
+    "1866-1922",
+    "historical institution",
   ],
   openGraph: {
-    title: 'About The Lincoln Institution - Historical Institution 1866-1922',
+    title: "About The Lincoln Institution - Historical Institution 1866-1922",
     description:
-      'Learn about The Lincoln Institution, a Philadelphia charity founded by Mary McHenry Cox that operated from 1866-1922, housing Civil War orphans and providing education.',
-    type: 'article',
+      "Learn about The Lincoln Institution, a Philadelphia charity founded by Mary McHenry Cox that operated from 1866-1922, housing Civil War orphans and providing education.",
+    type: "article",
   },
 };
 
@@ -34,10 +34,12 @@ export default function AboutPage() {
       className="container mx-auto my-4 w-[95%] px-4 py-2 lg:max-w-8/10"
       id="main-content"
     >
-      <Breadcrumbs items={[{ label: 'About' }]} />
-      <BreadcrumbStructuredData items={[{ label: 'About' }]} />
+      <Breadcrumbs items={[{ label: "About" }]} />
+      <BreadcrumbStructuredData items={[{ label: "About" }]} />
       <header className="mb-8 text-center">
-        <h1 className="mb-4 font-bold text-3xl">About The Lincoln Institution</h1>
+        <h1 className="mb-4 font-bold text-3xl">
+          About The Lincoln Institution
+        </h1>
         <p className="text-lg text-muted-foreground">
           Learn about the historical institution and this digital directory
         </p>
@@ -92,7 +94,7 @@ export default function AboutPage() {
                 older boys worked in city center businesses.
               </p>
               <p>
-                Information on the deaths of orphans is available{' '}
+                Information on the deaths of orphans is available{" "}
                 <Link
                   href="https://www.the2nomads.site/TEHSDocumentStore/docs/doc837.html"
                   target="_blank"
@@ -102,7 +104,7 @@ export default function AboutPage() {
                 .
               </p>
               <p>
-                Documents concerning the Lincoln Institution can be found{' '}
+                Documents concerning the Lincoln Institution can be found{" "}
                 <Link
                   href="https://www.the2nomads.site/TEHSDocumentStore/LincolnInstitution.html"
                   target="_blank"
@@ -139,10 +141,10 @@ export default function AboutPage() {
             </h2>
             <p className="prose prose-lg mx-auto max-w-3xl text-left">
               This digital directory contains historical records of students who
-              attended the Lincoln Institution during its years of operation. The
-              data provides valuable insights into the educational opportunities
-              and experiences of students during this period in American
-              history.
+              attended the Lincoln Institution during its years of operation.
+              The data provides valuable insights into the educational
+              opportunities and experiences of students during this period in
+              American history.
             </p>
           </div>
         </section>

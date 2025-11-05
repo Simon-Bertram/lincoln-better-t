@@ -1,18 +1,18 @@
-import type { RouterClient } from '@orpc/server';
-import { like } from 'drizzle-orm';
-import { z } from 'zod';
-import { db } from '../db';
-import { civilWarOrphans, students } from '../db/migrations/schema';
-import { publicProcedure } from '../lib/orpc';
+import type { RouterClient } from "@orpc/server";
+import { like } from "drizzle-orm";
+import { z } from "zod";
+import { db } from "../db";
+import { civilWarOrphans, students } from "../db/migrations/schema";
+import { publicProcedure } from "../lib/orpc";
 import {
   checkRateLimitWithContext,
   rateLimitMiddleware,
-} from '../lib/rate-limit';
+} from "../lib/rate-limit";
 import {
   CivilWarOrphanSchema,
   getCivilWarOrphansInputSchema,
-} from '../types/civil-war-orphans';
-import { getStudentsInputSchema, StudentSchema } from '../types/student';
+} from "../types/civil-war-orphans";
+import { getStudentsInputSchema, StudentSchema } from "../types/student";
 
 // Security constants
 const SECURITY_LIMITS = {
@@ -26,16 +26,16 @@ const SECURITY_LIMITS = {
  * @returns Sanitized search string safe for database queries
  */
 function sanitizeSearchInput(search: string): string {
-  if (!search || typeof search !== 'string') {
-    return '';
+  if (!search || typeof search !== "string") {
+    return "";
   }
 
   return (
     search
       // Remove potentially dangerous SQL characters
-      .replace(/[%_\\]/g, '') // Remove SQL wildcards and escape characters
-      .replace(/[<>'"&]/g, '') // Remove HTML/XML special characters
-      .replace(/[;()]/g, '') // Remove SQL statement terminators
+      .replace(/[%_\\]/g, "") // Remove SQL wildcards and escape characters
+      .replace(/[<>'"&]/g, "") // Remove HTML/XML special characters
+      .replace(/[;()]/g, "") // Remove SQL statement terminators
       .trim() // Remove leading/trailing whitespace
       .slice(0, SECURITY_LIMITS.MAX_SEARCH_LENGTH)
   ); // Enforce length limit
@@ -47,7 +47,7 @@ function sanitizeSearchInput(search: string): string {
  * @returns Sanitized offset value within safe limits
  */
 function sanitizeOffset(offset: number | undefined): number {
-  if (typeof offset !== 'number' || offset < 0 || !Number.isInteger(offset)) {
+  if (typeof offset !== "number" || offset < 0 || !Number.isInteger(offset)) {
     return 0;
   }
   return Math.min(offset, SECURITY_LIMITS.MAX_OFFSET);
@@ -122,7 +122,7 @@ function validateCivilWarOrphanResults(results: unknown[]) {
 function handleStudentQueryError(error: unknown): never {
   // In production, log to external service (Sentry, etc.)
   throw new Error(
-    `Failed to fetch students: ${error instanceof Error ? error.message : 'Unknown error'}`
+    `Failed to fetch students: ${error instanceof Error ? error.message : "Unknown error"}`
   );
 }
 
@@ -134,7 +134,7 @@ function handleStudentQueryError(error: unknown): never {
 function handleCivilWarOrphanQueryError(error: unknown): never {
   // In production, log to external service (Sentry, etc.)
   throw new Error(
-    `Failed to fetch civil war orphans: ${error instanceof Error ? error.message : 'Unknown error'}`
+    `Failed to fetch civil war orphans: ${error instanceof Error ? error.message : "Unknown error"}`
   );
 }
 
@@ -171,7 +171,7 @@ export const appRouter = {
         throwRateLimitError(rateLimitResult);
       }
 
-      return 'OK';
+      return "OK";
     }),
   getStudents: publicProcedure
     .use(rateLimitMiddleware)

@@ -1,17 +1,17 @@
-'use client';
+"use client";
 
-import { Users } from 'lucide-react';
+import { Users } from "lucide-react";
 import {
   type CivilWarOrphan,
   civilWarOrphansColumns,
   civilWarOrphansMobileColumns,
-} from '@/components/civil-war-orphans-columns';
-import { columns, mobileColumns, type Student } from '@/components/columns';
-import { DataSection } from '@/components/data-section';
-import { ErrorBoundary } from '@/components/error-boundary';
-import { TableToggle } from '@/components/table-toggle';
-import { useTableToggle } from '@/hooks/use-table-toggle';
-import { MESSAGES } from '@/lib/constants';
+} from "@/components/civil-war-orphans-columns";
+import { columns, mobileColumns, type Student } from "@/components/columns";
+import { DataSection } from "@/components/data-section";
+import { ErrorBoundary } from "@/components/error-boundary";
+import { TableToggle } from "@/components/table-toggle";
+import { useTableToggle } from "@/hooks/use-table-toggle";
+import { MESSAGES } from "@/lib/constants";
 
 // Students section using the generic DataSection component
 function StudentsSection() {
@@ -23,7 +23,7 @@ function StudentsSection() {
       loadingMessage={MESSAGES.LOADING.STUDENTS}
       mobileColumns={mobileColumns}
       queryFnAction={async () => {
-        const { client } = await import('@/utils/orpc');
+        const { client } = await import("@/utils/orpc");
         return client.getStudents();
       }}
       queryKey="students"
@@ -41,7 +41,7 @@ function CivilWarOrphansSection() {
       loadingMessage={MESSAGES.LOADING.CIVIL_WAR_ORPHANS}
       mobileColumns={civilWarOrphansMobileColumns}
       queryFnAction={async () => {
-        const { client } = await import('@/utils/orpc');
+        const { client } = await import("@/utils/orpc");
         return client.getCivilWarOrphans();
       }}
       queryKey="civil-war-orphans"
@@ -59,7 +59,7 @@ export default function Home() {
         className="absolute inset-0 z-0 hidden dark:block"
         style={{
           background:
-            'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(139, 92, 246, 0.25), transparent 70%), #000000',
+            "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(139, 92, 246, 0.25), transparent 70%), #000000",
         }}
       />
       {/* Light mode background */}
@@ -67,7 +67,7 @@ export default function Home() {
         className="absolute inset-0 z-0 bg-white dark:hidden"
         style={{
           background:
-            'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(139, 92, 246, 0.15), transparent 70%), #ffffff',
+            "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(139, 92, 246, 0.15), transparent 70%), #ffffff",
         }}
       />
 
@@ -91,20 +91,20 @@ export default function Home() {
             className="text-balance bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text font-bold text-4xl text-transparent md:text-5xl"
             id="main-heading"
           >
-            The Lincoln Institute Directory
+            The Lincoln Institution Directory
           </h1>
           <div className="prose prose-lg mx-auto max-w-3xl space-y-4 text-muted-foreground leading-relaxed">
             <p className="text-lg">
-              The Lincoln Institute was a charity created by Mary McHenry Cox
+              The Lincoln Institution was a charity created by Mary McHenry Cox
               which operated from 1866 to 1922 at 808 South Eleventh Street in
               Philadelphia.
             </p>
             <p>
               This digital directory contains historical records of students who
-              attended the Lincoln Institute during its years of operation. The
-              data provides valuable insights into the educational opportunities
-              and experiences of students during this period in American
-              history.
+              attended the Lincoln Institution during its years of operation.
+              The data provides valuable insights into the educational
+              opportunities and experiences of students during this period in
+              American history.
             </p>
           </div>
         </section>

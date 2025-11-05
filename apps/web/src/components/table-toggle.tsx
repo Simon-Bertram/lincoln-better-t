@@ -1,20 +1,20 @@
-'use client';
+"use client";
 
-import { Users } from 'lucide-react';
+import { Users } from "lucide-react";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { useTableToggle } from '@/hooks/use-table-toggle';
+} from "@/components/ui/select";
+import { useTableToggle } from "@/hooks/use-table-toggle";
 
 export function TableToggle() {
   const { currentTableType, switchToTable, TABLE_TYPES } = useTableToggle();
 
   const handleValueChange = (value: string) => {
-    switchToTable(value as 'students' | 'civil_war_orphans');
+    switchToTable(value as "students" | "civil_war_orphans");
   };
 
   return (

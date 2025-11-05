@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useCallback } from 'react';
-import { toast } from 'sonner';
+import { useCallback } from "react";
+import { toast } from "sonner";
 
 // Constants for rate limit handling
 const RATE_LIMIT_CONSTANTS = {
@@ -27,7 +27,7 @@ export function useRateLimitHandling() {
       code?: string;
       data?: { retryAfter?: number; limit?: number };
     }) => {
-      if (error?.code === 'RATE_LIMITED') {
+      if (error?.code === "RATE_LIMITED") {
         const retryAfter =
           error.data?.retryAfter || RATE_LIMIT_CONSTANTS.DEFAULT_RETRY_AFTER;
         const limit = error.data?.limit || RATE_LIMIT_CONSTANTS.DEFAULT_LIMIT;
@@ -36,7 +36,7 @@ export function useRateLimitHandling() {
           `Rate limit exceeded. You can make ${limit} requests per minute. Please try again in ${retryAfter} seconds.`,
           {
             duration: RATE_LIMIT_CONSTANTS.TOAST_DURATION,
-            description: 'This helps protect our servers from abuse.',
+            description: "This helps protect our servers from abuse.",
           }
         );
 
@@ -60,7 +60,7 @@ export function useRateLimitHandling() {
         data?: { retryAfter?: number; limit?: number };
         message?: string;
       },
-      fallbackMessage = 'An error occurred'
+      fallbackMessage = "An error occurred"
     ) => {
       // Try to handle as rate limit error first
       if (handleRateLimitError(error)) {
@@ -102,9 +102,9 @@ export function useRateLimitHandling() {
             // If it's a rate limit error and we have retries left
             if (
               error &&
-              typeof error === 'object' &&
-              'code' in error &&
-              error.code === 'RATE_LIMITED' &&
+              typeof error === "object" &&
+              "code" in error &&
+              error.code === "RATE_LIMITED" &&
               attempt < maxRetries
             ) {
               const retryAfter =
@@ -150,7 +150,7 @@ export function useRateLimitHandling() {
  * @returns True if the error is a rate limit error
  */
 export function isRateLimitError(error: { code?: string }): boolean {
-  return error?.code === 'RATE_LIMITED';
+  return error?.code === "RATE_LIMITED";
 }
 
 /**

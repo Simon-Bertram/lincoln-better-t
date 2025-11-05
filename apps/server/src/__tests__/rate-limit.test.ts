@@ -1,9 +1,9 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
   checkRateLimit,
   createRateLimitMiddleware,
   getClientId,
-} from '../lib/rate-limit';
+} from "../lib/rate-limit";
 
 // Mock the rate limit store
 const mockRateLimitStore = new Map<
@@ -12,8 +12,8 @@ const mockRateLimitStore = new Map<
 >();
 
 // Mock the global rate limit store
-vi.mock('../lib/rate-limit', async () => {
-  const actual = await vi.importActual('../lib/rate-limit');
+vi.mock("../lib/rate-limit", async () => {
+  const actual = await vi.importActual("../lib/rate-limit");
   return {
     ...actual,
     // Override the store for testing
@@ -21,55 +21,55 @@ vi.mock('../lib/rate-limit', async () => {
   };
 });
 
-describe('Rate Limiting', () => {
+describe("Rate Limiting", () => {
   beforeEach(() => {
     mockRateLimitStore.clear();
   });
 
-  describe('getClientId', () => {
-    it('should extract client ID from x-forwarded-for header', () => {
+  describe("getClientId", () => {
+    it("should extract client ID from x-forwarded-for header", () => {
       const mockReq = {
         headers: {
           get: (name: string) => {
-            if (name === 'x-forwarded-for') return '192.168.1.1, 10.0.0.1';
+            if (name === "x-forwarded-for") return "192.168.1.1, 10.0.0.1";
             return null;
           },
         },
       };
 
       const clientId = getClientId(mockReq);
-      expect(clientId).toBe('192.168.1.1');
+      expect(clientId).toBe("192.168.1.1");
     });
 
-    it('should extract client ID from x-real-ip header', () => {
+    it("should extract client ID from x-real-ip header", () => {
       const mockReq = {
         headers: {
           get: (name: string) => {
-            if (name === 'x-real-ip') return '192.168.1.2';
+            if (name === "x-real-ip") return "192.168.1.2";
             return null;
           },
         },
       };
 
       const clientId = getClientId(mockReq);
-      expect(clientId).toBe('192.168.1.2');
+      expect(clientId).toBe("192.168.1.2");
     });
 
-    it('should extract client ID from cf-connecting-ip header', () => {
+    it("should extract client ID from cf-connecting-ip header", () => {
       const mockReq = {
         headers: {
           get: (name: string) => {
-            if (name === 'cf-connecting-ip') return '192.168.1.3';
+            if (name === "cf-connecting-ip") return "192.168.1.3";
             return null;
           },
         },
       };
 
       const clientId = getClientId(mockReq);
-      expect(clientId).toBe('192.168.1.3');
+      expect(clientId).toBe("192.168.1.3");
     });
 
-    it('should return unknown when no IP headers are present', () => {
+    it("should return unknown when no IP headers are present", () => {
       const mockReq = {
         headers: {
           get: () => null,
@@ -77,21 +77,21 @@ describe('Rate Limiting', () => {
       };
 
       const clientId = getClientId(mockReq);
-      expect(clientId).toBe('unknown');
+      expect(clientId).toBe("unknown");
     });
   });
 
-  describe('checkRateLimit', () => {
-    it('should allow first request', () => {
-      const result = checkRateLimit('test-client', 100);
+  describe("checkRateLimit", () => {
+    it("should allow first request", () => {
+      const result = checkRateLimit("test-client", 100);
 
       expect(result.allowed).toBe(true);
       expect(result.remaining).toBe(99);
       expect(result.resetTime).toBeGreaterThan(Date.now());
     });
 
-    it('should allow requests within limit', () => {
-      const clientId = 'test-client-2';
+    it("should allow requests within limit", () => {
+      const clientId = "test-client-2";
 
       // Make 5 requests
       for (let i = 0; i < 5; i++) {
@@ -101,8 +101,8 @@ describe('Rate Limiting', () => {
       }
     });
 
-    it('should block requests when limit exceeded', () => {
-      const clientId = 'test-client-3';
+    it("should block requests when limit exceeded", () => {
+      const clientId = "test-client-3";
       const maxRequests = 3;
 
       // Make requests up to the limit
@@ -118,8 +118,8 @@ describe('Rate Limiting', () => {
       expect(blockedResult.retryAfter).toBeGreaterThan(0);
     });
 
-    it('should reset after window expires', () => {
-      const clientId = 'test-client-4';
+    it("should reset after window expires", () => {
+      const clientId = "test-client-4";
       const maxRequests = 2;
 
       // Exceed the limit
@@ -141,22 +141,22 @@ describe('Rate Limiting', () => {
     });
   });
 
-  describe('Rate Limit Middleware', () => {
-    it('should create middleware with default settings', () => {
+  describe("Rate Limit Middleware", () => {
+    it("should create middleware with default settings", () => {
       const middleware = createRateLimitMiddleware();
       expect(middleware).toBeDefined();
-      expect(typeof middleware).toBe('function');
+      expect(typeof middleware).toBe("function");
     });
 
-    it('should create middleware with custom settings', () => {
+    it("should create middleware with custom settings", () => {
       const customMiddleware = createRateLimitMiddleware(50);
       expect(customMiddleware).toBeDefined();
-      expect(typeof customMiddleware).toBe('function');
+      expect(typeof customMiddleware).toBe("function");
     });
   });
 
-  describe('Rate Limit Configuration', () => {
-    it('should have reasonable default limits', () => {
+  describe("Rate Limit Configuration", () => {
+    it("should have reasonable default limits", () => {
       // These tests verify that our configuration constants are reasonable
       expect(100).toBeGreaterThan(0); // MAX_REQUESTS
       expect(20).toBeGreaterThan(0); // MAX_REQUESTS_STRICT

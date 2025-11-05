@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useCallback, useMemo } from 'react';
+import { useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useMemo } from "react";
 
-export type TableType = 'students' | 'civil_war_orphans';
+export type TableType = "students" | "civil_war_orphans";
 
 const TABLE_TYPES = {
-  STUDENTS: 'students' as const,
-  CIVIL_WAR_ORPHANS: 'civil_war_orphans' as const,
+  STUDENTS: "students" as const,
+  CIVIL_WAR_ORPHANS: "civil_war_orphans" as const,
 } as const;
 
 const DEFAULT_TABLE_TYPE: TableType = TABLE_TYPES.STUDENTS;
@@ -20,7 +20,7 @@ function useTableTypeFromURL(): TableType {
   const searchParams = useSearchParams();
 
   return useMemo(() => {
-    const tableParam = searchParams.get('table');
+    const tableParam = searchParams.get("table");
     return (tableParam as TableType) || DEFAULT_TABLE_TYPE;
   }, [searchParams]);
 }
@@ -43,10 +43,10 @@ function useTableNavigation() {
 
       if (newTableType === DEFAULT_TABLE_TYPE) {
         // Remove the param if it's the default
-        params.delete('table');
+        params.delete("table");
       } else {
         // Set the param for non-default values
-        params.set('table', newTableType);
+        params.set("table", newTableType);
       }
 
       const newUrl = params.toString()

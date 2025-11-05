@@ -1,12 +1,12 @@
-import type { Column, ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown } from 'lucide-react';
+import type { Column, ColumnDef } from "@tanstack/react-table";
+import { ArrowUpDown } from "lucide-react";
 
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
-} from '@/components/ui/hover-card';
+} from "@/components/ui/hover-card";
 
 export type Student = {
   id: number;
@@ -32,7 +32,7 @@ export type Student = {
 function createSortableHeader(title: string, column: Column<Student, unknown>) {
   return (
     <Button
-      onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+      onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       variant="ghost"
     >
       {title}
@@ -51,7 +51,7 @@ function createSortableHeader(title: string, column: Column<Student, unknown>) {
  * @param fallback - The fallback text when value is null/undefined
  * @returns JSX element for the cell
  */
-function createTextCell(value: unknown, fallback = '-') {
+function createTextCell(value: unknown, fallback = "-") {
   return <div>{String(value || fallback)}</div>;
 }
 
@@ -62,7 +62,7 @@ function createTextCell(value: unknown, fallback = '-') {
  */
 function createDateCell(dateValue: string | null) {
   return (
-    <div>{dateValue ? new Date(dateValue).toLocaleDateString() : '-'}</div>
+    <div>{dateValue ? new Date(dateValue).toLocaleDateString() : "-"}</div>
   );
 }
 
@@ -117,78 +117,78 @@ function createHoverCardCell(
 
 export const columns: ColumnDef<Student>[] = [
   {
-    accessorKey: 'id',
-    header: 'ID',
-    cell: ({ row }) => <div className="font-medium">{row.getValue('id')}</div>,
+    accessorKey: "id",
+    header: "ID",
+    cell: ({ row }) => <div className="font-medium">{row.getValue("id")}</div>,
   },
   {
-    accessorKey: 'indianName',
-    header: 'Tribal Name',
-    cell: ({ row }) => createTextCell(row.getValue('indianName')),
+    accessorKey: "indianName",
+    header: "Tribal Name",
+    cell: ({ row }) => createTextCell(row.getValue("indianName")),
     enableGlobalFilter: true,
   },
   {
-    accessorKey: 'familyName',
-    header: ({ column }) => createSortableHeader('Family Name', column),
-    cell: ({ row }) => createTextCell(row.getValue('familyName')),
+    accessorKey: "familyName",
+    header: ({ column }) => createSortableHeader("Family Name", column),
+    cell: ({ row }) => createTextCell(row.getValue("familyName")),
     enableGlobalFilter: true,
   },
   {
-    accessorKey: 'englishGivenName',
-    header: ({ column }) => createSortableHeader('English Name', column),
-    cell: ({ row }) => createTextCell(row.getValue('englishGivenName')),
+    accessorKey: "englishGivenName",
+    header: ({ column }) => createSortableHeader("English Name", column),
+    cell: ({ row }) => createTextCell(row.getValue("englishGivenName")),
     enableGlobalFilter: true,
   },
   {
-    accessorKey: 'sex',
-    header: 'Sex',
-    cell: ({ row }) => createTextCell(row.getValue('sex')),
+    accessorKey: "sex",
+    header: "Sex",
+    cell: ({ row }) => createTextCell(row.getValue("sex")),
   },
   {
-    accessorKey: 'yearOfBirth',
-    header: ({ column }) => createSortableHeader('Year of Birth', column),
-    cell: ({ row }) => createTextCell(row.getValue('yearOfBirth')),
+    accessorKey: "yearOfBirth",
+    header: ({ column }) => createSortableHeader("Year of Birth", column),
+    cell: ({ row }) => createTextCell(row.getValue("yearOfBirth")),
   },
   {
-    accessorKey: 'nation',
-    header: ({ column }) => createSortableHeader('Nation', column),
-    cell: ({ row }) => createTextCell(row.getValue('nation')),
+    accessorKey: "nation",
+    header: ({ column }) => createSortableHeader("Nation", column),
+    cell: ({ row }) => createTextCell(row.getValue("nation")),
     enableGlobalFilter: false,
   },
   {
-    accessorKey: 'arrivalAtLincoln',
-    header: ({ column }) => createSortableHeader('Arrival Date', column),
+    accessorKey: "arrivalAtLincoln",
+    header: ({ column }) => createSortableHeader("Arrival Date", column),
     cell: ({ row }) =>
-      createDateCell(row.getValue('arrivalAtLincoln') as string | null),
+      createDateCell(row.getValue("arrivalAtLincoln") as string | null),
   },
   {
-    accessorKey: 'departureFromLincoln',
-    header: ({ column }) => createSortableHeader('Departure Date', column),
+    accessorKey: "departureFromLincoln",
+    header: ({ column }) => createSortableHeader("Departure Date", column),
     cell: ({ row }) =>
-      createDateCell(row.getValue('departureFromLincoln') as string | null),
+      createDateCell(row.getValue("departureFromLincoln") as string | null),
   },
   {
-    accessorKey: 'source',
-    header: 'Source',
+    accessorKey: "source",
+    header: "Source",
     cell: ({ row }) =>
-      createHoverCardCell(row.getValue('source') as string | null, 'Source'),
+      createHoverCardCell(row.getValue("source") as string | null, "Source"),
   },
   {
-    accessorKey: 'comments',
-    header: 'Comments',
+    accessorKey: "comments",
+    header: "Comments",
     cell: ({ row }) =>
       createHoverCardCell(
-        row.getValue('comments') as string | null,
-        'Comments'
+        row.getValue("comments") as string | null,
+        "Comments"
       ),
   },
   {
-    accessorKey: 'relevantLinks',
-    header: 'Relevant Link',
+    accessorKey: "relevantLinks",
+    header: "Relevant Link",
     cell: ({ row }) =>
       createHoverCardCell(
-        row.getValue('relevantLinks') as string | null,
-        'Relevant Links',
+        row.getValue("relevantLinks") as string | null,
+        "Relevant Links",
         true
       ),
   },
@@ -197,15 +197,15 @@ export const columns: ColumnDef<Student>[] = [
 // Mobile-specific columns that show only essential information
 export const mobileColumns: ColumnDef<Student>[] = [
   {
-    accessorKey: 'familyName',
-    header: ({ column }) => createSortableHeader('Family Name', column),
-    cell: ({ row }) => createTextCell(row.getValue('familyName')),
+    accessorKey: "familyName",
+    header: ({ column }) => createSortableHeader("Family Name", column),
+    cell: ({ row }) => createTextCell(row.getValue("familyName")),
     enableGlobalFilter: true,
   },
   {
-    accessorKey: 'englishGivenName',
-    header: ({ column }) => createSortableHeader('English Name', column),
-    cell: ({ row }) => createTextCell(row.getValue('englishGivenName')),
+    accessorKey: "englishGivenName",
+    header: ({ column }) => createSortableHeader("English Name", column),
+    cell: ({ row }) => createTextCell(row.getValue("englishGivenName")),
     enableGlobalFilter: true,
   },
 ];

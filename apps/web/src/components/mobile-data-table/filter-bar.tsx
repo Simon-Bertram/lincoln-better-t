@@ -1,15 +1,14 @@
-'use client';
+"use client";
 
-import { ChevronDown, X } from 'lucide-react';
-import React from 'react';
-import { Button } from '@/components/ui/button';
+import { ChevronDown, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 
 type FilterBarProps = {
   globalFilter: string;
@@ -44,7 +43,7 @@ export function FilterBar({
           <Button
             aria-label="Clear search"
             className="-translate-y-1/2 absolute top-1/2 right-1 h-6 w-6 p-0"
-            onClick={() => onGlobalFilterChange('')}
+            onClick={() => onGlobalFilterChange("")}
             size="sm"
             variant="ghost"
           >
@@ -56,8 +55,12 @@ export function FilterBar({
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button className="ml-4" variant="outline">
-              {nationFilter || 'Filter by Nation'}
-              <ChevronDown aria-hidden="true" className="ml-2 h-4 w-4" focusable="false" />
+              {nationFilter || "Filter by Nation"}
+              <ChevronDown
+                aria-hidden="true"
+                className="ml-2 h-4 w-4"
+                focusable="false"
+              />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
@@ -65,7 +68,10 @@ export function FilterBar({
               All Nations
             </DropdownMenuItem>
             {uniqueNations.map((nation) => (
-              <DropdownMenuItem key={nation} onClick={() => onNationFilterChange(nation)}>
+              <DropdownMenuItem
+                key={nation}
+                onClick={() => onNationFilterChange(nation)}
+              >
                 {nation}
               </DropdownMenuItem>
             ))}
@@ -75,5 +81,3 @@ export function FilterBar({
     </div>
   );
 }
-
-

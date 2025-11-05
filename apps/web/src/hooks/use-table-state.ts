@@ -4,15 +4,15 @@ import type {
   Table as ReactTable,
   SortingState,
   VisibilityState,
-} from '@tanstack/react-table';
+} from "@tanstack/react-table";
 import {
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from '@tanstack/react-table';
-import { useMemo, useState } from 'react';
+} from "@tanstack/react-table";
+import { useMemo, useState } from "react";
 
 export type UseTableStateOptions<TData, TValue = unknown> = {
   data: TData[];
@@ -31,7 +31,7 @@ export type UseTableStateReturn<TData> = {
   nationFilter: string | null;
   getSortDirection: (column: {
     getIsSorted: () => string | false;
-  }) => 'none' | 'ascending' | 'descending';
+  }) => "none" | "ascending" | "descending";
   clearFilters: () => void;
   setGlobalFilter: (value: string) => void;
   setNationFilter: (value: string | null) => void;
@@ -50,7 +50,7 @@ export function useTableState<TData, TValue = unknown>({
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
-  const [globalFilter, setGlobalFilter] = useState('');
+  const [globalFilter, setGlobalFilter] = useState("");
   const [nationFilter, setNationFilter] = useState<string | null>(null);
 
   // Business logic: Extract unique nations from data
@@ -61,7 +61,7 @@ export function useTableState<TData, TValue = unknown>({
 
     const nations = (data as Array<{ nation: string | null }>)
       .map((item) => item.nation)
-      .filter((nation): nation is string => nation !== null && nation !== '');
+      .filter((nation): nation is string => nation !== null && nation !== "");
 
     return [...new Set(nations)].sort();
   }, [data, enableNationFilter]);
@@ -96,7 +96,7 @@ export function useTableState<TData, TValue = unknown>({
       : undefined,
     onRowSelectionChange: enableRowSelection ? setRowSelection : undefined,
     onGlobalFilterChange: enableGlobalFilter ? setGlobalFilter : undefined,
-    globalFilterFn: 'includesString',
+    globalFilterFn: "includesString",
     state: {
       sorting,
       columnFilters,
@@ -109,20 +109,20 @@ export function useTableState<TData, TValue = unknown>({
   // Utility function: Get sort direction for accessibility
   const getSortDirection = (column: {
     getIsSorted: () => string | false;
-  }): 'none' | 'ascending' | 'descending' => {
+  }): "none" | "ascending" | "descending" => {
     const sortState = column.getIsSorted();
-    if (sortState === 'asc') {
-      return 'ascending';
+    if (sortState === "asc") {
+      return "ascending";
     }
-    if (sortState === 'desc') {
-      return 'descending';
+    if (sortState === "desc") {
+      return "descending";
     }
-    return 'none';
+    return "none";
   };
 
   // Utility function: Clear all filters
   const clearFilters = () => {
-    setGlobalFilter('');
+    setGlobalFilter("");
     setNationFilter(null);
     setColumnFilters([]);
   };

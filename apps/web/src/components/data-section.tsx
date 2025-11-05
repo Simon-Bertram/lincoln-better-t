@@ -1,20 +1,20 @@
-'use client';
+"use client";
 
-import { useQuery } from '@tanstack/react-query';
-import type { ColumnDef } from '@tanstack/react-table';
-import { AlertTriangle, RefreshCw } from 'lucide-react';
-import type { CivilWarOrphan } from '@/components/civil-war-orphans-columns';
-import type { Student } from '@/components/columns';
-import { DataTable } from '@/components/data-table/data-table';
-import { MobileDataTable } from '@/components/mobile-data-table';
-import { Button } from '@/components/ui/button';
+import { useQuery } from "@tanstack/react-query";
+import type { ColumnDef } from "@tanstack/react-table";
+import { AlertTriangle, RefreshCw } from "lucide-react";
+import type { CivilWarOrphan } from "@/components/civil-war-orphans-columns";
+import type { Student } from "@/components/columns";
+import { DataTable } from "@/components/data-table/data-table";
+import { MobileDataTable } from "@/components/mobile-data-table/mobile-data-table";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
+} from "@/components/ui/card";
 
 // Types for the generic data section
 export type DataSectionProps<T extends Student | CivilWarOrphan> = {

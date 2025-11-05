@@ -1,20 +1,20 @@
-'use client';
+"use client";
 
-import { useQuery } from '@tanstack/react-query';
-import type { ColumnDef } from '@tanstack/react-table';
-import { AlertTriangle, RefreshCw } from 'lucide-react';
-import type { CivilWarOrphan } from '@/components/civil-war-orphans-columns';
-import type { Student } from '@/components/columns';
-import { DataTable } from '@/components/data-table/data-table';
-import { MobileDataTable } from '@/components/mobile-data-table';
-import { Button } from '@/components/ui/button';
+import { useQuery } from "@tanstack/react-query";
+import type { ColumnDef } from "@tanstack/react-table";
+import { AlertTriangle, RefreshCw } from "lucide-react";
+import type { CivilWarOrphan } from "@/components/civil-war-orphans-columns";
+import type { Student } from "@/components/columns";
+import { DataTable } from "@/components/data-table/data-table";
+import { MobileDataTable } from "@/components/mobile-data-table/mobile-data-table";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
+} from "@/components/ui/card";
 
 // Enhanced types for better type safety
 export interface DataSectionConfig<T extends Student | CivilWarOrphan> {
@@ -51,7 +51,7 @@ interface LoadingStateProps {
 
 function LoadingState({ message, className }: LoadingStateProps) {
   return (
-    <div className={`flex items-center justify-center py-8 ${className || ''}`}>
+    <div className={`flex items-center justify-center py-8 ${className || ""}`}>
       <div className="flex items-center gap-2 text-muted-foreground">
         <div
           aria-label="Loading"
@@ -74,7 +74,7 @@ interface ErrorStateProps {
 
 function ErrorState({ message, onRetry, className, error }: ErrorStateProps) {
   return (
-    <Card className={`mx-auto max-w-md ${className || ''}`}>
+    <Card className={`mx-auto max-w-md ${className || ""}`}>
       <CardHeader className="text-center">
         <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10">
           <AlertTriangle className="h-6 w-6 text-destructive" />
@@ -83,7 +83,7 @@ function ErrorState({ message, onRetry, className, error }: ErrorStateProps) {
         <CardDescription>{message}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        {process.env.NODE_ENV === 'development' && error && (
+        {process.env.NODE_ENV === "development" && error && (
           <div className="rounded-md bg-muted p-3">
             <details>
               <summary className="cursor-pointer font-medium text-sm">
@@ -113,7 +113,7 @@ interface EmptyStateProps {
 function EmptyState({ message, className }: EmptyStateProps) {
   return (
     <div
-      className={`py-8 text-center text-muted-foreground ${className || ''}`}
+      className={`py-8 text-center text-muted-foreground ${className || ""}`}
     >
       <p>{message}</p>
     </div>

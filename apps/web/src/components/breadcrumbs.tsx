@@ -1,6 +1,6 @@
-import { ChevronRight, Home } from 'lucide-react';
-import Link from 'next/link';
-import Script from 'next/script';
+import { ChevronRight, Home } from "lucide-react";
+import Link from "next/link";
+import Script from "next/script";
 
 type BreadcrumbItem = {
   label: string;
@@ -12,7 +12,7 @@ type BreadcrumbsProps = {
 };
 
 export function Breadcrumbs({ items }: BreadcrumbsProps) {
-  const allItems = [{ label: 'Home', href: '/' }, ...items];
+  const allItems = [{ label: "Home", href: "/" }, ...items];
 
   return (
     <nav aria-label="Breadcrumb" className="mb-4">
@@ -45,13 +45,13 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
 
 // Structured data for breadcrumbs
 export function BreadcrumbStructuredData({ items }: BreadcrumbsProps) {
-  const allItems = [{ label: 'Home', href: '/' }, ...items];
+  const allItems = [{ label: "Home", href: "/" }, ...items];
 
   const structuredData = {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
     itemListElement: allItems.map((item, index) => ({
-      '@type': 'ListItem',
+      "@type": "ListItem",
       position: index + 1,
       name: item.label,
       item: item.href

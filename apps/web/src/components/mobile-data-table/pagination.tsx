@@ -1,21 +1,20 @@
-'use client';
+"use client";
 
+import type { Table as ReactTable } from "@tanstack/react-table";
 import {
   ChevronLeft,
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
-} from 'lucide-react';
-import React from 'react';
-import type { Table as ReactTable } from '@tanstack/react-table';
-import { Button } from '@/components/ui/button';
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from "@/components/ui/select";
 
 type PaginationProps<TData> = {
   table: ReactTable<TData>;
@@ -23,7 +22,11 @@ type PaginationProps<TData> = {
   tableId: string;
 };
 
-export function Pagination<TData>({ table, pageSizeOptions, tableId }: PaginationProps<TData>) {
+export function Pagination<TData>({
+  table,
+  pageSizeOptions,
+  tableId,
+}: PaginationProps<TData>) {
   return (
     <nav
       aria-controls={tableId}
@@ -31,7 +34,8 @@ export function Pagination<TData>({ table, pageSizeOptions, tableId }: Paginatio
       className="flex flex-col items-center justify-between gap-2.5 p-4 md:flex-row"
     >
       <div className="mb-2 flex-1 text-muted-foreground text-sm">
-        Showing {table.getRowModel().rows.length} of {table.getFilteredRowModel().rows.length} row(s).
+        Showing {table.getRowModel().rows.length} of{" "}
+        {table.getFilteredRowModel().rows.length} row(s).
       </div>
       <div className="flex items-center space-x-6 lg:space-x-8">
         <div className="flex items-center space-x-2">
@@ -61,7 +65,8 @@ export function Pagination<TData>({ table, pageSizeOptions, tableId }: Paginatio
           </Select>
         </div>
         <div className="flex w-[100px] items-center justify-center font-medium text-sm">
-          Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
+          Page {table.getState().pagination.pageIndex + 1} of{" "}
+          {table.getPageCount()}
         </div>
         <div className="flex items-center space-x-2">
           <Button
@@ -72,7 +77,11 @@ export function Pagination<TData>({ table, pageSizeOptions, tableId }: Paginatio
             variant="outline"
           >
             <span className="sr-only">Go to first page</span>
-            <ChevronsLeft aria-hidden="true" className="h-4 w-4" focusable="false" />
+            <ChevronsLeft
+              aria-hidden="true"
+              className="h-4 w-4"
+              focusable="false"
+            />
           </Button>
           <Button
             className="h-8 w-8"
@@ -82,7 +91,11 @@ export function Pagination<TData>({ table, pageSizeOptions, tableId }: Paginatio
             variant="outline"
           >
             <span className="sr-only">Go to previous page</span>
-            <ChevronLeft aria-hidden="true" className="h-4 w-4" focusable="false" />
+            <ChevronLeft
+              aria-hidden="true"
+              className="h-4 w-4"
+              focusable="false"
+            />
           </Button>
           <Button
             className="h-8 w-8"
@@ -92,7 +105,11 @@ export function Pagination<TData>({ table, pageSizeOptions, tableId }: Paginatio
             variant="outline"
           >
             <span className="sr-only">Go to next page</span>
-            <ChevronRight aria-hidden="true" className="h-4 w-4" focusable="false" />
+            <ChevronRight
+              aria-hidden="true"
+              className="h-4 w-4"
+              focusable="false"
+            />
           </Button>
           <Button
             className="hidden h-8 w-8 lg:flex"
@@ -102,12 +119,14 @@ export function Pagination<TData>({ table, pageSizeOptions, tableId }: Paginatio
             variant="outline"
           >
             <span className="sr-only">Go to last page</span>
-            <ChevronsRight aria-hidden="true" className="h-4 w-4" focusable="false" />
+            <ChevronsRight
+              aria-hidden="true"
+              className="h-4 w-4"
+              focusable="false"
+            />
           </Button>
         </div>
       </div>
     </nav>
   );
 }
-
-
