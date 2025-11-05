@@ -1,5 +1,3 @@
-"use client";
-
 export const DEFAULT_PAGE_SIZE = 10;
 export const SMALL_PAGE_SIZE = 20;
 export const MEDIUM_PAGE_SIZE = 25;

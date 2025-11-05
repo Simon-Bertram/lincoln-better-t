@@ -172,7 +172,7 @@ export function EnhancedDataSection<T extends Student | CivilWarOrphan>({
       )}
       {showMobileTable && (
         <div className="block lg:hidden">
-          <MobileDataTable data={query.data} mobileColumns={mobileColumns} />
+          <MobileDataTable records={query.data} mobileColumns={mobileColumns} />
         </div>
       )}
     </div>

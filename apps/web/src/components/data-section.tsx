@@ -117,7 +117,7 @@ export function DataSection<T extends Student | CivilWarOrphan>({
       </div>
       {/* Mobile table - visible on mobile */}
       <div className="block lg:hidden">
-        <MobileDataTable data={query.data} mobileColumns={mobileColumns} />
+        <MobileDataTable records={query.data} mobileColumns={mobileColumns} />
       </div>
     </>
   );

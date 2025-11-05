@@ -37,12 +37,12 @@ import {
 
 type MobileDataTableProps<T extends Student | CivilWarOrphan> = {
   mobileColumns: ColumnDef<T>[];
-  data: T[];
+  records: T[];
 };
 
 export function MobileDataTable<T extends Student | CivilWarOrphan>({
   mobileColumns,
-  data,
+  records,
 }: MobileDataTableProps<T>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -52,29 +52,37 @@ export function MobileDataTable<T extends Student | CivilWarOrphan>({
   const [nationFilter, setNationFilter] = useState<string | null>(null);
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
 
-  // Extract unique nations from data (only for Student type)
+  // Determine if we're displaying Students (who have nation filter) vs Civil War Orphans
+  // Students have a 'nation' property, Civil War Orphans do not
+  const isStudentData = useMemo(() => {
+    if (records.length === 0) return false;
+    // Check if any item has the 'nation' property (Student-specific)
+    return records.some((item) => "nation" in item);
+  }, [records]);
+
+  // Extract unique nations from records (only for Student type)
   const uniqueNations = useMemo(() => {
-    const nations = data
+    const nations = records
       .filter((item) => "nation" in item)
       .map((item) => (item as Student).nation)
       .filter((nation): nation is string => nation !== null && nation !== "");
 
     return [...new Set(nations)].sort();
-  }, [data]);
+  }, [records]);
 
-  // Filter data by nation if filter is applied (only for Student type)
+  // Filter records by nation if filter is applied (only for Student type)
   const filteredData = useMemo(() => {
     if (!nationFilter) {
-      return data;
+      return records;
     }
 
-    return data.filter((item) => {
+    return records.filter((item) => {
       if ("nation" in item) {
         return item.nation === nationFilter;
       }
       return true; // Don't filter CivilWarOrphan data
     });
-  }, [data, nationFilter]);
+  }, [records, nationFilter]);
 
   const getSortDirection = (column: { getIsSorted: () => string | false }) => {
     if (column.getIsSorted() === "asc") {
@@ -125,8 +133,9 @@ export function MobileDataTable<T extends Student | CivilWarOrphan>({
       <FilterBar
         globalFilter={globalFilter}
         nationFilter={nationFilter}
-        onGlobalFilterChange={(value) => table.setGlobalFilter(value)}
-        onNationFilterChange={setNationFilter}
+        onGlobalFilterChangeAction={(value) => table.setGlobalFilter(value)}
+        onNationFilterChangeAction={setNationFilter}
+        showNationFilter={isStudentData}
         uniqueNations={uniqueNations}
       />
       <div className="overflow-hidden rounded-md border">
