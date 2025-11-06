@@ -34,10 +34,10 @@ export function DataTableFilterBar<TData>({
     () => Array.from(new Set(uniqueNations)).filter(Boolean),
     [uniqueNations]
   );
-  
+
   const filterId = `${tableId}-filter`;
   const filterHelpId = `${tableId}-filter-help`;
-  
+
   return (
     <div className="flex items-center py-4">
       <div className="relative max-w-sm">
@@ -59,6 +59,7 @@ export function DataTableFilterBar<TData>({
             className="-translate-y-1/2 absolute top-1/2 right-1 h-6 w-6 p-0"
             onClick={() => table.setGlobalFilter("")}
             size="sm"
+            type="button"
             variant="ghost"
           >
             <X aria-hidden="true" className="h-4 w-4" focusable="false" />
@@ -70,7 +71,16 @@ export function DataTableFilterBar<TData>({
       </p>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button className="ml-4" variant="outline">
+          <Button
+            aria-label={
+              nationFilter
+                ? `Filter by nation: ${nationFilter}`
+                : "Filter by nation"
+            }
+            className="ml-4"
+            type="button"
+            variant="outline"
+          >
             {nationFilter || "Filter by Nation"}
             <ChevronDown
               aria-hidden="true"
@@ -98,7 +108,12 @@ export function DataTableFilterBar<TData>({
       </DropdownMenu>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button className="ml-auto" variant="outline">
+          <Button
+            aria-label="Toggle column visibility"
+            className="ml-auto"
+            type="button"
+            variant="outline"
+          >
             Columns{" "}
             <ChevronDown
               aria-hidden="true"

@@ -8,15 +8,15 @@ import { CloudinaryImage } from "@/components/cloudinary-image";
 
 /**
  * Static Generation Configuration
- * 
+ *
  * This page contains static historical content that never changes.
  * The page is statically generated at build time and never revalidated.
- * 
+ *
  * This provides:
  * - Maximum performance - served instantly from CDN
  * - Zero server costs - all static, no server computation
  * - Excellent Core Web Vitals scores - fully static content
- * 
+ *
  * The page will only regenerate when you redeploy the application.
  */
 export const revalidate = false; // Never revalidate - content is static
@@ -46,21 +46,21 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <main
-      className="container mx-auto my-2 w-[95%] px-4 py-2 lg:max-w-8/10 lg:my-12"
+      className="container mx-auto my-2 w-[95%] px-4 py-2 lg:my-12 lg:max-w-8/10"
       id="main-content"
     >
       <Breadcrumbs items={[{ label: "About" }]} />
       <BreadcrumbStructuredData items={[{ label: "About" }]} />
-      <header className="mb-12 mt-8 text-center lg:mb-16 lg:mt-12">
-        <h1 className="mb-6 font-bold text-4xl leading-tight lg:text-5xl lg:mb-8">
+      <header className="mt-8 mb-12 text-center lg:mt-12 lg:mb-16">
+        <h1 className="mb-6 font-bold text-4xl leading-tight lg:mb-8 lg:text-5xl">
           About The Lincoln Institution
         </h1>
-        <p className="mx-auto max-w-2xl text-lg leading-relaxed text-muted-foreground lg:text-xl">
+        <p className="mx-auto max-w-2xl text-lg text-muted-foreground leading-relaxed lg:text-xl">
           Learn about the historical institution and this digital directory
         </p>
       </header>
 
-      <article className="mx-auto mb-16 space-y-16 lg:max-w-[85ch] lg:mb-24 lg:space-y-24 xl:max-w-[95ch]">
+      <article className="mx-auto mb-16 space-y-16 lg:mb-24 lg:max-w-[85ch] lg:space-y-24 xl:max-w-[95ch]">
         <section aria-labelledby="institution-heading">
           <h2
             className="mb-8 text-center font-semibold text-2xl leading-tight lg:mb-10 lg:text-3xl"
@@ -69,7 +69,7 @@ export default function AboutPage() {
             The Institution
           </h2>
           <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:gap-12">
-            <div className="prose prose-lg prose-gray flex-1 max-w-none lg:prose-xl">
+            <div className="prose prose-lg prose-gray lg:prose-xl max-w-none flex-1">
               <p className="leading-relaxed">
                 The Lincoln Institution was a charitable institution founded by
                 Mary McHenry Cox that operated from 1866 to 1922 at 808 South
@@ -98,7 +98,7 @@ export default function AboutPage() {
             Civil War Orphans
           </h2>
           <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:gap-12">
-            <div className="prose prose-lg prose-gray flex-1 max-w-none space-y-6 lg:prose-xl lg:space-y-7">
+            <div className="prose prose-lg prose-gray lg:prose-xl max-w-none flex-1 space-y-6 lg:space-y-7">
               <p className="leading-relaxed">
                 The Lincoln Institution, a Philadelphia charity, housed orphaned
                 boys of the Civil War during from 1866 to 1884, whose fathers
@@ -112,6 +112,7 @@ export default function AboutPage() {
                 Information on the deaths of orphans is available{" "}
                 <Link
                   href="https://www.the2nomads.site/TEHSDocumentStore/docs/doc837.html"
+                  rel="noopener noreferrer"
                   target="_blank"
                 >
                   here
@@ -122,13 +123,14 @@ export default function AboutPage() {
                 Documents concerning the Lincoln Institution can be found{" "}
                 <Link
                   href="https://www.the2nomads.site/TEHSDocumentStore/LincolnInstitution.html"
+                  rel="noopener noreferrer"
                   target="_blank"
                 >
                   here
                 </Link>
                 .
               </p>
-              <p className="text-sm leading-relaxed text-muted-foreground">
+              <p className="text-muted-foreground text-sm leading-relaxed">
                 The data were compiled by Heidi Sproat and Mike Bertram.
               </p>
             </div>
@@ -154,13 +156,13 @@ export default function AboutPage() {
             >
               This Digital Directory
             </h2>
-            <div className="prose prose-lg prose-gray mx-auto max-w-none text-left lg:prose-xl">
+            <div className="prose prose-lg prose-gray lg:prose-xl mx-auto max-w-none text-left">
               <p className="leading-relaxed">
-                This digital directory contains historical records of students who
-                attended the Lincoln Institution during its years of operation.
-                The data provides valuable insights into the educational
-                opportunities and experiences of students during this period in
-                American history.
+                This digital directory contains historical records of students
+                who attended the Lincoln Institution during its years of
+                operation. The data provides valuable insights into the
+                educational opportunities and experiences of students during
+                this period in American history.
               </p>
             </div>
           </div>

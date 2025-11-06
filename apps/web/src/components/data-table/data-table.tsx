@@ -56,7 +56,7 @@ export function DataTable<TData, TValue>({
         />
         <DataTableBody columnsLength={columns.length} table={table} />
       </Table>
-      <PaginationControls table={table} />
+      <PaginationControls table={table} tableId={tableId} />
     </div>
   );
 }

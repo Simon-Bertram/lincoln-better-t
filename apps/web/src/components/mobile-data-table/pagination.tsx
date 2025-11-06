@@ -39,7 +39,10 @@ export function Pagination<TData>({
       </div>
       <div className="flex items-center space-x-6 lg:space-x-8">
         <div className="flex items-center space-x-2">
-          <p className="font-medium text-sm" id="rows-per-page-label">
+          <p
+            className="font-medium text-sm"
+            id={`${tableId}-rows-per-page-label`}
+          >
             Rows per page
           </p>
           <Select
@@ -49,9 +52,9 @@ export function Pagination<TData>({
             value={`${table.getState().pagination.pageSize}`}
           >
             <SelectTrigger
-              aria-labelledby="rows-per-page-label rows-per-page-trigger"
+              aria-labelledby={`${tableId}-rows-per-page-label ${tableId}-rows-per-page-trigger`}
               className="h-8 w-[70px]"
-              id="rows-per-page-trigger"
+              id={`${tableId}-rows-per-page-trigger`}
             >
               <SelectValue placeholder={table.getState().pagination.pageSize} />
             </SelectTrigger>
@@ -70,10 +73,12 @@ export function Pagination<TData>({
         </div>
         <div className="flex items-center space-x-2">
           <Button
+            aria-label="Go to first page"
             className="hidden h-8 w-8 lg:flex"
             disabled={!table.getCanPreviousPage()}
             onClick={() => table.setPageIndex(0)}
             size="icon"
+            type="button"
             variant="outline"
           >
             <span className="sr-only">Go to first page</span>
@@ -84,10 +89,12 @@ export function Pagination<TData>({
             />
           </Button>
           <Button
+            aria-label="Go to previous page"
             className="h-8 w-8"
             disabled={!table.getCanPreviousPage()}
             onClick={() => table.previousPage()}
             size="icon"
+            type="button"
             variant="outline"
           >
             <span className="sr-only">Go to previous page</span>
@@ -98,10 +105,12 @@ export function Pagination<TData>({
             />
           </Button>
           <Button
+            aria-label="Go to next page"
             className="h-8 w-8"
             disabled={!table.getCanNextPage()}
             onClick={() => table.nextPage()}
             size="icon"
+            type="button"
             variant="outline"
           >
             <span className="sr-only">Go to next page</span>
@@ -112,10 +121,12 @@ export function Pagination<TData>({
             />
           </Button>
           <Button
+            aria-label="Go to last page"
             className="hidden h-8 w-8 lg:flex"
             disabled={!table.getCanNextPage()}
             onClick={() => table.setPageIndex(table.getPageCount() - 1)}
             size="icon"
+            type="button"
             variant="outline"
           >
             <span className="sr-only">Go to last page</span>

@@ -26,25 +26,32 @@ type NameFilterProps = {
 };
 
 function NameFilter({ value, onChange }: NameFilterProps) {
+  const filterId = "mobile-student-filter";
+  const filterHelpId = "mobile-student-filter-help";
+
   return (
     <div className="relative max-w-sm">
-      <label className="sr-only" htmlFor="student-filter">
+      <label className="sr-only" htmlFor={filterId}>
         Filter students
       </label>
       <Input
-        aria-describedby="student-filter-help"
+        aria-describedby={filterHelpId}
         className="pr-8"
-        id="student-filter"
+        id={filterId}
         onChange={(event) => onChange(event.target.value)}
         placeholder="Filter by name..."
         value={value}
       />
+      <p className="sr-only" id={filterHelpId}>
+        Filters the table rows by student name
+      </p>
       {value && (
         <Button
           aria-label="Clear search"
           className="-translate-y-1/2 absolute top-1/2 right-1 h-6 w-6 p-0"
           onClick={() => onChange("")}
           size="sm"
+          type="button"
           variant="ghost"
         >
           <X aria-hidden="true" className="h-4 w-4" focusable="false" />
@@ -82,7 +89,16 @@ function NationFilter({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button className="ml-4" variant="outline">
+        <Button
+          aria-label={
+            selectedNation
+              ? `Filter by nation: ${selectedNation}`
+              : "Filter by nation"
+          }
+          className="ml-4"
+          type="button"
+          variant="outline"
+        >
           {selectedNation || "Filter by Nation"}
           <ChevronDown
             aria-hidden="true"
@@ -133,12 +149,12 @@ export function FilterBar({
 }: FilterBarProps) {
   return (
     <div className="flex items-center py-4">
-      <NameFilter value={globalFilter} onChange={onGlobalFilterChangeAction} />
+      <NameFilter onChange={onGlobalFilterChangeAction} value={globalFilter} />
       {showNationFilter && (
         <NationFilter
           nations={uniqueNations}
-          selectedNation={nationFilter}
           onNationChange={onNationFilterChangeAction}
+          selectedNation={nationFilter}
         />
       )}
     </div>

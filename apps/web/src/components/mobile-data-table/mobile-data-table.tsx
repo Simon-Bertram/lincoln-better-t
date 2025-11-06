@@ -181,9 +181,11 @@ export function MobileDataTable<T extends Student | CivilWarOrphan>({
                       ))}
                       <TableCell>
                         <Button
+                          aria-label={`Toggle details for row ${row.index + 1}`}
                           className="h-8 w-8 p-0"
                           onClick={() => toggleRowExpansion(row.id)}
                           size="sm"
+                          type="button"
                           variant="ghost"
                         >
                           {isExpanded ? (
