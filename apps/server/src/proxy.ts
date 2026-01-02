@@ -122,7 +122,7 @@ function applySecurityHeaders(
   }
 }
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const response = NextResponse.next();
 
   applySecurityHeaders(response, request);
