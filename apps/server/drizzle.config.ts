@@ -7,4 +7,16 @@ export default defineConfig({
   dbCredentials: {
     url: process.env.DATABASE_URL || "",
   },
+  strict: true,
+  verbose: true,
+  breakpoints: true,
+  introspect: {
+    casing: "camel",
+  },
+  migrations: {
+    prefix: "timestamp",
+    table: "__drizzle_migrations__",
+    schema: "public",
+  },
+  schemaFilter: "public",
 });

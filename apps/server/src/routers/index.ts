@@ -2,7 +2,7 @@ import type { RouterClient } from "@orpc/server";
 import { like } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "../db";
-import { civilWarOrphans, students } from "../db/migrations/schema";
+import { civilWarOrphans, students } from "../db/schema";
 import { publicProcedure } from "../lib/orpc";
 import {
   CivilWarOrphanSchema,

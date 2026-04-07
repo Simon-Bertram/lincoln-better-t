@@ -1,6 +1,6 @@
 import { neon } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
-import { civilWarOrphans, students } from "./migrations/schema";
+import { civilWarOrphans, students } from "./schema";
 
 const schema = { students, civilWarOrphans };
 
