@@ -1,14 +1,24 @@
 import type { RouterClient } from "@orpc/server";
-import { like } from "drizzle-orm";
+import { and, eq, inArray, like, or } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "../db";
-import { civilWarOrphans, students } from "../db/schema";
+import {
+  agencies,
+  civilWarOrphans,
+  enrollments,
+  nations,
+  students,
+} from "../db/schema";
 import { publicProcedure } from "../lib/orpc";
 import {
   CivilWarOrphanSchema,
   getCivilWarOrphansInputSchema,
 } from "../types/civil-war-orphans";
-import { getStudentsInputSchema, StudentSchema } from "../types/student";
+import {
+  getStudentsInputSchema,
+  StudentEntitySchema,
+  StudentTableRowSchema,
+} from "../types/student";
 
 // Security constants
 const SECURITY_LIMITS = {
@@ -54,19 +64,39 @@ function sanitizeOffset(offset: number | undefined): number {
  * @param input - Optional input containing search and offset parameters
  * @returns Database query builder
  */
-function buildStudentQuery(input?: { search?: string; offset?: number }) {
+function buildStudentQuery(input?: {
+  search?: string;
+  offset?: number;
+  limit?: number;
+}) {
   const offset = sanitizeOffset(input?.offset);
   const search = input?.search ? sanitizeSearchInput(input.search) : undefined;
+  const limit =
+    typeof input?.limit === "number" && input.limit > 0
+      ? Math.min(input.limit, 100)
+      : undefined;
 
   const whereClause = search
-    ? like(students.familyName, `%${search}%`)
+    ? or(
+        like(students.familyName, `%${search}%`),
+        like(students.givenName, `%${search}%`),
+        like(students.indianName, `%${search}%`)
+      )
     : undefined;
 
+  const baseQuery = db.select().from(students).offset(offset);
+
   if (whereClause) {
-    return db.select().from(students).where(whereClause).offset(offset);
+    if (typeof limit === "number") {
+      return baseQuery.where(whereClause).limit(limit);
+    }
+    return baseQuery.where(whereClause);
   }
 
-  return db.select().from(students).offset(offset);
+  if (typeof limit === "number") {
+    return baseQuery.limit(limit);
+  }
+  return baseQuery;
 }
 
 /**
@@ -98,7 +128,7 @@ function buildCivilWarOrphansQuery(input?: {
  * @returns Validated student array
  */
 function validateStudentResults(results: unknown[]) {
-  return z.array(StudentSchema).parse(results);
+  return z.array(StudentTableRowSchema).parse(results);
 }
 
 /**
@@ -135,23 +165,146 @@ function handleCivilWarOrphanQueryError(error: unknown): never {
 }
 
 export const appRouter = {
-  healthCheck: publicProcedure
-    .output(z.string())
-    .handler(() => {
-      return "OK";
-    }),
+  healthCheck: publicProcedure.output(z.string()).handler(() => {
+    return "OK";
+  }),
   getStudents: publicProcedure
     .input(getStudentsInputSchema.optional())
-    .output(z.array(StudentSchema))
+    .output(z.array(StudentTableRowSchema))
     .handler(async ({ input }) => {
       try {
-        const query = buildStudentQuery(input);
-        const result = await query;
+        const studentRows = await buildStudentQuery(input);
+        const validatedStudents = z.array(StudentEntitySchema).parse(studentRows);
+
+        if (!validatedStudents.length) {
+          return [];
+        }
+
+        const studentIds = validatedStudents.map((student) => student.studentId);
+        const nationIds = validatedStudents
+          .map((student) => student.nationId)
+          .filter((id): id is number => typeof id === "number");
+        const agencyIds = validatedStudents
+          .map((student) => student.agencyId)
+          .filter((id): id is number => typeof id === "number");
+
+        const [nationRows, agencyRows, enrollmentRows] = await Promise.all([
+          nationIds.length
+            ? db
+                .select({
+                  nationId: nations.nationId,
+                  nation: nations.nation,
+                })
+                .from(nations)
+                .where(inArray(nations.nationId, nationIds))
+            : Promise.resolve([]),
+          agencyIds.length
+            ? db
+                .select({
+                  agencyId: agencies.agencyId,
+                  agency: agencies.agency,
+                })
+                .from(agencies)
+                .where(inArray(agencies.agencyId, agencyIds))
+            : Promise.resolve([]),
+          db
+            .select({
+              studentId: enrollments.studentId,
+              arrivalDateFull: enrollments.arrivalDateFull,
+              departureDateFull: enrollments.departureDateFull,
+              arrivalYearNumeric: enrollments.arrivalYearNumeric,
+              departureYearNumeric: enrollments.departureYearNumeric,
+              trade: enrollments.trade,
+              diedAtLincoln: enrollments.diedAtLincoln,
+            })
+            .from(enrollments)
+            .where(inArray(enrollments.studentId, studentIds)),
+        ]);
+
+        const nationById = new Map(nationRows.map((row) => [row.nationId, row.nation]));
+        const agencyById = new Map(agencyRows.map((row) => [row.agencyId, row.agency]));
+        const enrollmentByStudentId = new Map<number, (typeof enrollmentRows)[number]>();
+
+        for (const enrollment of enrollmentRows) {
+          if (enrollment.studentId === null) {
+            continue;
+          }
+          const existing = enrollmentByStudentId.get(enrollment.studentId);
+          if (!existing) {
+            enrollmentByStudentId.set(enrollment.studentId, enrollment);
+            continue;
+          }
+
+          const existingDepartureYear = existing.departureYearNumeric ?? Number.MIN_SAFE_INTEGER;
+          const nextDepartureYear =
+            enrollment.departureYearNumeric ?? Number.MIN_SAFE_INTEGER;
+          const existingArrivalYear = existing.arrivalYearNumeric ?? Number.MIN_SAFE_INTEGER;
+          const nextArrivalYear = enrollment.arrivalYearNumeric ?? Number.MIN_SAFE_INTEGER;
+
+          const shouldReplace =
+            nextDepartureYear > existingDepartureYear ||
+            (nextDepartureYear === existingDepartureYear &&
+              nextArrivalYear > existingArrivalYear);
+
+          if (shouldReplace) {
+            enrollmentByStudentId.set(enrollment.studentId, enrollment);
+          }
+        }
+
+        const result = validatedStudents.map((student) => {
+          const enrollment = enrollmentByStudentId.get(student.studentId);
+          return {
+            studentId: student.studentId,
+            familyName: student.familyName,
+            givenName: student.givenName,
+            indianName: student.indianName,
+            sex: student.sex,
+            birthYear: student.birthYear,
+            nation:
+              student.nationId === null
+                ? null
+                : (nationById.get(student.nationId) ?? null),
+            agency:
+              student.agencyId === null
+                ? null
+                : (agencyById.get(student.agencyId) ?? null),
+            arrivalDateFull: enrollment?.arrivalDateFull ?? null,
+            departureDateFull: enrollment?.departureDateFull ?? null,
+            trade: enrollment?.trade ?? null,
+            diedAtLincoln: enrollment?.diedAtLincoln ?? null,
+          };
+        });
+
         return validateStudentResults(result);
       } catch (error) {
         handleStudentQueryError(error);
       }
     }),
+  getNations: publicProcedure.output(z.array(z.object({
+    nationId: z.number(),
+    nation: z.string().nullable(),
+    band: z.string().nullable(),
+  }))).handler(async () => {
+    return db.select().from(nations);
+  }),
+  getAgencies: publicProcedure.output(z.array(z.object({
+    agencyId: z.number(),
+    agency: z.string().nullable(),
+  }))).handler(async () => {
+    return db.select().from(agencies);
+  }),
+  getEnrollments: publicProcedure.output(z.array(z.object({
+    studentId: z.number().nullable(),
+    arrivalDateFull: z.string().nullable(),
+    departureDateFull: z.string().nullable(),
+    arrivalYearNumeric: z.number().nullable(),
+    departureYearNumeric: z.number().nullable(),
+    lengthOfStayDays: z.number().nullable(),
+    diedAtLincoln: z.boolean().nullable(),
+    trade: z.string().nullable(),
+  }))).handler(async () => {
+    return db.select().from(enrollments);
+  }),
   getCivilWarOrphans: publicProcedure
     .input(getCivilWarOrphansInputSchema.optional())
     .output(z.array(CivilWarOrphanSchema))

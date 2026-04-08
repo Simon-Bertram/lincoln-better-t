@@ -2,9 +2,9 @@
 
 import type { Student } from "@/components/columns";
 
-type StudentDetailsProps = {
+interface StudentDetailsProps {
   student: Student;
-};
+}
 
 export function StudentDetails({ student }: StudentDetailsProps) {
   return (
@@ -24,19 +24,23 @@ export function StudentDetails({ student }: StudentDetailsProps) {
           <span className="font-medium text-muted-foreground">
             Year of Birth:
           </span>
-          <p className="mt-1">{student.yearOfBirth || "-"}</p>
+          <p className="mt-1">{student.birthYear || "-"}</p>
         </div>
         <div>
           <span className="font-medium text-muted-foreground">Nation:</span>
           <p className="mt-1">{student.nation || "-"}</p>
         </div>
         <div>
+          <span className="font-medium text-muted-foreground">Agency:</span>
+          <p className="mt-1">{student.agency || "-"}</p>
+        </div>
+        <div>
           <span className="font-medium text-muted-foreground">
             Arrival Date:
           </span>
           <p className="mt-1">
-            {student.arrivalAtLincoln
-              ? new Date(student.arrivalAtLincoln).toLocaleDateString()
+            {student.arrivalDateFull
+              ? new Date(student.arrivalDateFull).toLocaleDateString()
               : "-"}
           </p>
         </div>
@@ -45,40 +49,26 @@ export function StudentDetails({ student }: StudentDetailsProps) {
             Departure Date:
           </span>
           <p className="mt-1">
-            {student.departureFromLincoln
-              ? new Date(student.departureFromLincoln).toLocaleDateString()
+            {student.departureDateFull
+              ? new Date(student.departureDateFull).toLocaleDateString()
               : "-"}
           </p>
         </div>
       </div>
 
-      {student.source && (
+      {student.trade && (
         <div>
-          <span className="font-medium text-muted-foreground">Source:</span>
-          <p className="mt-1 text-sm">{student.source}</p>
+          <span className="font-medium text-muted-foreground">Trade:</span>
+          <p className="mt-1 text-sm">{student.trade}</p>
         </div>
       )}
 
-      {student.comments && (
-        <div>
-          <span className="font-medium text-muted-foreground">Comments:</span>
-          <p className="mt-1 text-sm">{student.comments}</p>
-        </div>
-      )}
-
-      {student.relevantLinks && (
+      {student.diedAtLincoln !== null && (
         <div>
           <span className="font-medium text-muted-foreground">
-            Relevant Links:
+            Died At Lincoln:
           </span>
-          <a
-            className="mt-1 block text-sm underline"
-            href={student.relevantLinks}
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            {student.relevantLinks}
-          </a>
+          <p className="mt-1 text-sm">{student.diedAtLincoln ? "Yes" : "No"}</p>
         </div>
       )}
     </div>

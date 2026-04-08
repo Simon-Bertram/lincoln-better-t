@@ -12,7 +12,7 @@ import { MESSAGES, QUERY_KEYS } from "@/lib/constants";
 
 // Students data section configuration
 export const studentsConfig: DataSectionConfig<Student> =
-  createDataSectionConfig({
+  createDataSectionConfig<Student>({
     queryKey: QUERY_KEYS.STUDENTS,
     queryFn: async () => {
       const { client } = await import("@/utils/orpc");
@@ -34,7 +34,7 @@ export const studentsConfig: DataSectionConfig<Student> =
 
 // Civil War Orphans data section configuration
 export const civilWarOrphansConfig: DataSectionConfig<CivilWarOrphan> =
-  createDataSectionConfig({
+  createDataSectionConfig<CivilWarOrphan>({
     queryKey: QUERY_KEYS.CIVIL_WAR_ORPHANS,
     queryFn: async () => {
       const { client } = await import("@/utils/orpc");

@@ -7,41 +7,37 @@ const PAGINATION_LIMITS = {
   MAX_OFFSET: 10_000,
 } as const;
 
-// Define the complete Student type based on the database schema
-export const StudentSchema = z.object({
-  id: z.number(),
-  censusRecord1900: z.string().nullable(),
-  indianName: z.string().nullable(),
+// Students table row schema
+export const StudentEntitySchema = z.object({
+  studentId: z.number(),
   familyName: z.string().nullable(),
-  englishGivenName: z.string().nullable(),
-  alias: z.string().nullable(),
+  givenName: z.string().nullable(),
+  indianName: z.string().nullable(),
   sex: z.string().nullable(),
-  yearOfBirth: z.number().nullable(),
-  yearOfBirthUncertain: z.boolean().nullable(),
-  yearOfBirthUncertaintyType: z.string().nullable(),
-  yearOfBirthOriginalText: z.string().nullable(),
-  arrivalAtLincoln: z.string().nullable(), // Date as string from database
-  arrivalAtLincolnUncertain: z.boolean().nullable(),
-  arrivalAtLincolnUncertaintyType: z.string().nullable(),
-  arrivalAtLincolnOriginalText: z.string().nullable(),
-  departureFromLincoln: z.string().nullable(), // Date as string from database
-  departureFromLincolnUncertain: z.boolean().nullable(),
-  departureFromLincolnUncertaintyType: z.string().nullable(),
-  departureFromLincolnOriginalText: z.string().nullable(),
-  nation: z.string().nullable(),
-  band: z.string().nullable(),
-  agency: z.string().nullable(),
-  trade: z.string().nullable(),
-  source: z.string().nullable(),
-  comments: z.string().nullable(),
-  causeOfDeath: z.string().nullable(),
-  cemeteryBurial: z.string().nullable(),
-  relevantLinks: z.string().nullable(),
-  createdAt: z.string().nullable(),
-  updatedAt: z.string().nullable(),
+  birthYear: z.number().nullable(),
+  nationId: z.number().nullable(),
+  agencyId: z.number().nullable(),
 });
 
-export type Student = z.infer<typeof StudentSchema>;
+export type StudentEntity = z.infer<typeof StudentEntitySchema>;
+
+// API response schema for the normalized student table view
+export const StudentTableRowSchema = z.object({
+  studentId: z.number(),
+  familyName: z.string().nullable(),
+  givenName: z.string().nullable(),
+  indianName: z.string().nullable(),
+  sex: z.string().nullable(),
+  birthYear: z.number().nullable(),
+  nation: z.string().nullable(),
+  agency: z.string().nullable(),
+  arrivalDateFull: z.string().nullable(),
+  departureDateFull: z.string().nullable(),
+  trade: z.string().nullable(),
+  diedAtLincoln: z.boolean().nullable(),
+});
+
+export type StudentTableRow = z.infer<typeof StudentTableRowSchema>;
 
 // Input schemas for API procedures
 export const getStudentsInputSchema = z.object({

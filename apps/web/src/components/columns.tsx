@@ -2,26 +2,21 @@ import type { Column, ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
 
-export type Student = {
-  id: number;
+export interface Student {
+  studentId: number;
   indianName: string | null;
   familyName: string | null;
-  englishGivenName: string | null;
+  givenName: string | null;
   sex: string | null;
-  yearOfBirth: number | null;
+  birthYear: number | null;
   nation: string | null;
-  arrivalAtLincoln: string | null;
-  departureFromLincoln: string | null;
-  source: string | null;
-  comments: string | null;
-  relevantLinks: string | null;
-};
+  agency: string | null;
+  arrivalDateFull: string | null;
+  departureDateFull: string | null;
+  trade: string | null;
+  diedAtLincoln: boolean | null;
+}
 
 /**
  * Creates a sortable header button with arrow icon
@@ -66,60 +61,13 @@ function createDateCell(dateValue: string | null) {
   );
 }
 
-/**
- * Creates a hover card cell for displaying long text content
- * @param content - The content to display in the hover card
- * @param title - The title for the hover card trigger
- * @param isLink - Whether the content should be rendered as a link
- * @returns JSX element for the hover card cell
- */
-function createHoverCardCell(
-  content: string | null,
-  title: string,
-  isLink = false
-) {
-  if (!content) {
-    return <div>-</div>;
-  }
-
-  return (
-    <div>
-      <HoverCard>
-        <HoverCardTrigger asChild>
-          <Button
-            className="h-auto p-0 text-blue-700 hover:text-blue-900 dark:text-blue-300 dark:hover:text-blue-200"
-            variant="link"
-          >
-            {title}
-          </Button>
-        </HoverCardTrigger>
-        <HoverCardContent className="w-80">
-          <div className="space-y-2">
-            <h4 className="font-semibold text-sm">{title}</h4>
-            {isLink ? (
-              <a
-                className="break-all text-sm underline"
-                href={content}
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                {content}
-              </a>
-            ) : (
-              <p className="text-sm">{content}</p>
-            )}
-          </div>
-        </HoverCardContent>
-      </HoverCard>
-    </div>
-  );
-}
-
 export const columns: ColumnDef<Student>[] = [
   {
-    accessorKey: "id",
+    accessorKey: "studentId",
     header: "ID",
-    cell: ({ row }) => <div className="font-medium">{row.getValue("id")}</div>,
+    cell: ({ row }) => (
+      <div className="font-medium">{row.getValue("studentId")}</div>
+    ),
   },
   {
     accessorKey: "indianName",
@@ -134,9 +82,9 @@ export const columns: ColumnDef<Student>[] = [
     enableGlobalFilter: true,
   },
   {
-    accessorKey: "englishGivenName",
+    accessorKey: "givenName",
     header: ({ column }) => createSortableHeader("English Name", column),
-    cell: ({ row }) => createTextCell(row.getValue("englishGivenName")),
+    cell: ({ row }) => createTextCell(row.getValue("givenName")),
     enableGlobalFilter: true,
   },
   {
@@ -145,9 +93,9 @@ export const columns: ColumnDef<Student>[] = [
     cell: ({ row }) => createTextCell(row.getValue("sex")),
   },
   {
-    accessorKey: "yearOfBirth",
+    accessorKey: "birthYear",
     header: ({ column }) => createSortableHeader("Year of Birth", column),
-    cell: ({ row }) => createTextCell(row.getValue("yearOfBirth")),
+    cell: ({ row }) => createTextCell(row.getValue("birthYear")),
   },
   {
     accessorKey: "nation",
@@ -156,41 +104,37 @@ export const columns: ColumnDef<Student>[] = [
     enableGlobalFilter: false,
   },
   {
-    accessorKey: "arrivalAtLincoln",
+    accessorKey: "agency",
+    header: ({ column }) => createSortableHeader("Agency", column),
+    cell: ({ row }) => createTextCell(row.getValue("agency")),
+  },
+  {
+    accessorKey: "arrivalDateFull",
     header: ({ column }) => createSortableHeader("Arrival Date", column),
     cell: ({ row }) =>
-      createDateCell(row.getValue("arrivalAtLincoln") as string | null),
+      createDateCell(row.getValue("arrivalDateFull") as string | null),
   },
   {
-    accessorKey: "departureFromLincoln",
+    accessorKey: "departureDateFull",
     header: ({ column }) => createSortableHeader("Departure Date", column),
     cell: ({ row }) =>
-      createDateCell(row.getValue("departureFromLincoln") as string | null),
+      createDateCell(row.getValue("departureDateFull") as string | null),
   },
   {
-    accessorKey: "source",
-    header: "Source",
-    cell: ({ row }) =>
-      createHoverCardCell(row.getValue("source") as string | null, "Source"),
+    accessorKey: "trade",
+    header: "Trade",
+    cell: ({ row }) => createTextCell(row.getValue("trade")),
   },
   {
-    accessorKey: "comments",
-    header: "Comments",
-    cell: ({ row }) =>
-      createHoverCardCell(
-        row.getValue("comments") as string | null,
-        "Comments"
-      ),
-  },
-  {
-    accessorKey: "relevantLinks",
-    header: "Relevant Link",
-    cell: ({ row }) =>
-      createHoverCardCell(
-        row.getValue("relevantLinks") as string | null,
-        "Relevant Links",
-        true
-      ),
+    accessorKey: "diedAtLincoln",
+    header: "Died At Lincoln",
+    cell: ({ row }) => {
+      const value = row.getValue("diedAtLincoln") as boolean | null;
+      if (value === null) {
+        return <div>-</div>;
+      }
+      return <div>{value ? "Yes" : "No"}</div>;
+    },
   },
 ];
 
@@ -203,9 +147,9 @@ export const mobileColumns: ColumnDef<Student>[] = [
     enableGlobalFilter: true,
   },
   {
-    accessorKey: "englishGivenName",
+    accessorKey: "givenName",
     header: ({ column }) => createSortableHeader("English Name", column),
-    cell: ({ row }) => createTextCell(row.getValue("englishGivenName")),
+    cell: ({ row }) => createTextCell(row.getValue("givenName")),
     enableGlobalFilter: true,
   },
 ];

@@ -34,7 +34,7 @@ export function useCivilWarOrphansQuery() {
 /**
  * Type-safe data configuration for different table types
  */
-export type DataConfig<T> = {
+export interface DataConfig<T> {
   queryKey: string[];
   queryFn: () => Promise<T[]>;
   columns: ColumnDef<T>[];
@@ -42,7 +42,7 @@ export type DataConfig<T> = {
   emptyMessage: string;
   errorMessage: string;
   loadingMessage: string;
-};
+}
 
 /**
  * Hook to get data configuration for students

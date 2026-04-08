@@ -1,13 +1,13 @@
 import { useQueryWithErrorHandling } from "./use-error-handling";
 
-export type UseDataFetchingOptions<TData> = {
+export interface UseDataFetchingOptions<TData> {
   queryKey: string[];
   queryFn: () => Promise<TData[]>;
   enabled?: boolean;
   retry?: number;
   staleTime?: number;
   gcTime?: number;
-};
+}
 
 const SECONDS_TO_MS = 1000;
 const MINUTES_TO_MS = 60 * SECONDS_TO_MS;
