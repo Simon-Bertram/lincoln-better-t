@@ -8,6 +8,8 @@ import {
 import { columns, mobileColumns, type Student } from "@/components/columns";
 import { DataSection } from "@/components/data-section";
 import { ErrorBoundary } from "@/components/error-boundary";
+import { CivilWarOrphanDetails } from "@/components/mobile-data-table/civil-war-orphan-details";
+import { StudentDetails } from "@/components/mobile-data-table/student-details";
 import { TableToggle } from "@/components/table-toggle";
 import { useTableToggle } from "@/hooks/use-table-toggle";
 import { MESSAGES } from "@/lib/constants";
@@ -21,6 +23,10 @@ function StudentsSection() {
 			errorMessage={MESSAGES.ERROR.STUDENTS}
 			loadingMessage={MESSAGES.LOADING.STUDENTS}
 			mobileColumns={mobileColumns}
+			mobileOptions={{
+				getNation: (student) => student.nation,
+				renderDetails: (student) => <StudentDetails student={student} />,
+			}}
 			queryFn={async () => {
 				const { client } = await import("@/utils/orpc");
 				return client.getStudents();
@@ -39,6 +45,9 @@ function CivilWarOrphansSection() {
 			errorMessage={MESSAGES.ERROR.CIVIL_WAR_ORPHANS}
 			loadingMessage={MESSAGES.LOADING.CIVIL_WAR_ORPHANS}
 			mobileColumns={civilWarOrphansMobileColumns}
+			mobileOptions={{
+				renderDetails: (orphan) => <CivilWarOrphanDetails orphan={orphan} />,
+			}}
 			queryFn={async () => {
 				const { client } = await import("@/utils/orpc");
 				return client.getCivilWarOrphans();

@@ -3,6 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import type { ColumnDef } from "@tanstack/react-table";
 import { AlertTriangle, RefreshCw } from "lucide-react";
+import type { ReactNode } from "react";
 import type { CivilWarOrphan } from "@/components/civil-war-orphans-columns";
 import type { Student } from "@/components/columns";
 import { DataTable } from "@/components/data-table/data-table";
@@ -22,6 +23,10 @@ export interface DataSectionProps<T extends Student | CivilWarOrphan> {
   queryFn: () => Promise<T[]>;
   columns: ColumnDef<T>[];
   mobileColumns: ColumnDef<T>[];
+  mobileOptions: {
+    getNation?: (record: T) => string | null;
+    renderDetails: (record: T) => ReactNode;
+  };
   emptyMessage: string;
   errorMessage: string;
   loadingMessage: string;
@@ -88,6 +93,7 @@ export function DataSection<T extends Student | CivilWarOrphan>({
   queryFn,
   columns,
   mobileColumns,
+  mobileOptions,
   emptyMessage,
   errorMessage,
   loadingMessage,
@@ -125,7 +131,11 @@ export function DataSection<T extends Student | CivilWarOrphan>({
       </div>
       {/* Mobile table - visible on mobile */}
       <div className="block lg:hidden">
-        <MobileDataTable records={query.data} mobileColumns={mobileColumns} />
+        <MobileDataTable
+          mobileColumns={mobileColumns}
+          options={mobileOptions}
+          records={query.data}
+        />
       </div>
     </>
   );

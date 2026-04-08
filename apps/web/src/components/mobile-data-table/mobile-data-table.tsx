@@ -15,13 +15,11 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { ChevronDown, ChevronRight as ChevronRightIcon } from "lucide-react";
+import type { ReactNode } from "react";
 import React, { useMemo, useState } from "react";
-import type { CivilWarOrphan } from "@/components/civil-war-orphans-columns";
-import type { Student } from "@/components/columns";
 import { PAGE_SIZE_OPTIONS } from "@/components/mobile-data-table/constants";
 import { FilterBar } from "@/components/mobile-data-table/filter-bar";
 import { Pagination } from "@/components/mobile-data-table/pagination";
-import { RowDetails } from "@/components/mobile-data-table/row-details";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -33,17 +31,22 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-// Page size options moved to constants file
+export interface MobileDataTableOptions<T> {
+  getNation?: (record: T) => string | null;
+  renderDetails: (record: T) => ReactNode;
+}
 
-type MobileDataTableProps<T extends Student | CivilWarOrphan> = {
-  mobileColumns: ColumnDef<T>[];
-  records: T[];
-};
+interface MobileDataTableProps<TData> {
+  mobileColumns: ColumnDef<TData>[];
+  records: TData[];
+  options: MobileDataTableOptions<TData>;
+}
 
-export function MobileDataTable<T extends Student | CivilWarOrphan>({
+export function MobileDataTable<TData>({
   mobileColumns,
   records,
-}: MobileDataTableProps<T>) {
+  options,
+}: MobileDataTableProps<TData>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -52,37 +55,27 @@ export function MobileDataTable<T extends Student | CivilWarOrphan>({
   const [nationFilter, setNationFilter] = useState<string | null>(null);
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
 
-  // Determine if we're displaying Students (who have nation filter) vs Civil War Orphans
-  // Students have a 'nation' property, Civil War Orphans do not
-  const isStudentData = useMemo(() => {
-    if (records.length === 0) return false;
-    // Check if any item has the 'nation' property (Student-specific)
-    return records.some((item) => "nation" in item);
-  }, [records]);
+  const showNationFilter = typeof options.getNation === "function";
 
-  // Extract unique nations from records (only for Student type)
   const uniqueNations = useMemo(() => {
+    const getNation = options.getNation;
+    if (!getNation) {
+      return [];
+    }
     const nations = records
-      .filter((item) => "nation" in item)
-      .map((item) => (item as Student).nation)
+      .map((item) => getNation(item))
       .filter((nation): nation is string => nation !== null && nation !== "");
 
     return [...new Set(nations)].sort();
-  }, [records]);
+  }, [records, options.getNation]);
 
-  // Filter records by nation if filter is applied (only for Student type)
   const filteredData = useMemo(() => {
-    if (!nationFilter) {
+    const getNation = options.getNation;
+    if (nationFilter === null || getNation === undefined) {
       return records;
     }
-
-    return records.filter((item) => {
-      if ("nation" in item) {
-        return item.nation === nationFilter;
-      }
-      return true; // Don't filter CivilWarOrphan data
-    });
-  }, [records, nationFilter]);
+    return records.filter((item) => getNation(item) === nationFilter);
+  }, [records, nationFilter, options.getNation]);
 
   const getSortDirection = (column: { getIsSorted: () => string | false }) => {
     if (column.getIsSorted() === "asc") {
@@ -135,7 +128,7 @@ export function MobileDataTable<T extends Student | CivilWarOrphan>({
         nationFilter={nationFilter}
         onGlobalFilterChangeAction={(value) => table.setGlobalFilter(value)}
         onNationFilterChangeAction={setNationFilter}
-        showNationFilter={isStudentData}
+        showNationFilter={showNationFilter}
         uniqueNations={uniqueNations}
       />
       <div className="overflow-hidden rounded-md border">
@@ -211,9 +204,7 @@ export function MobileDataTable<T extends Student | CivilWarOrphan>({
                           className="p-0"
                           colSpan={row.getVisibleCells().length + 1}
                         >
-                          <RowDetails
-                            item={row.original as Student | CivilWarOrphan}
-                          />
+                          {options.renderDetails(row.original)}
                         </TableCell>
                       </TableRow>
                     )}
