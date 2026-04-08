@@ -17,20 +17,20 @@ import {
 } from "@/components/ui/card";
 
 // Types for the generic data section
-export type DataSectionProps<T extends Student | CivilWarOrphan> = {
+export interface DataSectionProps<T extends Student | CivilWarOrphan> {
   queryKey: string;
-  queryFnAction: () => Promise<T[]>;
+  queryFn: () => Promise<T[]>;
   columns: ColumnDef<T>[];
   mobileColumns: ColumnDef<T>[];
   emptyMessage: string;
   errorMessage: string;
   loadingMessage: string;
-};
+}
 
 // Loading state component
-type LoadingStateProps = {
+interface LoadingStateProps {
   message: string;
-};
+}
 
 function LoadingState({ message }: LoadingStateProps) {
   return (
@@ -44,10 +44,10 @@ function LoadingState({ message }: LoadingStateProps) {
 }
 
 // Error state component
-type ErrorStateProps = {
+interface ErrorStateProps {
   message: string;
   onRetry: () => void;
-};
+}
 
 function ErrorState({ message, onRetry }: ErrorStateProps) {
   return (
@@ -70,9 +70,9 @@ function ErrorState({ message, onRetry }: ErrorStateProps) {
 }
 
 // Empty state component
-type EmptyStateProps = {
+interface EmptyStateProps {
   message: string;
-};
+}
 
 function EmptyState({ message }: EmptyStateProps) {
   return (
@@ -85,7 +85,7 @@ function EmptyState({ message }: EmptyStateProps) {
 // Main generic data section component
 export function DataSection<T extends Student | CivilWarOrphan>({
   queryKey,
-  queryFnAction,
+  queryFn,
   columns,
   mobileColumns,
   emptyMessage,
@@ -94,11 +94,11 @@ export function DataSection<T extends Student | CivilWarOrphan>({
 }: DataSectionProps<T>) {
   const query = useQuery({
     queryKey: [queryKey],
-    queryFn: queryFnAction,
+    queryFn,
     // Data is static (never changes), so use infinite stale time
     // This ensures React Query uses cached data immediately without refetching
-    staleTime: Infinity,
-    gcTime: Infinity,
+    staleTime: Number.POSITIVE_INFINITY,
+    gcTime: Number.POSITIVE_INFINITY,
     // Don't refetch on window focus for static data
     refetchOnWindowFocus: false,
     // Don't refetch on mount if data exists in cache

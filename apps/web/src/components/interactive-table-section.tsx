@@ -21,7 +21,7 @@ function StudentsSection() {
 			errorMessage={MESSAGES.ERROR.STUDENTS}
 			loadingMessage={MESSAGES.LOADING.STUDENTS}
 			mobileColumns={mobileColumns}
-			queryFnAction={async () => {
+			queryFn={async () => {
 				const { client } = await import("@/utils/orpc");
 				return client.getStudents();
 			}}
@@ -39,7 +39,7 @@ function CivilWarOrphansSection() {
 			errorMessage={MESSAGES.ERROR.CIVIL_WAR_ORPHANS}
 			loadingMessage={MESSAGES.LOADING.CIVIL_WAR_ORPHANS}
 			mobileColumns={civilWarOrphansMobileColumns}
-			queryFnAction={async () => {
+			queryFn={async () => {
 				const { client } = await import("@/utils/orpc");
 				return client.getCivilWarOrphans();
 			}}
